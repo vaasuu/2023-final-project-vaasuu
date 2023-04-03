@@ -17,7 +17,7 @@ const signUpUser = async (req, res) => {
   if (error) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ status: 400, error: error.details[0].message });
+      .json({ error: error.details[0].message });
   }
 
   const { email, password, name } = req.body;
@@ -27,7 +27,7 @@ const signUpUser = async (req, res) => {
   if (user.length > 0) {
     return res
       .status(StatusCodes.CONFLICT)
-      .json({ status: 409, error: "User with that email already exists" }); // data leak
+      .json({ error: "User with that email already exists" }); // data leak
   }
 
   let passwordHash;
@@ -37,7 +37,7 @@ const signUpUser = async (req, res) => {
     console.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ status: 500, error: "Internal server error" });
+      .json({ error: "Internal server error" });
   }
 
   const newUser = {
@@ -53,7 +53,7 @@ const signUpUser = async (req, res) => {
     console.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ status: 500, error: "Internal server error" });
+      .json({ error: "Internal server error" });
   }
 
   const token = jwt.sign(
@@ -65,10 +65,9 @@ const signUpUser = async (req, res) => {
     { expiresIn: "1h" }
   );
 
-  return res.status(StatusCodes.CREATED).json({
-    status: 201,
-    data: { id: newUser.id, email: newUser.email, token },
-  });
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ id: newUser.id, email: newUser.email, token });
 };
 
 const loginUser = async (req, res) => {
@@ -81,7 +80,7 @@ const loginUser = async (req, res) => {
   if (error) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ status: 400, error: error.details[0].message });
+      .json({ error: error.details[0].message });
   }
 
   const { email, password } = req.body;
@@ -90,7 +89,7 @@ const loginUser = async (req, res) => {
   if (foundUsers.length === 0) {
     return res
       .status(StatusCodes.UNAUTHORIZED)
-      .json({ status: 401, error: "Invalid credentials" });
+      .json({ error: "Invalid credentials" });
   }
   const user = foundUsers[0]; // there should only be one user with a given email
 
@@ -100,13 +99,13 @@ const loginUser = async (req, res) => {
     if (!isValidPassword) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ status: 401, error: "Invalid credentials" });
+        .json({ error: "Invalid credentials" });
     }
   } catch (err) {
     console.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ status: 500, error: "Internal server error" });
+      .json({ error: "Internal server error" });
   }
 
   const token = jwt.sign(
@@ -120,10 +119,10 @@ const loginUser = async (req, res) => {
     }
   );
 
-  return res.status(StatusCodes.OK).json({
-    status: 200,
-    data: { id: user.id, email: user.email, token },
-  });
+  // return the user details and JWT
+  return res
+    .status(StatusCodes.OK)
+    .json({ id: user.id, email: user.email, token });
 };
 
 module.exports = {
