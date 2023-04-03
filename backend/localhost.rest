@@ -1,11 +1,22 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 
+# Variables
 @PORT = 3000
+
+# Dynamic Variables
+@authToken = {{login.response.body.token}}
+@authToken = {{signup.response.body.token}}
+
+@userId = {{login.response.body.id}}
+@userId = {{signup.response.body.id}}
+
+### health check
 
 GET http://localhost:{{PORT}}/health
 
-### password length < min length
+### Signup - password length too short
 
+# @name signup
 POST http://localhost:{{PORT}}/api/v1/users/signup
 Content-Type: application/json
 
@@ -15,8 +26,9 @@ Content-Type: application/json
     "password": "test123"
 }
 
-### successfull signup
+### successful signup
 
+# @name signup
 POST http://localhost:{{PORT}}/api/v1/users/signup
 Content-Type: application/json
 
@@ -26,8 +38,9 @@ Content-Type: application/json
     "password": "CorrectHorseBatteryStaple"
 }
 
-### successfull login
+### successful login
 
+# @name login
 POST http://localhost:{{PORT}}/api/v1/users/login
 Content-Type: application/json
 
