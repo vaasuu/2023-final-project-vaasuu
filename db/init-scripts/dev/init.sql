@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `users` (
-    id BINARY(16) PRIMARY KEY NOT NULL,
+    id CHAR(36) PRIMARY KEY NOT NULL,
     name VARCHAR(255) NOT NULL,
     -- 320 is the max length of an email address https://www.rfc-editor.org/rfc/rfc3696#:~:text=the%20%22%40%22)%20for%20a-,total%20length%20of%20320,-characters.%20%20Systems%20that
     email VARCHAR(320) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `listings` (
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     asking_price DECIMAL(10, 2) NOT NULL,
-    owner BINARY(16) NOT NULL,
+    owner CHAR(36) NOT NULL,
     location VARCHAR(255) NOT NULL,
     picture_url VARCHAR(255) NOT NULL,
     FOREIGN KEY (owner) REFERENCES users(id)
