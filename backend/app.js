@@ -2,7 +2,12 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+const users = require("./routes/users");
+
 const app = express();
+
+// for parsing application/json
+app.use(express.json());
 
 app.use(
   cors({
@@ -14,7 +19,10 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
+// take API routes into use
+app.use("/api/v1/users", users);
+
+app.get("/health", (req, res) => {
   res.send("ok");
 });
 

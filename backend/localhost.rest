@@ -1,0 +1,37 @@
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+@PORT = 3000
+
+GET http://localhost:{{PORT}}/health
+
+### password length < min length
+
+POST http://localhost:{{PORT}}/api/v1/users/signup
+Content-Type: application/json
+
+{
+    "name": "test",
+    "email": "example@example.com",
+    "password": "test123"
+}
+
+### successfull signup
+
+POST http://localhost:{{PORT}}/api/v1/users/signup
+Content-Type: application/json
+
+{
+    "name": "test",
+    "email": "example@example.com",
+    "password": "CorrectHorseBatteryStaple"
+}
+
+### successfull login
+
+POST http://localhost:{{PORT}}/api/v1/users/login
+Content-Type: application/json
+
+{
+    "email": "example@example.com",
+    "password": "CorrectHorseBatteryStaple"
+}
