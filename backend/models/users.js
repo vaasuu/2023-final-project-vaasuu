@@ -113,14 +113,17 @@ const users = {
         if (err) {
           reject(err);
         } else {
-          connection.query("SELECT * FROM users", (err, result) => {
-            connection.release();
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result);
+          connection.query(
+            "SELECT id, name, created_at FROM users",
+            (err, result) => {
+              connection.release();
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
             }
-          });
+          );
         }
       });
     }),

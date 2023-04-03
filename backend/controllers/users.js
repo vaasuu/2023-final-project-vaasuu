@@ -133,7 +133,22 @@ const loginUser = async (req, res) => {
     .json({ id: user.id, email: user.email, token });
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const usersArray = await users.getAll();
+
+    // return the users array
+    return res.status(StatusCodes.OK).json(usersArray);
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   signUpUser,
   loginUser,
+  getAllUsers,
 };

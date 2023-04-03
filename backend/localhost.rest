@@ -70,3 +70,27 @@ Content-Type: application/json
     "email": "foo@example.com",
     "password": "WrongPassword"
 }
+
+### get all users - unauthorized - no Authorization header
+
+GET http://localhost:{{PORT}}/api/v1/users
+
+### get all users - authorized
+
+GET http://localhost:{{PORT}}/api/v1/users
+Authorization: Bearer {{authToken}}
+
+### get all users - unauthorized - malformed token
+
+GET http://localhost:{{PORT}}/api/v1/users
+Authorization: Bearer malformedToken
+
+### get all users - unauthorized - no token
+
+GET http://localhost:{{PORT}}/api/v1/users
+Authorization: Bearer 
+
+### get all users - unauthorized - expired token
+
+GET http://localhost:{{PORT}}/api/v1/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjMzE2MjExLWM5ZjQtNDM3Yy04MDQyLTllNWRjMGVlMWQxZSIsImVtYWlsIjoiZXhhbXBsZTJAZXhhbXBsZS5jb20iLCJpYXQiOjE2ODA1NDM1OTEsImV4cCI6MTY4MDU0NzE5MX0.ch7iKLKNluWKg_84dG9YALsA2RHpA7KGwfwyaXVeyhQ
