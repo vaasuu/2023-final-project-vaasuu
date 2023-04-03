@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS `listings` (
     asking_price DECIMAL(10, 2) NOT NULL,
     owner CHAR(36) CHARACTER SET ascii NOT NULL,
     location VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (owner) REFERENCES users(id),
     -- delete listing's pictures when listing is deleted:
     CONSTRAINT listing_pictures_fk FOREIGN KEY (listing_id) REFERENCES pictures(listing_id) ON DELETE CASCADE
@@ -26,5 +28,7 @@ CREATE TABLE IF NOT EXISTS `pictures` (
     url VARCHAR(1000) NOT NULL,
     blurhash VARCHAR(30) NOT NULL,
     listing_id BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (listing_id) REFERENCES listings(listing_id) ON DELETE CASCADE
 );
