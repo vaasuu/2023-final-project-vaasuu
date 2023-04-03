@@ -48,3 +48,25 @@ Content-Type: application/json
     "email": "example@example.com",
     "password": "CorrectHorseBatteryStaple"
 }
+
+### unsuccessful login - wrong password
+
+# @name login
+POST http://localhost:{{PORT}}/api/v1/users/login
+Content-Type: application/json
+
+{
+    "email": "example@example.com",
+    "password": "WrongPassword"
+}
+
+### unsuccessful login - wrong email
+
+# @name login
+POST http://localhost:{{PORT}}/api/v1/users/login
+Content-Type: application/json
+
+{
+    "email": "foo@example.com",
+    "password": "WrongPassword"
+}
