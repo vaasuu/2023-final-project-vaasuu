@@ -30,6 +30,7 @@ const signUpUser = async (req, res) => {
       .json({ error: "User with that email already exists" }); // data leak
   }
 
+  // password hashing
   let passwordHash;
   try {
     passwordHash = await bcrypt.hash(password, 10);
@@ -40,6 +41,7 @@ const signUpUser = async (req, res) => {
       .json({ error: "Internal server error" });
   }
 
+  // create new user object
   const newUser = {
     id: uuidv4(),
     email,
@@ -47,6 +49,7 @@ const signUpUser = async (req, res) => {
     name,
   };
 
+  // save new user to the database
   try {
     await users.create(newUser);
   } catch (err) {
@@ -56,6 +59,7 @@ const signUpUser = async (req, res) => {
       .json({ error: "Internal server error" });
   }
 
+  // create and return a JWT
   const token = jwt.sign(
     {
       id: newUser.id,
@@ -83,8 +87,10 @@ const loginUser = async (req, res) => {
       .json({ error: error.details[0].message });
   }
 
+  // get details from the request body
   const { email, password } = req.body;
 
+  // check if user exists in the database
   const foundUsers = await users.findByEmail(email);
   if (foundUsers.length === 0) {
     return res
@@ -93,6 +99,7 @@ const loginUser = async (req, res) => {
   }
   const user = foundUsers[0]; // there should only be one user with a given email
 
+  // check if password is correct
   let isValidPassword;
   try {
     isValidPassword = await bcrypt.compare(password, user.password_hash);
@@ -108,6 +115,7 @@ const loginUser = async (req, res) => {
       .json({ error: "Internal server error" });
   }
 
+  // create a new JWT
   const token = jwt.sign(
     {
       id: user.id,
