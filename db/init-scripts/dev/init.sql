@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS `listings` (
     asking_price DECIMAL(10, 2) NOT NULL,
     owner CHAR(36) CHARACTER SET ascii NOT NULL,
     location VARCHAR(255) NOT NULL,
-    picture_url VARCHAR(255) NOT NULL,
     FOREIGN KEY (owner) REFERENCES users(id)
 );
 CREATE TABLE IF NOT EXISTS `pictures` (
