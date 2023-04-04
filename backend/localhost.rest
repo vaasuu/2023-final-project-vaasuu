@@ -107,3 +107,20 @@ Authorization: Bearer {{authToken}}
 
 GET {{baseUrl}}/api/v1/users/thisIsNotAnExistingUserId
 Authorization: Bearer {{authToken}}
+
+### Create new user to be deleted
+
+# @name signupToDelete
+POST {{baseUrl}}/api/v1/users/signup
+Content-Type: application/json
+
+{
+    "name": "test",
+    "email": "to.delete@example.com",
+    "password": "ui432oo3u42i"
+}
+
+### delete user by id
+
+DELETE {{baseUrl}}/api/v1/users/{{signupToDelete.response.body.id}}
+Authorization: Bearer {{signupToDelete.response.body.token}}

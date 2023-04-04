@@ -7,7 +7,7 @@ const {
   loginUser,
   getAllUsers,
   getUserById,
-const { signUpUser, loginUser, getAllUsers } = require("../controllers/users");
+  deleteUserById,
 } = require("../controllers/users");
 
 router.post("/signup", signUpUser);
@@ -21,4 +21,5 @@ router.get("/", getAllUsers);
 
 // These routes are only accessible to their respective users or admins
 router.get("/:id", getUserById);
+router.delete("/:id", deleteUserById);
 module.exports = router;

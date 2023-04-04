@@ -199,9 +199,59 @@ const getUserById = async (req, res) => {
   }
 };
 
+const deleteUserById = async (req, res) => {
+  const schema = Joi.object({
+    id: Joi.string().required(),
+  });
+
+  const { error } = schema.validate(req.params);
+  if (error) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: error.details[0].message });
+  }
+
+  const { id } = req.params;
+
+  const requestedUserId = id;
+  const isAdmin = req.userData.isAdmin;
+  const tokenUserId = req.userData.userId;
+
+  // Check if user is authorized to access this resource
+  // User can delete only their own account.
+  // Admin can delete any account.
+
+  // if user is not an admin and is not requesting their own account information
+  if (!isAdmin && tokenUserId !== requestedUserId) {
+    // return 403 forbidden
+    return res
+      .status(StatusCodes.FORBIDDEN)
+      .json({ error: "You are not authorized to access this resource" });
+  }
+
+  // check if user exists in the database
+  try {
+    const deletionResult = await users.delete(id);
+    console.log(deletionResult);
+    if (deletionResult.affectedRows === 0) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: "User with that ID does not exist" });
+    }
+
+    return res.status(StatusCodes.NO_CONTENT).json();
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   signUpUser,
   loginUser,
   getAllUsers,
   getUserById,
+  deleteUserById,
 };
