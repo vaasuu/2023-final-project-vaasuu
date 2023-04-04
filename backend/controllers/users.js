@@ -9,7 +9,7 @@ const users = require("../models/users");
 const signUpUser = async (req, res) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().min(12).required(),
+    password: Joi.string().min(8).max(72).required(),
     name: Joi.string().required(),
   });
 
@@ -77,7 +77,7 @@ const signUpUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().min(12).required(),
+    password: Joi.string().min(8).max(72).required(),
   });
 
   const { error } = schema.validate(req.body);
