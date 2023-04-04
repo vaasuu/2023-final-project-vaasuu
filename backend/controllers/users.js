@@ -64,6 +64,7 @@ const signUpUser = async (req, res) => {
     {
       id: newUser.id,
       email: newUser.email,
+      isAdmin: newUser.isAdmin,
     },
     process.env.JWT_SECRET,
     { expiresIn: "1h" }
@@ -120,6 +121,7 @@ const loginUser = async (req, res) => {
     {
       id: user.id,
       email: user.email,
+      isAdmin: user.is_admin,
     },
     process.env.JWT_SECRET,
     {
@@ -147,8 +149,54 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  const schema = Joi.object({
+    id: Joi.string().required(),
+  });
+
+  const { error } = schema.validate(req.params);
+  if (error) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: error.details[0].message });
+  }
+
+  const { id } = req.params;
+
+  // Check if user is authorized to access this resource
+  // Only admins or the user themselves can access this resource
+  const requestedUserId = id;
+  const isAdmin = req.userdata.isAdmin;
+  const tokenUserId = req.userdata.id;
+  if (!isAdmin || tokenUserId !== requestedUserId) {
+    return res
+      .status(StatusCodes.FORBIDDEN)
+      .json({ error: "You are not authorized to access this resource" });
+  }
+
+  // check if user exists in the database
+  try {
+    const foundUsers = await users.findById(id);
+    if (foundUsers.length === 0) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: "User with that ID does not exist" });
+    }
+
+    const user = foundUsers[0];
+    // return the user details
+    return res.status(StatusCodes.OK).json(user);
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   signUpUser,
   loginUser,
   getAllUsers,
+  getUserById,
 };

@@ -97,3 +97,13 @@ Authorization: Bearer
 
 GET {{baseUrl}}/api/v1/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjMzE2MjExLWM5ZjQtNDM3Yy04MDQyLTllNWRjMGVlMWQxZSIsImVtYWlsIjoiZXhhbXBsZTJAZXhhbXBsZS5jb20iLCJpYXQiOjE2ODA1NDM1OTEsImV4cCI6MTY4MDU0NzE5MX0.ch7iKLKNluWKg_84dG9YALsA2RHpA7KGwfwyaXVeyhQ
+
+### get user by id
+
+GET {{baseUrl}}/api/v1/users/{{userId}}
+Authorization: Bearer {{authToken}}
+
+### get user by id - not found
+
+GET {{baseUrl}}/api/v1/users/thisIsNotAnExistingUserId
+Authorization: Bearer {{authToken}}
