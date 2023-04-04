@@ -1,3 +1,9 @@
+-- Adminer 4.8.1 MySQL 5.5.5-10.11.2-MariaDB-1:10.11.2+maria~ubu2204 dump
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+SET NAMES utf8mb4;
 DROP TABLE IF EXISTS `listings`;
 CREATE TABLE `listings` (
     `listing_id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -139,3 +145,4 @@ VALUES (
         '2023-04-02 10:00:00',
         '2023-04-02 10:00:00'
     );
+-- 2023-04-04 01:01:46
