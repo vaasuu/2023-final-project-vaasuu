@@ -102,6 +102,16 @@ VALUES (
         '2023-04-02 12:02:00',
         '2023-04-04 00:10:19'
     );
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles` (
+    `role_id` int(11) NOT NULL AUTO_INCREMENT,
+    `role_name` varchar(50) NOT NULL,
+    PRIMARY KEY (`role_id`),
+    UNIQUE KEY `role_name` (`role_name`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+INSERT INTO `roles` (`role_id`, `role_name`)
+VALUES (2, 'admin'),
+    (1, 'normal');
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
     `id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
@@ -145,4 +155,17 @@ VALUES (
         '2023-04-02 10:00:00',
         '2023-04-02 10:00:00'
     );
--- 2023-04-04 01:01:46
+DROP TABLE IF EXISTS `user_roles`;
+CREATE TABLE `user_roles` (
+    `user_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+    `role_id` int(11) NOT NULL,
+    PRIMARY KEY (`user_id`, `role_id`),
+    KEY `role_id` (`role_id`),
+    CONSTRAINT `user_roles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+INSERT INTO `user_roles` (`user_id`, `role_id`)
+VALUES ('aaaaaaaa-0615-4d04-a795-9c5756ef5f4c', 1),
+    ('bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89', 1),
+    ('cccccccc-681d-4475-84a2-fdd1d0dcd057', 2);
+-- 2023-04-04 02:43:40
