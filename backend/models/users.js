@@ -26,7 +26,7 @@ const users = {
           reject(err);
         } else {
           connection.query(
-            "SELECT * FROM users WHERE id = ?",
+            "SELECT id, name, email, created_at, updated_at FROM users WHERE id = ?",
             id,
             (err, result) => {
               connection.release();
