@@ -1,7 +1,10 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 
 # Variables
-@PORT = 3000
+@scheme = http
+@host = localhost
+@PORT = {{$dotenv PORT}} 
+@baseUrl = {{scheme}}://{{host}}:{{PORT}}
 
 # Dynamic Variables
 @authToken = {{login.response.body.token}}
@@ -12,12 +15,12 @@
 
 ### health check
 
-GET http://localhost:{{PORT}}/health
+GET {{baseUrl}}/health
 
 ### Signup - password length too short
 
 # @name signup
-POST http://localhost:{{PORT}}/api/v1/users/signup
+POST {{baseUrl}}/api/v1/users/signup
 Content-Type: application/json
 
 {
@@ -29,7 +32,7 @@ Content-Type: application/json
 ### successful signup
 
 # @name signup
-POST http://localhost:{{PORT}}/api/v1/users/signup
+POST {{baseUrl}}/api/v1/users/signup
 Content-Type: application/json
 
 {
@@ -41,7 +44,7 @@ Content-Type: application/json
 ### successful login
 
 # @name login
-POST http://localhost:{{PORT}}/api/v1/users/login
+POST {{baseUrl}}/api/v1/users/login
 Content-Type: application/json
 
 {
@@ -52,7 +55,7 @@ Content-Type: application/json
 ### unsuccessful login - wrong password
 
 # @name login
-POST http://localhost:{{PORT}}/api/v1/users/login
+POST {{baseUrl}}/api/v1/users/login
 Content-Type: application/json
 
 {
@@ -63,7 +66,7 @@ Content-Type: application/json
 ### unsuccessful login - wrong email
 
 # @name login
-POST http://localhost:{{PORT}}/api/v1/users/login
+POST {{baseUrl}}/api/v1/users/login
 Content-Type: application/json
 
 {
@@ -73,24 +76,24 @@ Content-Type: application/json
 
 ### get all users - unauthorized - no Authorization header
 
-GET http://localhost:{{PORT}}/api/v1/users
+GET {{baseUrl}}/api/v1/users
 
 ### get all users - authorized
 
-GET http://localhost:{{PORT}}/api/v1/users
+GET {{baseUrl}}/api/v1/users
 Authorization: Bearer {{authToken}}
 
 ### get all users - unauthorized - malformed token
 
-GET http://localhost:{{PORT}}/api/v1/users
+GET {{baseUrl}}/api/v1/users
 Authorization: Bearer malformedToken
 
 ### get all users - unauthorized - no token
 
-GET http://localhost:{{PORT}}/api/v1/users
+GET {{baseUrl}}/api/v1/users
 Authorization: Bearer 
 
 ### get all users - unauthorized - expired token
 
-GET http://localhost:{{PORT}}/api/v1/users
+GET {{baseUrl}}/api/v1/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjMzE2MjExLWM5ZjQtNDM3Yy04MDQyLTllNWRjMGVlMWQxZSIsImVtYWlsIjoiZXhhbXBsZTJAZXhhbXBsZS5jb20iLCJpYXQiOjE2ODA1NDM1OTEsImV4cCI6MTY4MDU0NzE5MX0.ch7iKLKNluWKg_84dG9YALsA2RHpA7KGwfwyaXVeyhQ
