@@ -163,12 +163,17 @@ const getUserById = async (req, res) => {
 
   const { id } = req.params;
 
-  // Check if user is authorized to access this resource
-  // Only admins or the user themselves can access this resource
   const requestedUserId = id;
-  const isAdmin = req.userdata.isAdmin;
-  const tokenUserId = req.userdata.id;
-  if (!isAdmin || tokenUserId !== requestedUserId) {
+  const isAdmin = req.userData.isAdmin;
+  const tokenUserId = req.userData.userId;
+
+  // Check if user is authorized to access this resource
+  // User can only get their own account information.
+  // Admin can get any user's account information.
+
+  // if user is not an admin and is not requesting their own account information
+  if (!isAdmin && tokenUserId !== requestedUserId) {
+    // return 403 forbidden
     return res
       .status(StatusCodes.FORBIDDEN)
       .json({ error: "You are not authorized to access this resource" });
