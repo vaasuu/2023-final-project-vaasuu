@@ -161,7 +161,9 @@ CREATE TRIGGER `user_default_role`
 AFTER
 INSERT ON `users` FOR EACH ROW
 INSERT INTO `user_roles` (`user_id`)
-VALUES (NEW.id) $$ DELIMITER;
+VALUES (NEW.id);
+;
+DELIMITER;
 DROP TABLE IF EXISTS `user_roles`;
 CREATE TABLE `user_roles` (
     `user_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
@@ -175,4 +177,4 @@ INSERT INTO `user_roles` (`user_id`, `role_id`)
 VALUES ('aaaaaaaa-0615-4d04-a795-9c5756ef5f4c', 1),
     ('bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89', 1),
     ('cccccccc-681d-4475-84a2-fdd1d0dcd057', 2);
--- 2023-04-04 10:35:04
+-- 2023-04-05 04:39:02
