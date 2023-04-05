@@ -108,6 +108,27 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/api/v1/users/thisIsNotAnExistingUserId
 Authorization: Bearer {{authToken}}
 
+### get user by id - different user, not admin
+
+GET {{baseUrl}}/api/v1/users/bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89
+Authorization: Bearer {{authToken}}
+
+### login as admin
+
+# @name loginAdmin
+POST {{baseUrl}}/api/v1/users/login
+Content-Type: application/json
+
+{
+    "email": "bob.johnson@example.com",
+    "password": "bob.johnson"
+}
+
+### get user by id - different user, admin
+
+GET {{baseUrl}}/api/v1/users/bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
 ### Create new user to be deleted
 
 # @name signupToDelete

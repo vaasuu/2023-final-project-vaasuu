@@ -5,6 +5,7 @@ const Joi = require("joi");
 const { StatusCodes } = require("http-status-codes");
 
 const users = require("../models/users");
+const utils = require("../utils");
 
 const signUpUser = async (req, res) => {
   const schema = Joi.object({
@@ -63,16 +64,16 @@ const signUpUser = async (req, res) => {
   const token = jwt.sign(
     {
       id: newUser.id,
-      email: newUser.email,
-      isAdmin: newUser.isAdmin,
     },
     process.env.JWT_SECRET,
     { expiresIn: "1h" }
   );
 
+  const roles = await utils.getRoles(newUser.id);
+
   return res
     .status(StatusCodes.CREATED)
-    .json({ id: newUser.id, email: newUser.email, token });
+    .json({ id: newUser.id, email: newUser.email, token, roles });
 };
 
 const loginUser = async (req, res) => {
@@ -120,8 +121,6 @@ const loginUser = async (req, res) => {
   const token = jwt.sign(
     {
       id: user.id,
-      email: user.email,
-      isAdmin: user.is_admin,
     },
     process.env.JWT_SECRET,
     {
@@ -129,10 +128,12 @@ const loginUser = async (req, res) => {
     }
   );
 
+  const roles = await utils.getRoles(user.id);
+
   // return the user details and JWT
   return res
     .status(StatusCodes.OK)
-    .json({ id: user.id, email: user.email, token });
+    .json({ id: user.id, email: user.email, token, roles });
 };
 
 const getAllUsers = async (req, res) => {
@@ -164,8 +165,8 @@ const getUserById = async (req, res) => {
   const { id } = req.params;
 
   const requestedUserId = id;
-  const isAdmin = req.userData.isAdmin;
   const tokenUserId = req.userData.userId;
+  const isAdmin = await utils.hasRole(tokenUserId, "admin");
 
   // Check if user is authorized to access this resource
   // User can only get their own account information.
@@ -214,8 +215,8 @@ const deleteUserById = async (req, res) => {
   const { id } = req.params;
 
   const requestedUserId = id;
-  const isAdmin = req.userData.isAdmin;
   const tokenUserId = req.userData.userId;
+  const isAdmin = await utils.hasRole(tokenUserId, "admin");
 
   // Check if user is authorized to access this resource
   // User can delete only their own account.

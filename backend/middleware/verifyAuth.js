@@ -21,7 +21,7 @@ const verifyAuth = (req, res, next) => {
     // Verify token
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     // Add user data from the JWT to the request
-    req.userData = { userId: decodedToken.id, isAdmin: decodedToken.isAdmin };
+    req.userData = { userId: decodedToken.id };
     next();
   } catch (err) {
     // catch any errors (e.g. invalid token)

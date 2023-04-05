@@ -127,6 +127,32 @@ const users = {
         }
       });
     }),
+
+  getUsersRoles: (id) =>
+    new Promise((resolve, reject) => {
+      db.getConnection((err, connection) => {
+        if (err) {
+          reject(err);
+        } else {
+          connection.query(
+            `SELECT GROUP_CONCAT(r.role_name) AS roles
+            FROM user_roles ur
+            JOIN roles r ON ur.role_id = r.role_id
+            WHERE ur.user_id = ?;`,
+            id,
+            (err, result) => {
+              connection.release();
+              if (err) {
+                reject(err);
+              } else {
+                const roles = result[0]?.roles?.split(",") || [];
+                resolve(roles);
+              }
+            }
+          );
+        }
+      });
+    }),
 };
 
 module.exports = users;
