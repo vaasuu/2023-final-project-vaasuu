@@ -8,6 +8,7 @@ const {
   getAllUsers,
   getUserById,
   deleteUserById,
+  updateUserById,
 } = require("../controllers/users");
 
 router.post("/signup", signUpUser);
@@ -22,4 +23,6 @@ router.get("/", getAllUsers);
 // These routes are only accessible to their respective users or admins
 router.get("/:id", getUserById);
 router.delete("/:id", deleteUserById);
+router.patch("/:id", updateUserById);
+
 module.exports = router;

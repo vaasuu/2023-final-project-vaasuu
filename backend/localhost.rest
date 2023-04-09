@@ -146,6 +146,18 @@ Content-Type: application/json
 DELETE {{baseUrl}}/api/v1/users/{{signupToDelete.response.body.id}}
 Authorization: Bearer {{signupToDelete.response.body.token}}
 
+### update user by id
+
+PATCH {{baseUrl}}/api/v1/users/{{signupToDelete.response.body.id}}
+Authorization: Bearer {{signupToDelete.response.body.token}}
+Content-Type: application/json
+
+{
+    "name": "New Name",
+    "email": "adaaanew.email@example.com",
+    "password": "adaaanew.email"
+}
+
 ### get roles
 
 GET {{baseUrl}}/api/v1/roles

@@ -6,6 +6,7 @@ const { StatusCodes } = require("http-status-codes");
 
 const users = require("../models/users");
 const utils = require("../utils");
+const roles = require("../models/roles");
 
 const signUpUser = async (req, res) => {
   const schema = Joi.object({
@@ -190,8 +191,16 @@ const getUserById = async (req, res) => {
     }
 
     const user = foundUsers[0];
+    const userDetailsToReturn = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      created_at: user.created_at,
+      updated_at: user.updated_at,
+    };
+
     // return the user details
-    return res.status(StatusCodes.OK).json(user);
+    return res.status(StatusCodes.OK).json(userDetailsToReturn);
   } catch (err) {
     console.error(err);
     return res
@@ -249,10 +258,119 @@ const deleteUserById = async (req, res) => {
   }
 };
 
+const updateUserById = async (req, res) => {
+  const schema = Joi.object({
+    name: Joi.string().max(255).optional(),
+    email: Joi.string().email().optional(),
+    password: Joi.string().min(8).max(72).optional(),
+    role: Joi.array().items(Joi.string()).optional(),
+  }).or("name", "email", "password", "role");
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: error.details[0].message });
+  }
+
+  const { id } = req.params;
+
+  try {
+    const requestedUserId = id;
+    const tokenUserId = req.userData.userId;
+    const isAdmin = await utils.hasRole(tokenUserId, "admin");
+
+    // Check if user is authorized to access this resource
+    // User can update only their own account.
+    // Admin can update any account.
+
+    // if user is not an admin and is not updating their own account information
+    if (!isAdmin && tokenUserId !== requestedUserId) {
+      // return 403 forbidden
+      return res
+        .status(StatusCodes.FORBIDDEN)
+        .json({ error: "You are not authorized to update this resource" });
+    }
+
+    if (req.body.role) {
+      // check if user is an admin
+      if (!isAdmin) {
+        return res
+          .status(StatusCodes.FORBIDDEN)
+          .json({ error: "You are not authorized to update roles" });
+      }
+
+      // check if the role is valid
+      const validRoles = await roles.getAll();
+      if (!validRoles.includes(req.body.role)) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ error: "Invalid role" });
+      }
+    }
+
+    // check if user exists in the database
+    const foundUsers = await users.findById(id);
+    if (foundUsers.length === 0) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: "User with that ID does not exist" });
+    }
+
+    // check if email is already in use
+    if (req.body.email) {
+      const foundUsers = await users.findByEmail(req.body.email);
+      if (foundUsers.length > 0) {
+        return res
+          .status(StatusCodes.CONFLICT)
+          .json({ error: "Email is already in use" });
+      }
+    }
+
+    // hash the password if it is provided
+    if (req.body.password) {
+      // compare new password with old password
+      const isSamePassword = await bcrypt.compare(
+        req.body.password,
+        foundUsers[0].password_hash
+      );
+      if (isSamePassword) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ error: "New password cannot be the same as old password" });
+      } else {
+        // hash the new password
+        const password_hash = await bcrypt.hash(req.body.password, 10);
+        req.body.password_hash = password_hash;
+        delete req.body.password; // remove the password from the request body
+      }
+    }
+
+    // update the user
+    try {
+      await users.update(id, req.body);
+
+      // return only status code on successfull update
+      return res.status(StatusCodes.NO_CONTENT).json();
+    } catch (err) {
+      console.error(err);
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "Internal server error" });
+    }
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   signUpUser,
   loginUser,
   getAllUsers,
   getUserById,
   deleteUserById,
+  updateUserById,
 };
