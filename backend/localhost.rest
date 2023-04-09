@@ -145,3 +145,8 @@ Content-Type: application/json
 
 DELETE {{baseUrl}}/api/v1/users/{{signupToDelete.response.body.id}}
 Authorization: Bearer {{signupToDelete.response.body.token}}
+
+### get roles
+
+GET {{baseUrl}}/api/v1/roles
+Authorization: Bearer {{authToken}}

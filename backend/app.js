@@ -3,6 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const users = require("./routes/users");
+const roles = require("./routes/roles");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(
 
 // take API routes into use
 app.use("/api/v1/users", users);
+app.use("/api/v1/roles", roles);
 
 app.get("/health", (req, res) => {
   res.send("ok");
