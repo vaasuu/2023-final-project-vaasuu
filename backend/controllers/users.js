@@ -242,7 +242,6 @@ const deleteUserById = async (req, res) => {
   // check if user exists in the database
   try {
     const deletionResult = await users.delete(id);
-    console.log(deletionResult);
     if (deletionResult.affectedRows === 0) {
       return res
         .status(StatusCodes.NOT_FOUND)
@@ -359,7 +358,7 @@ const updateUserById = async (req, res) => {
         .json({ error: "Internal server error" });
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });
