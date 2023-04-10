@@ -5,6 +5,8 @@ on:
       - main
     paths:
       - backend/**
+      - .github/workflows/backend.yml
+  workflow_dispatch:
 jobs:
   prettier-check:
     runs-on: ubuntu-latest
