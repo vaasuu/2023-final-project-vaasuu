@@ -158,3 +158,125 @@ describe("POST signup", () => {
     );
   });
 });
+
+describe("POST login", () => {
+  it("should login a user", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      email: "john.smith@example.com",
+      password: "john.smith",
+    });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("id");
+    expect(res.body).toHaveProperty("email");
+    expect(res.body).toHaveProperty("token");
+    expect(res.body).toHaveProperty("roles");
+  });
+
+  it("should not let user post extra fields", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      email: "john.smith@example.com",
+      password: "wrong.password",
+      extra: "field",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("error", '"extra" is not allowed');
+  });
+
+  it("should not let a user login with a missing email and password", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({});
+    expect(res.statusCode).toEqual(400);
+
+    expect(res.body).toHaveProperty("error", '"email" is required');
+  });
+
+  it("should not let a user login with a wrong password", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      email: "john.smith@example.com",
+      password: "wrong.password",
+    });
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Invalid credentials");
+  });
+
+  it("should not let a user login with a wrong email", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      email: "non.existing@example.com",
+      password: "wrong.password",
+    });
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Invalid credentials");
+  });
+
+  it("should not let a user login with a missing email", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      password: "john.smith",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("error", '"email" is required');
+  });
+
+  it("should not let a user login with a malformed email", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      email: "john.smithexample.com",
+      password: "john.smith",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("error", '"email" must be a valid email');
+  });
+
+  it("should not let a user login with a missing password", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      email: "john.smith@example.com",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("error", '"password" is required');
+  });
+
+  it("should not let a user login with an empty password", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      email: "john.smith@example.com",
+      password: "",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      '"password" is not allowed to be empty'
+    );
+  });
+
+  it("should not let a user login with a too short password", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      email: "john.smith@example.com",
+      password: "pass",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      '"password" length must be at least 8 characters long'
+    );
+  });
+
+  it("should not let a user login with a too long password", async () => {
+    const res = await request(app)
+      .post("/api/v1/users/login")
+      .send({
+        email: "john.smith@example.com",
+        password: "a".repeat(73), // 72 max
+      });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      '"password" length must be less than or equal to 72 characters long'
+    );
+  });
+});
