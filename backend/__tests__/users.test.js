@@ -1,4 +1,11 @@
-const { describe, expect, it, beforeAll, afterAll } = require("@jest/globals");
+const {
+  describe,
+  expect,
+  it,
+  beforeAll,
+  afterAll,
+  beforeEach,
+} = require("@jest/globals");
 const app = require("../app");
 const db = require("../db/pool");
 const request = require("supertest");
@@ -330,6 +337,133 @@ describe("GET all users", () => {
 
   it("should not let a user get all users with an expired token", async () => {
     const res = await request(app).get("/api/v1/users").auth(
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjMzE2MjExLWM5ZjQtNDM3Yy04MDQyLTllNWRjMGVlMWQxZSIsImlhdCI6MCwiZXhwIjozNjAwfQ.ooD-9hioy7bLKn-V6ErMfZn1MuBlFkxoV4erebTDvI8", // expect JWT secret to be "secret"
+      {
+        type: "bearer",
+      }
+    );
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Token expired");
+  });
+});
+
+describe("GET a user", () => {
+  let token; // token to use for the tests
+
+  beforeEach(async () => {
+    // get a token
+    const loginRes = await request(app).post("/api/v1/users/login").send({
+      email: "john.smith@example.com",
+      password: "john.smith",
+    });
+
+    // use the token from the login response
+    token = loginRes.body.token;
+  });
+
+  it("should return a user", async () => {
+    const res = await request(app)
+      .get("/api/v1/users/aaaaaaaa-0615-4d04-a795-9c5756ef5f4c")
+      .auth(token, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("user");
+    expect(res.body.user).toEqual({
+      id: "aaaaaaaa-0615-4d04-a795-9c5756ef5f4c",
+      name: "John Smith",
+      email: "john.smith@example.com",
+      created_at: expect.any(String),
+      updated_at: expect.any(String),
+    });
+  });
+
+  it("should not let a normal user get other user details", async () => {
+    const res = await request(app)
+      .get("/api/v1/users/bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89")
+      .auth(token, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty(
+      "error",
+      "You are not authorized to access this resource"
+    );
+  });
+
+  it("should let an admin user get other user details", async () => {
+    // get a token
+    const loginRes = await request(app).post("/api/v1/users/login").send({
+      email: "bob.johnson@example.com",
+      password: "bob.johnson",
+    });
+
+    // use the token from the login response
+    const adminToken = loginRes.body.token;
+
+    const res = await request(app)
+      .get("/api/v1/users/bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89")
+      .auth(adminToken, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("user");
+    expect(res.body.user).toEqual({
+      id: "bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89",
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      created_at: expect.any(String),
+      updated_at: expect.any(String),
+    });
+  });
+
+  it("should 404 on not existing user", async () => {
+    // get a admin token
+    const loginRes = await request(app).post("/api/v1/users/login").send({
+      email: "bob.johnson@example.com",
+      password: "bob.johnson",
+    });
+
+    // use the token from the login response
+    const adminToken = loginRes.body.token;
+
+    const res = await request(app)
+      .get("/api/v1/users/not-an-existing-user-id")
+      .auth(adminToken, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(404);
+    expect(res.body).toHaveProperty(
+      "error",
+      "User with that ID does not exist"
+    );
+  });
+
+  it("should not let a user get a user without a token", async () => {
+    const res = await request(app).get("/api/v1/users/1");
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Unauthorized");
+  });
+
+  it("should not let a user get a user with an invalid token", async () => {
+    const res = await request(app)
+      .get("/api/v1/users/1")
+      .auth("invalid-token-here", {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Invalid token");
+  });
+
+  it("should not let a user get a user with an expired token", async () => {
+    const res = await request(app).get("/api/v1/users/1").auth(
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjMzE2MjExLWM5ZjQtNDM3Yy04MDQyLTllNWRjMGVlMWQxZSIsImlhdCI6MCwiZXhwIjozNjAwfQ.ooD-9hioy7bLKn-V6ErMfZn1MuBlFkxoV4erebTDvI8", // expect JWT secret to be "secret"
       {
         type: "bearer",
