@@ -9,6 +9,7 @@ const {
 const app = require("../app");
 const db = require("../db/pool");
 const request = require("supertest");
+const users = require("../models/users");
 
 beforeAll(async () => {
   // Remove all test users from db
@@ -578,6 +579,142 @@ describe("DELETE a user", () => {
 
   it("should not let a user delete a user with an expired token", async () => {
     const res = await request(app).delete("/api/v1/users/1").auth(
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjMzE2MjExLWM5ZjQtNDM3Yy04MDQyLTllNWRjMGVlMWQxZSIsImlhdCI6MCwiZXhwIjozNjAwfQ.ooD-9hioy7bLKn-V6ErMfZn1MuBlFkxoV4erebTDvI8", // expect JWT secret to be "secret"
+      {
+        type: "bearer",
+      }
+    );
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Token expired");
+  });
+});
+
+describe("Update a user", () => {
+  let signupRes; // response from the signup request
+
+  beforeEach(async () => {
+    // First delete the user incase it already exists
+    db.query("DELETE FROM users WHERE email = 'tobe.updated@test.example.com'");
+
+    // sign up a new user that can be updated
+    signupRes = await request(app).post("/api/v1/users/signup").send({
+      name: "Tobe Updated",
+      email: "tobe.updated@test.example.com",
+      password: "tobe.updated",
+    });
+  });
+
+  it("should allow to update own user", async () => {
+    // get state before update
+    const userBefore = await users.findById(signupRes.body.id);
+    expect(userBefore[0].name).toEqual("Tobe Updated");
+
+    const res = await request(app)
+      .patch(`/api/v1/users/${signupRes.body.id}`)
+      .send({
+        name: "Sir Tobe Updated",
+        password: "sir.tobe.updated",
+      })
+      .auth(signupRes.body.token, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(204);
+
+    // check that the user was updated
+    const user = await users.findById(signupRes.body.id);
+
+    expect(user[0].name).toEqual("Sir Tobe Updated");
+    expect(user[0].password_hash).not.toEqual(userBefore[0].password_hash); // password hash should be different
+  });
+
+  it("should not let a normal user update other user details", async () => {
+    const res = await request(app)
+      .patch("/api/v1/users/bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89")
+      .send({
+        name: "Name changed by normal user",
+      })
+      .auth(signupRes.body.token, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty(
+      "error",
+      "You are not authorized to update this resource"
+    );
+  });
+
+  it("should let an admin user update other user details", async () => {
+    // get a token
+    const loginRes = await request(app).post("/api/v1/users/login").send({
+      email: "bob.johnson@example.com",
+      password: "bob.johnson",
+    });
+
+    // use the token from the login response
+    const adminToken = loginRes.body.token;
+
+    const res = await request(app)
+      .patch(`/api/v1/users/${signupRes.body.id}`)
+      .send({
+        name: "Name changed by admin user",
+      })
+      .auth(adminToken, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(204);
+    expect(res.body).toEqual({});
+  });
+
+  it("should 404 on not existing user", async () => {
+    // get a admin token
+    const loginRes = await request(app).post("/api/v1/users/login").send({
+      email: "bob.johnson@example.com",
+      password: "bob.johnson",
+    });
+
+    // use the token from the login response
+    const adminToken = loginRes.body.token;
+
+    const res = await request(app)
+      .patch("/api/v1/users/not-an-existing-user-id")
+      .send({
+        name: "Name changed by admin user",
+      })
+      .auth(adminToken, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(404);
+    expect(res.body).toHaveProperty(
+      "error",
+      "User with that ID does not exist"
+    );
+  });
+
+  it("should not let a user update a user without a token", async () => {
+    const res = await request(app).patch("/api/v1/users/1");
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Unauthorized");
+  });
+
+  it("should not let a user update a user with an invalid token", async () => {
+    const res = await request(app)
+      .patch("/api/v1/users/1")
+      .auth("invalid-token-here", {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Invalid token");
+  });
+
+  it("should not let a user update a user with an expired token", async () => {
+    const res = await request(app).patch("/api/v1/users/1").auth(
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjMzE2MjExLWM5ZjQtNDM3Yy04MDQyLTllNWRjMGVlMWQxZSIsImlhdCI6MCwiZXhwIjozNjAwfQ.ooD-9hioy7bLKn-V6ErMfZn1MuBlFkxoV4erebTDvI8", // expect JWT secret to be "secret"
       {
         type: "bearer",
