@@ -142,7 +142,7 @@ const getAllUsers = async (req, res) => {
     const usersArray = await users.getAll();
 
     // return the users array
-    return res.status(StatusCodes.OK).json(usersArray);
+    return res.status(StatusCodes.OK).json({ users: usersArray });
   } catch (err) {
     console.error(err);
     return res
@@ -200,7 +200,7 @@ const getUserById = async (req, res) => {
     };
 
     // return the user details
-    return res.status(StatusCodes.OK).json(userDetailsToReturn);
+    return res.status(StatusCodes.OK).json({ user: userDetailsToReturn });
   } catch (err) {
     console.error(err);
     return res
