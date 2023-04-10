@@ -474,3 +474,117 @@ describe("GET a user", () => {
     expect(res.body).toHaveProperty("error", "Token expired");
   });
 });
+
+describe("DELETE a user", () => {
+  let signupRes; // response from the signup request
+
+  beforeEach(async () => {
+    // First delete the user incase it already exists
+    db.query("DELETE FROM users WHERE email = 'tobe.deleted@test.example.com'");
+
+    // sign up a new user that can be deleted
+    signupRes = await request(app).post("/api/v1/users/signup").send({
+      name: "Tobe deleted",
+      email: "tobe.deleted@test.example.com",
+      password: "tobe.deleted",
+    });
+  });
+
+  it("should allow to delete own user", async () => {
+    const res = await request(app)
+      .delete(`/api/v1/users/${signupRes.body.id}`)
+      .auth(signupRes.body.token, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(204);
+    expect(res.body).toEqual({});
+  });
+
+  it("should not let a normal user get other user details", async () => {
+    const res = await request(app)
+      .delete("/api/v1/users/bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89")
+      .auth(signupRes.body.token, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty(
+      "error",
+      "You are not authorized to access this resource"
+    );
+  });
+
+  it("should let an admin user delete other user details", async () => {
+    // get a token
+    const loginRes = await request(app).post("/api/v1/users/login").send({
+      email: "bob.johnson@example.com",
+      password: "bob.johnson",
+    });
+
+    // use the token from the login response
+    const adminToken = loginRes.body.token;
+
+    const res = await request(app)
+      .delete(`/api/v1/users/${signupRes.body.id}`)
+      .auth(adminToken, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(204);
+    expect(res.body).toEqual({});
+  });
+
+  it("should 404 on not existing user", async () => {
+    // get a admin token
+    const loginRes = await request(app).post("/api/v1/users/login").send({
+      email: "bob.johnson@example.com",
+      password: "bob.johnson",
+    });
+
+    // use the token from the login response
+    const adminToken = loginRes.body.token;
+
+    const res = await request(app)
+      .delete("/api/v1/users/not-an-existing-user-id")
+      .auth(adminToken, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(404);
+    expect(res.body).toHaveProperty(
+      "error",
+      "User with that ID does not exist"
+    );
+  });
+
+  it("should not let a user delete a user without a token", async () => {
+    const res = await request(app).delete("/api/v1/users/1");
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Unauthorized");
+  });
+
+  it("should not let a user delete a user with an invalid token", async () => {
+    const res = await request(app)
+      .delete("/api/v1/users/1")
+      .auth("invalid-token-here", {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Invalid token");
+  });
+
+  it("should not let a user delete a user with an expired token", async () => {
+    const res = await request(app).delete("/api/v1/users/1").auth(
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjMzE2MjExLWM5ZjQtNDM3Yy04MDQyLTllNWRjMGVlMWQxZSIsImlhdCI6MCwiZXhwIjozNjAwfQ.ooD-9hioy7bLKn-V6ErMfZn1MuBlFkxoV4erebTDvI8", // expect JWT secret to be "secret"
+      {
+        type: "bearer",
+      }
+    );
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toHaveProperty("error", "Token expired");
+  });
+});
