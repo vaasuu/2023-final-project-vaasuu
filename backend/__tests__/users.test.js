@@ -1,0 +1,160 @@
+const { describe, expect, it, beforeAll, afterAll } = require("@jest/globals");
+const app = require("../app");
+const db = require("../db/pool");
+const request = require("supertest");
+
+beforeAll(async () => {
+  // Remove all test users from db
+  db.query("DELETE FROM users WHERE email LIKE '%@test.example.com'");
+});
+
+afterAll(async () => {
+  // Remove all test users from db
+  db.query("DELETE FROM users WHERE email LIKE '%@test.example.com'");
+});
+
+describe("POST signup", () => {
+  it("should create a new user", async () => {
+    const res = await request(app).post("/api/v1/users/signup").send({
+      name: "Success User",
+      email: "success.user@test.example.com",
+      password: "success.user",
+    });
+
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty("id");
+    expect(res.body).toHaveProperty("email");
+    expect(res.body).toHaveProperty("token");
+    expect(res.body).toHaveProperty("roles");
+  });
+
+  it("should not let a user sign up with an existing email", async () => {
+    const res = await request(app).post("/api/v1/users/signup").send({
+      // user already exists in db sample data
+      name: "John Smith",
+      email: "john.smith@example.com",
+      password: "john.smith",
+    });
+
+    expect(res.statusCode).toEqual(409);
+    expect(res.body).toHaveProperty(
+      "error",
+      "User with that email already exists"
+    );
+  });
+
+  it("should not let a user sign up with a missing email", async () => {
+    const res = await request(app).post("/api/v1/users/signup").send({
+      name: "John Doe",
+      password: "john.doe",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("error", '"email" is required');
+  });
+
+  it("should not let a user sign up with a malformed email", async () => {
+    const res = await request(app).post("/api/v1/users/signup").send({
+      name: "John Doe",
+      email: "john.doeexample.com",
+      password: "john.doe",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("error", '"email" must be a valid email');
+  });
+
+  it("should not let a user sign up with a missing password", async () => {
+    const res = await request(app).post("/api/v1/users/signup").send({
+      name: "John Doe",
+      email: "john.doe@test.example.com",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("error", '"password" is required');
+  });
+
+  it("should not let a user sign up with an empty password", async () => {
+    const res = await request(app).post("/api/v1/users/signup").send({
+      name: "John Doe",
+      email: "john.doe@test.example.com",
+      password: "",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      '"password" is not allowed to be empty'
+    );
+  });
+
+  it("should not let a user sign up with a too short password", async () => {
+    const res = await request(app).post("/api/v1/users/signup").send({
+      name: "John Doe",
+      email: "john.doe@test.example.com",
+      password: "pass",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      '"password" length must be at least 8 characters long'
+    );
+  });
+
+  it("should not let a user sign up with a too long password", async () => {
+    const res = await request(app)
+      .post("/api/v1/users/signup")
+      .send({
+        name: "John Doe",
+        email: "john.doe@test.example.com",
+        password: "a".repeat(73), // 72 max
+      });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      '"password" length must be less than or equal to 72 characters long'
+    );
+  });
+
+  it("should not let a user sign up with a missing name", async () => {
+    const res = await request(app).post("/api/v1/users/signup").send({
+      email: "john.doe@test.example.com",
+      password: "john.doe",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("error", '"name" is required');
+  });
+
+  it("should not let a user sign up with an empty name", async () => {
+    const res = await request(app).post("/api/v1/users/signup").send({
+      name: "",
+      email: "john.doe@test.example.com",
+      password: "john.doe",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      '"name" is not allowed to be empty'
+    );
+  });
+
+  it("should not let a user sign up with a too long name", async () => {
+    const res = await request(app)
+      .post("/api/v1/users/signup")
+      .send({
+        name: "a".repeat(256), // 255 max length in db
+        email: "john.doe@test.example.com",
+        password: "john.doe",
+      });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      '"name" length must be less than or equal to 255 characters long'
+    );
+  });
+});

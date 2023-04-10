@@ -2,6 +2,11 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+// Use test database for unit tests and integration tests
+if (process.env.NODE_ENV === "test") {
+  process.env.MYSQL_DATABASE = "test";
+}
+
 const users = require("./routes/users");
 const roles = require("./routes/roles");
 
