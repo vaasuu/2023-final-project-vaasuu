@@ -12,7 +12,7 @@ const signUpUser = async (req, res) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(8).max(72).required(),
-    name: Joi.string().required(),
+    name: Joi.string().max(255).required(),
   });
 
   const { error } = schema.validate(req.body);
