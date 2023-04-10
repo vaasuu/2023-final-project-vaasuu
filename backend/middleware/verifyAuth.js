@@ -1,6 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const verifyAuth = (req, res, next) => {
   if (req.method === "OPTIONS") {
