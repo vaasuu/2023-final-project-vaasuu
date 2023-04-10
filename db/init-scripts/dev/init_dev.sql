@@ -4,6 +4,11 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 SET NAMES utf8mb4;
+DROP DATABASE IF EXISTS `dev`;
+CREATE DATABASE `dev`
+/*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */
+;
+USE `dev`;
 DROP TABLE IF EXISTS `listings`;
 CREATE TABLE `listings` (
     `listing_id` bigint(20) NOT NULL AUTO_INCREMENT,
