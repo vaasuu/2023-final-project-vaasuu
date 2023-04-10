@@ -162,3 +162,7 @@ Content-Type: application/json
 
 GET {{baseUrl}}/api/v1/roles
 Authorization: Bearer {{authToken}}
+
+### get roles - unauthorized
+
+GET {{baseUrl}}/api/v1/roles
