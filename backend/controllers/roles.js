@@ -5,7 +5,7 @@ const getRoles = async (req, res) => {
   try {
     const rolesResponse = await roles.getAll();
     const rolesArray = rolesResponse.map((role) => role.role_name);
-    res.status(StatusCodes.OK).json(rolesArray);
+    res.status(StatusCodes.OK).json({ roles: rolesArray });
   } catch (error) {
     console.error(error);
     res
