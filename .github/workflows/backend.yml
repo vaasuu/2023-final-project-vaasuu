@@ -1,0 +1,81 @@
+name: Backend
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - backend/**
+jobs:
+  prettier-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Run prettier style check
+        working-directory: ./backend
+        run: npx prettier --check .
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Run eslint
+        working-directory: ./backend
+        run: npx eslint .
+  tests:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Start MySQL server
+        uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: 8.0
+          auto-start: true
+      - name: Setup MySQL server
+        run: |
+          mysql -u root -h 127.0.0.1 -e <<EOF
+            CREATE DATABASE test;
+            ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+            FLUSH PRIVILEGES;
+          EOF
+      - name: Seed Database
+        working-directory: ./db/init-scripts
+        run: mysql -h 127.0.0.1 -P 3306 -u root -ppassword test < init_test.sql
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install node-modules
+        working-directory: ./backend
+        run: npm ci
+      - name: Run tests
+        env:
+          MYSQL_HOST: localhost
+          MYSQL_USERNAME: root
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: test
+          JWT_KEY: secret
+        working-directory: ./backend
+        run: npx jest --coverage --coverageReporters={clover,json-summary,json,lcov} --forceExit
+      - name: Save coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: ./backend/coverage
+  deploy:
+    if: ${{secrets.BACKEND_DEPLOY_WEBHOOK != ''}}
+    needs: [prettier-check, lint, tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy to render.com
+        run: curl ${{secrets.BACKEND_DEPLOY_WEBHOOK}}
