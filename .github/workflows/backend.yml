@@ -77,9 +77,9 @@ jobs:
   deploy:
     env:
       BACKEND_DEPLOY_WEBHOOK: ${{secrets.BACKEND_DEPLOY_WEBHOOK}}
-    if: env.BACKEND_DEPLOY_WEBHOOK != ''
     needs: [prettier-check, lint, tests]
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger deploy to render.com
+      - if: env.BACKEND_DEPLOY_WEBHOOK != ''
+        name: Trigger deploy to production
         run: curl ${{secrets.BACKEND_DEPLOY_WEBHOOK}}
