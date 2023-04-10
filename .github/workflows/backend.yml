@@ -75,7 +75,7 @@ jobs:
       - name: Update Coverage Badge
         uses: we-cli/coverage-badge-action@8f6b0bd1b727cde6212c8c62d3329c4aac09fec3
   deploy:
-    if: ${{secrets.BACKEND_DEPLOY_WEBHOOK != ''}}
+    if: secrets.BACKEND_DEPLOY_WEBHOOK != ''
     needs: [prettier-check, lint, tests]
     runs-on: ubuntu-latest
     steps:
