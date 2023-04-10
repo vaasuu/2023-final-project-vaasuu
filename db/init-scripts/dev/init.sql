@@ -155,15 +155,11 @@ VALUES (
         '2023-04-02 10:00:00',
         '2023-04-02 10:00:00'
     );
-DELIMITER;
-;
 CREATE TRIGGER `user_default_role`
 AFTER
 INSERT ON `users` FOR EACH ROW
 INSERT INTO `user_roles` (`user_id`)
 VALUES (NEW.id);
-;
-DELIMITER;
 DROP TABLE IF EXISTS `user_roles`;
 CREATE TABLE `user_roles` (
     `user_id` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
