@@ -30,13 +30,13 @@ INSERT INTO `listings` (
     )
 VALUES (
         1,
-        'Macbook Pro',
-        '2019 Macbook Pro with 13\" Retina display, 2.4GHz quad-core Intel Core i5, 8GB RAM, and 256GB SSD storage.',
+        'MacBook Pro',
+        '2019 MacBook Pro with 13\" Retina display, 2.4GHz quad-core Intel Core i5, 8GB RAM, and 256GB SSD storage.',
         1500.00,
         'aaaaaaaa-0615-4d04-a795-9c5756ef5f4c',
         'San Francisco, CA',
         '2023-04-02 11:00:00',
-        '2023-04-02 11:00:00'
+        '2023-04-10 08:31:33'
     ),
     (
         2,
@@ -80,27 +80,27 @@ INSERT INTO `pictures` (
     )
 VALUES (
         1,
-        'https://placekitten.com/200/300',
+        'https://placehold.co/400x300?text=MacBook+Pro+picture+1',
         'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
         1,
         '2023-04-02 12:00:00',
-        '2023-04-04 00:09:45'
+        '2023-04-10 08:29:35'
     ),
     (
         2,
-        'https://placekitten.com/300/300',
+        'https://placehold.co/300x400?text=iPhone+12+Pro+picture+1',
         'LFFM~Cj?%1#M@rx]b#xGxukCxuj[',
         2,
         '2023-04-02 12:01:00',
-        '2023-04-04 00:10:03'
+        '2023-04-10 08:33:46'
     ),
     (
         3,
-        'https://placekitten.com/500/100',
+        'https://placehold.co/400x400?text=iPhone+12+Pro+picture+2',
         'LmNn}%-QxGIpw[aeWBaxM{t8axS5',
         2,
         '2023-04-02 12:02:00',
-        '2023-04-04 00:10:19'
+        '2023-04-10 08:34:04'
     );
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
@@ -173,4 +173,4 @@ INSERT INTO `user_roles` (`user_id`, `role_id`)
 VALUES ('aaaaaaaa-0615-4d04-a795-9c5756ef5f4c', 1),
     ('bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89', 1),
     ('cccccccc-681d-4475-84a2-fdd1d0dcd057', 2);
--- 2023-04-05 04:39:02
+-- 2023-04-10 08:35:05
