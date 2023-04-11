@@ -70,10 +70,10 @@ jobs:
         with:
           name: coverage
           path: ./backend/coverage
+      - name: link coverage report # because the coverage badge action expects the report to be in <repo root>/coverage/
+        run: ln -s ./backend/coverage/coverage-summary.json ./coverage/coverage-summary.json
       - name: Update Coverage Badge
         uses: we-cli/coverage-badge-action@8f6b0bd1b727cde6212c8c62d3329c4aac09fec3
-        with:
-          working-directory: ./backend
   deploy:
     env:
       BACKEND_DEPLOY_WEBHOOK: ${{secrets.BACKEND_DEPLOY_WEBHOOK}}
