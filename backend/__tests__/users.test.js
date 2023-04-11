@@ -7,18 +7,23 @@ const {
   beforeEach,
 } = require("@jest/globals");
 const app = require("../app");
-const db = require("../db/pool");
+const { promisePool } = require("../db/pool");
 const request = require("supertest");
 const users = require("../models/users");
 
 beforeAll(async () => {
   // Remove all test users from db
-  db.query("DELETE FROM users WHERE email LIKE '%@test.example.com'");
+  await promisePool.query(
+    "DELETE FROM users WHERE email LIKE '%@test.example.com'"
+  );
 });
 
 afterAll(async () => {
   // Remove all test users from db
-  db.query("DELETE FROM users WHERE email LIKE '%@test.example.com'");
+  await promisePool.query(
+    "DELETE FROM users WHERE email LIKE '%@test.example.com'"
+  );
+  promisePool.end();
 });
 
 describe("POST signup", () => {
@@ -481,7 +486,9 @@ describe("DELETE a user", () => {
 
   beforeEach(async () => {
     // First delete the user incase it already exists
-    db.query("DELETE FROM users WHERE email = 'tobe.deleted@test.example.com'");
+    await promisePool.query(
+      "DELETE FROM users WHERE email = 'tobe.deleted@test.example.com'"
+    );
 
     // sign up a new user that can be deleted
     signupRes = await request(app).post("/api/v1/users/signup").send({
@@ -595,7 +602,9 @@ describe("Update a user", () => {
 
   beforeEach(async () => {
     // First delete the user incase it already exists
-    db.query("DELETE FROM users WHERE email = 'tobe.updated@test.example.com'");
+    await promisePool.query(
+      "DELETE FROM users WHERE email = 'tobe.updated@test.example.com'"
+    );
 
     // sign up a new user that can be updated
     signupRes = await request(app).post("/api/v1/users/signup").send({

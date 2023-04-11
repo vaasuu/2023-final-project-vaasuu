@@ -9,4 +9,6 @@ const pool = mysql.createPool({
   port: process.env.MYSQL_PORT,
 });
 
-module.exports = pool;
+const promisePool = pool.promise();
+
+module.exports = { pool, promisePool };
