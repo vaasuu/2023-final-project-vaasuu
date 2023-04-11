@@ -1,6 +1,11 @@
-const { describe, expect, it } = require("@jest/globals");
+const { describe, expect, it, afterAll } = require("@jest/globals");
 const app = require("../app");
 const request = require("supertest");
+
+afterAll(() => {
+  const { pool } = require("../db/pool");
+  pool.end();
+});
 
 describe("GET roles", () => {
   it("should need auth", async () => {

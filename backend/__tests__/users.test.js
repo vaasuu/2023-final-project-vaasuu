@@ -23,7 +23,7 @@ afterAll(async () => {
   await promisePool.query(
     "DELETE FROM users WHERE email LIKE '%@test.example.com'"
   );
-  promisePool.end();
+  await promisePool.end(); // close the pool at the end of the test
 });
 
 describe("POST signup", () => {
