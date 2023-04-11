@@ -1,9 +1,9 @@
-const db = require("../db/pool");
+const { pool } = require("../db/pool");
 
 const users = {
   create: (user) =>
     new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+      pool.getConnection((err, connection) => {
         if (err) {
           reject(err);
         } else {
@@ -21,7 +21,7 @@ const users = {
 
   findById: (id) =>
     new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+      pool.getConnection((err, connection) => {
         if (err) {
           reject(err);
         } else {
@@ -43,7 +43,7 @@ const users = {
 
   findByEmail: (email) =>
     new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+      pool.getConnection((err, connection) => {
         if (err) {
           reject(err);
         } else {
@@ -65,7 +65,7 @@ const users = {
 
   update: (id, user) =>
     new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+      pool.getConnection((err, connection) => {
         if (err) {
           reject(err);
         } else {
@@ -87,7 +87,7 @@ const users = {
 
   delete: (id) =>
     new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+      pool.getConnection((err, connection) => {
         if (err) {
           reject(err);
         } else {
@@ -109,7 +109,7 @@ const users = {
 
   getAll: () =>
     new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+      pool.getConnection((err, connection) => {
         if (err) {
           reject(err);
         } else {
@@ -130,7 +130,7 @@ const users = {
 
   getUsersRoles: (id) =>
     new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+      pool.getConnection((err, connection) => {
         if (err) {
           reject(err);
         } else {

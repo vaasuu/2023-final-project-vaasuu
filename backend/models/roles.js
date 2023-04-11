@@ -1,9 +1,9 @@
-const db = require("../db/pool");
+const { pool } = require("../db/pool");
 
 const roles = {
   getAll: async () =>
     new Promise((resolve, reject) => {
-      db.getConnection((err, connection) => {
+      pool.getConnection((err, connection) => {
         if (err) {
           reject(err);
         } else {
