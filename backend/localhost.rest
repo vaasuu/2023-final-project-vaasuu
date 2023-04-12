@@ -166,3 +166,43 @@ Authorization: Bearer {{authToken}}
 ### get roles - unauthorized
 
 GET {{baseUrl}}/api/v1/roles
+
+### Forgot password - email not found
+
+POST {{baseUrl}}/api/v1/password-reset/send-reset-email
+Content-Type: application/json
+
+{
+    "email": "does.not.exist@example.com"
+}
+
+### Send forgot password
+
+POST {{baseUrl}}/api/v1/password-reset/send-reset-email
+Content-Type: application/json
+
+{
+    "email": "john.smith@example.com"
+}
+
+### Reset password - invalid token
+
+POST {{baseUrl}}/api/v1/password-reset/set-new-password
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhYWFhYWFhLTA2MTUtNGQwNC1hNzk1LTljNTc1NmVmNWY0YyIsImlhdCI6MTY4MTI0NTEyMywiZXhwIjoxNjgxMjQ2MjIzfQ.oh9fSC9MHyk5iX3ZuFoPsd6WXGF5laNg_ysyAULZ1ws", 
+    "password": "newPassword"
+}
+
+
+### Reset password - expired
+
+POST {{baseUrl}}/api/v1/password-reset/set-new-password
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhYWFhYWFhLTA2MTUtNGQwNC1hNzk1LTljNTc1NmVmNWY0YyIsImlhdCI6MTY4MTI0NTEyMywiZXhwIjoxNjgxMjQ2MzIzfQ.7O80aKMcONZ7ulFZgfd4tBOB3md4vDg0zG-7A8zTa-U", 
+    "password": "newPassword"
+}
+
