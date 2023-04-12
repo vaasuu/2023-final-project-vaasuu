@@ -3,9 +3,7 @@ const users = require("../models/users");
 const { StatusCodes } = require("http-status-codes");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const {
-  sendPasswordResetEmail,
-} = require("../services/sendPasswordResetEmail");
+const { sendPasswordResetEmail } = require("../services/passwordResetEmail");
 
 const resetPasswordEmail = async (req, res) => {
   const schema = Joi.object({
@@ -37,7 +35,8 @@ const resetPasswordEmail = async (req, res) => {
 
   try {
     console.log("Sending password reset email. Reset token:", token);
-    await sendPasswordResetEmail(user, token); // send email
+    const res = await sendPasswordResetEmail(user, token); // send email
+    console.log("Password reset email sent:", res.body);
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
