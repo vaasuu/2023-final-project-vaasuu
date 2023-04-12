@@ -4,6 +4,7 @@ const {
   beforeEach,
   afterEach,
   it,
+  afterAll,
 } = require("@jest/globals");
 const MailDev = require("maildev");
 const app = require("../app");
@@ -16,6 +17,11 @@ const waitMailDevShutdown = (maildev) => {
 };
 
 describe("Password reset", () => {
+  afterAll(() => {
+    const { pool } = require("../db/pool");
+    pool.end();
+  });
+
   describe("password reset email", () => {
     let maildev;
 
