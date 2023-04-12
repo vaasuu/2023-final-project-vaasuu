@@ -22,6 +22,7 @@ describe("Password reset", () => {
     beforeEach((done) => {
       maildev = new MailDev({
         smtp: 1025,
+        silent: true,
       });
 
       maildev.listen(done);
@@ -47,7 +48,6 @@ describe("Password reset", () => {
 
       return new Promise((resolve, reject) => {
         maildev.on("new", (email) => {
-          console.log(email);
           try {
             expect(email.subject).toEqual("Password Reset");
             expect(email.to[0].address).toEqual("jane.doe@example.com"); // check receiver email address
