@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --forceExit",
-    "test:watch": "jest --watchAll --no-cache --detectOpenHandles",
-    "test:verbose": "jest --verbose --forceExit",
-    "test:coverage": "jest --coverage --forceExit",
-    "dev": "nodemon server.js"
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "test:verbose": "jest --verbose",
+    "test:coverage": "jest --coverage",
+    "dev": "nodemon server.js",
+    "maildev": "maildev"
   },
   "keywords": [],
   "author": "",
