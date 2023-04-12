@@ -35,8 +35,7 @@ const resetPasswordEmail = async (req, res) => {
 
   try {
     console.log("Sending password reset email. Reset token:", token);
-    const res = await sendPasswordResetEmail(user, token); // send email
-    console.log("Password reset email sent:", res.body);
+    await sendPasswordResetEmail(user, token); // send email
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
