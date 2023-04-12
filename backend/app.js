@@ -9,6 +9,7 @@ if (process.env.NODE_ENV === "test") {
 
 const users = require("./routes/users");
 const roles = require("./routes/roles");
+const passwordReset = require("./routes/password-reset");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(
 // take API routes into use
 app.use("/api/v1/users", users);
 app.use("/api/v1/roles", roles);
+app.use("/api/v1/password-reset", passwordReset);
 
 app.get("/health", (req, res) => {
   res.send("ok");
