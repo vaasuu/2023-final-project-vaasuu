@@ -19,10 +19,10 @@ const resetPasswordEmail = async (req, res) => {
 
   const userArray = await users.findByEmail(email);
   if (userArray.length === 0) {
-    // email not found but we don't want to tell the hacker that
+    // user does not exist
     return res
-      .status(StatusCodes.OK)
-      .json({ message: "Email sent if that email belongs to a user" });
+      .status(StatusCodes.NOT_FOUND)
+      .json({ error: "User with that email does not exist" });
   }
 
   const user = userArray[0];
@@ -43,7 +43,7 @@ const resetPasswordEmail = async (req, res) => {
 
   return res
     .status(StatusCodes.OK)
-    .json({ message: "Email sent if that email belongs to a user" });
+    .json({ message: "Reset password email sent" });
 };
 
 const setNewPassword = async (req, res) => {

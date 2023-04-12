@@ -43,10 +43,7 @@ describe("Password reset", () => {
         });
 
       expect(res.statusCode).toEqual(200);
-      expect(res.body).toHaveProperty(
-        "message",
-        "Email sent if that email belongs to a user"
-      );
+      expect(res.body).toHaveProperty("message", "Reset password email sent");
 
       return new Promise((resolve, reject) => {
         maildev.on("new", (email) => {
@@ -70,10 +67,10 @@ describe("Password reset", () => {
           email: "does.not.exist@test.example.com",
         });
 
-      expect(res.statusCode).toEqual(200); // should be 200 as we don't want to give away that the email is not in the database
+      expect(res.statusCode).toEqual(404);
       expect(res.body).toHaveProperty(
-        "message",
-        "Email sent if that email belongs to a user"
+        "error",
+        "User with that email does not exist"
       );
 
       return new Promise((resolve, reject) => {
