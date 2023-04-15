@@ -6,6 +6,7 @@ const {
   signUpUser,
   loginUser,
   getAllUsers,
+  searchUsers,
   getUserById,
   deleteUserById,
   updateUserById,
@@ -19,6 +20,7 @@ router.post("/login", loginUser);
 router.use(verifyAuth);
 
 router.get("/", getAllUsers);
+router.get("/search", searchUsers);
 
 // These routes are only accessible to their respective users or admins
 router.get("/:id", getUserById);

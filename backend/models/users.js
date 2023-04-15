@@ -153,6 +153,29 @@ const users = {
         }
       });
     }),
+
+  search: (searchTerm) =>
+    new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) {
+          reject(err);
+        } else {
+          connection.query(
+            `SELECT id, name FROM users
+            WHERE name LIKE ?`,
+            `%${searchTerm}%`,
+            (err, result) => {
+              connection.release();
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
+            }
+          );
+        }
+      });
+    }),
 };
 
 module.exports = users;

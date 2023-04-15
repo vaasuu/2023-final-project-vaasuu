@@ -206,3 +206,17 @@ Content-Type: application/json
     "password": "newPassword"
 }
 
+### Search users
+
+GET {{baseUrl}}/api/v1/users/search?name=jo
+Authorization: Bearer {{authToken}}
+
+### Search users - no results
+
+GET {{baseUrl}}/api/v1/users/search?name=doesnotexist
+Authorization: Bearer {{authToken}}
+
+### Search users - no query
+
+GET {{baseUrl}}/api/v1/users/search
+Authorization: Bearer {{authToken}}

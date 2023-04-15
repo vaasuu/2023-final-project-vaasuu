@@ -152,6 +152,33 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const searchUsers = async (req, res) => {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+  });
+
+  const { error } = schema.validate(req.query);
+  if (error) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: error.details[0].message });
+  }
+
+  const { name } = req.query;
+
+  try {
+    const usersArray = await users.search(name);
+
+    // return the users array
+    return res.status(StatusCodes.OK).json({ users: usersArray });
+  } catch (err) {
+    logger.error(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
+  }
+};
+
 const getUserById = async (req, res) => {
   const schema = Joi.object({
     id: Joi.string().required(),
@@ -370,6 +397,7 @@ module.exports = {
   signUpUser,
   loginUser,
   getAllUsers,
+  searchUsers,
   getUserById,
   deleteUserById,
   updateUserById,

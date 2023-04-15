@@ -10,6 +10,7 @@ const app = require("../app");
 const { promisePool } = require("../db/pool");
 const request = require("supertest");
 const users = require("../models/users");
+const jwt = require("jsonwebtoken");
 
 beforeAll(async () => {
   // Remove all test users from db
@@ -732,5 +733,81 @@ describe("Update a user", () => {
 
     expect(res.statusCode).toEqual(401);
     expect(res.body).toHaveProperty("error", "Token expired");
+  });
+});
+
+describe("Search for users", () => {
+  // generate a auth token
+  const token = jwt.sign(
+    {
+      id: "some-id-here",
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+
+  it("user search should return array of users", async () => {
+    const res = await request(app)
+      .get("/api/v1/users/search?name=Jo")
+      .auth(token, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(200);
+    // expect to include bob and john
+    expect(res.body).toEqual({
+      users: expect.arrayContaining([
+        expect.objectContaining({
+          name: "Bob Johnson",
+        }),
+        expect.objectContaining({
+          name: "John Smith",
+        }),
+      ]),
+    });
+  });
+
+  it("user search should return empty array if no users found", async () => {
+    const res = await request(app)
+      .get("/api/v1/users/search?name=NoUser")
+      .auth(token, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toEqual({ users: [] });
+  });
+
+  it("user search should return 400 if no query param is provided", async () => {
+    const res = await request(app).get("/api/v1/users/search").auth(token, {
+      type: "bearer",
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toEqual({
+      error: '"name" is required',
+    });
+  });
+
+  it("user search should return 400 if query param is empty", async () => {
+    const res = await request(app)
+      .get("/api/v1/users/search?name=")
+      .auth(token, {
+        type: "bearer",
+      });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toEqual({
+      error: '"name" is not allowed to be empty',
+    });
+  });
+
+  it("should require a token to search for users", async () => {
+    const res = await request(app).get("/api/v1/users/search?name=Jo");
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body).toEqual({
+      error: "Unauthorized",
+    });
   });
 });
