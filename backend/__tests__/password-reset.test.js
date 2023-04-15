@@ -32,6 +32,7 @@ describe("Password reset", () => {
       maildev = new MailDev({
         smtp: 1025,
         silent: true,
+        disableWeb: true, // no need to run web interface
       });
 
       maildev.listen(done);
