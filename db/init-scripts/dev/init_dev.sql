@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `listings`;
 CREATE TABLE `listings` (
     `listing_id` bigint(20) NOT NULL AUTO_INCREMENT,
     `title` varchar(255) NOT NULL,
-    `description` text NOT NULL,
+    `description` varchar(65535) NOT NULL,
     `asking_price` decimal(10, 2) NOT NULL,
     `owner` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
     `location` varchar(255) NOT NULL,
