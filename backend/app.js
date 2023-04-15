@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
 
 if (process.env.NODE_ENV === "test") {
-  process.env.MYSQL_DATABASE = "test"; // Use a separate test database for unit tests and integration tests
-  process.env.JWT_SECRET = "secret"; // for automated tests only. Some tests are hardcoded to use this secret, so don't change it.
+  require("dotenv").config({ path: ".env.test" });
+} else if (process.env.NODE_ENV === "production") {
+  require("dotenv").config({ path: ".env.production" });
+} else {
+  require("dotenv").config({ path: ".env" });
 }
 
 const users = require("./routes/users");

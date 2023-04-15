@@ -30,7 +30,7 @@ describe("Password reset", () => {
 
     beforeEach((done) => {
       maildev = new MailDev({
-        smtp: 1025,
+        smtp: process.env.EMAIL_SMTP_PORT, // use the same port as the SMTP server
         silent: true,
         disableWeb: true, // no need to run web interface
       });
