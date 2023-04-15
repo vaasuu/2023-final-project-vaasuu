@@ -9,6 +9,17 @@ CREATE DATABASE `test`
 /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */
 ;
 USE `test`;
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE `categories` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    PRIMARY KEY (`id`),
+    KEY `id` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+INSERT INTO `categories` (`id`, `name`, `created_at`)
+VALUES (1, 'electronics', '2023-04-15 14:07:13'),
+    (2, 'exercise equipment', '2023-04-15 14:11:11');
 DROP TABLE IF EXISTS `listings`;
 CREATE TABLE `listings` (
     `listing_id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -41,7 +52,7 @@ VALUES (
         'aaaaaaaa-0615-4d04-a795-9c5756ef5f4c',
         'San Francisco, CA',
         '2023-04-02 11:00:00',
-        '2023-04-10 08:31:33'
+        '2023-04-15 14:24:52'
     ),
     (
         2,
@@ -51,7 +62,7 @@ VALUES (
         'bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89',
         'New York, NY',
         '2023-04-02 12:00:00',
-        '2023-04-02 12:00:00'
+        '2023-04-15 14:25:03'
     ),
     (
         3,
@@ -61,8 +72,21 @@ VALUES (
         'cccccccc-681d-4475-84a2-fdd1d0dcd057',
         'Los Angeles, CA',
         '2023-04-02 13:00:00',
-        '2023-04-02 13:00:00'
+        '2023-04-15 14:25:07'
     );
+DROP TABLE IF EXISTS `listing_categories`;
+CREATE TABLE `listing_categories` (
+    `listing_id` bigint(20) NOT NULL,
+    `category_id` bigint(20) NOT NULL,
+    KEY `listing_id` (`listing_id`),
+    KEY `category_id` (`category_id`),
+    CONSTRAINT `listing_categories_ibfk_4` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`listing_id`) ON DELETE CASCADE,
+    CONSTRAINT `listing_categories_ibfk_5` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+INSERT INTO `listing_categories` (`listing_id`, `category_id`)
+VALUES (1, 1),
+    (2, 1),
+    (3, 2);
 DROP TABLE IF EXISTS `pictures`;
 CREATE TABLE `pictures` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -178,4 +202,4 @@ INSERT INTO `user_roles` (`user_id`, `role_id`)
 VALUES ('aaaaaaaa-0615-4d04-a795-9c5756ef5f4c', 1),
     ('bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89', 1),
     ('cccccccc-681d-4475-84a2-fdd1d0dcd057', 2);
--- 2023-04-10 08:35:05
+-- 2023-04-15 15:50:25
