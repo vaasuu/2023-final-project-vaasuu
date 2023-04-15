@@ -4,6 +4,7 @@ const { StatusCodes } = require("http-status-codes");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { sendPasswordResetEmail } = require("../services/passwordResetEmail");
+const logger = require("../utils/log");
 
 const resetPasswordEmail = async (req, res) => {
   const schema = Joi.object({
@@ -34,10 +35,10 @@ const resetPasswordEmail = async (req, res) => {
   );
 
   try {
-    console.log("Sending password reset email. Reset token:", token);
+    logger.info(`Sending password reset email. Reset token: ${token}`);
     await sendPasswordResetEmail(user, token); // send email
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 

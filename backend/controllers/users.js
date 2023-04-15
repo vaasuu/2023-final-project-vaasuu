@@ -7,6 +7,7 @@ const { StatusCodes } = require("http-status-codes");
 const users = require("../models/users");
 const utils = require("../utils/utils");
 const roles = require("../models/roles");
+const logger = require("../utils/log");
 
 const signUpUser = async (req, res) => {
   const schema = Joi.object({
@@ -37,7 +38,7 @@ const signUpUser = async (req, res) => {
   try {
     passwordHash = await bcrypt.hash(password, 10);
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });
@@ -55,7 +56,7 @@ const signUpUser = async (req, res) => {
   try {
     await users.create(newUser);
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });
@@ -112,7 +113,7 @@ const loginUser = async (req, res) => {
         .json({ error: "Invalid credentials" });
     }
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });
@@ -144,7 +145,7 @@ const getAllUsers = async (req, res) => {
     // return the users array
     return res.status(StatusCodes.OK).json({ users: usersArray });
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });
@@ -202,7 +203,7 @@ const getUserById = async (req, res) => {
     // return the user details
     return res.status(StatusCodes.OK).json({ user: userDetailsToReturn });
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });
@@ -250,7 +251,7 @@ const deleteUserById = async (req, res) => {
 
     return res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });
@@ -352,13 +353,13 @@ const updateUserById = async (req, res) => {
       // return only status code on successfull update
       return res.status(StatusCodes.NO_CONTENT).json();
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({ error: "Internal server error" });
     }
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });

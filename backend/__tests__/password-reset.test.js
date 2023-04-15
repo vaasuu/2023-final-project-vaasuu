@@ -89,7 +89,6 @@ describe("Password reset", () => {
         }, 1000);
 
         maildev.on("new", (email) => {
-          console.log(email);
           try {
             expect(email.subject).not.toEqual("Password Reset");
             expect(email.to[0].address).not.toEqual("jane.doe@example.com"); // check receiver email address

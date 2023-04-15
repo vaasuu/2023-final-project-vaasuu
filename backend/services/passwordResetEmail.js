@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const logger = require("../utils/log");
 
 const sendPasswordResetEmail = async (user, resetToken) => {
   const transporter = nodemailer.createTransport({
@@ -33,8 +34,9 @@ const sendPasswordResetEmail = async (user, resetToken) => {
   };
 
   const info = await transporter.sendMail(mailOptions);
-  console.log("Message sent: %s", info.messageId);
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  logger.info(
+    `Password reset email sent to ${user.email}, messageId: ${info.messageId}`
+  );
 };
 
 module.exports = { sendPasswordResetEmail };
