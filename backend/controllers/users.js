@@ -5,7 +5,7 @@ const Joi = require("joi");
 const { StatusCodes } = require("http-status-codes");
 
 const users = require("../models/users");
-const utils = require("../utils");
+const utils = require("../utils/utils");
 const roles = require("../models/roles");
 
 const signUpUser = async (req, res) => {

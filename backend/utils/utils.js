@@ -1,4 +1,4 @@
-const users = require("./models/users");
+const users = require("../models/users");
 
 const utils = {
   getRoles: async (userId) => {
