@@ -6,6 +6,7 @@ const {
   createListing,
   getListings,
   getListing,
+  deleteListing,
   getUserListings,
   getCategories,
 } = require("../controllers/listings");
@@ -19,4 +20,8 @@ router.post("/", createListing);
 router.get("/", getListings);
 router.get("/:id", getListing);
 router.get("/user/:userId", getUserListings);
+
+// Only accessible to listing owner or admin
+router.delete("/:id", deleteListing);
+
 module.exports = router;

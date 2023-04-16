@@ -7,6 +7,7 @@ const logger = require("../utils/log");
 
 const listings = require("../models/listings");
 const users = require("../models/users");
+const utils = require("../utils/utils");
 
 const createListing = async (req, res) => {
   const schema = Joi.object({
@@ -162,7 +163,42 @@ const getListing = async (req, res) => {
 
 // const updateListing = (req, res) => {};
 
-// const deleteListing = (req, res) => {};
+const deleteListing = async (req, res) => {
+  const schema = Joi.object({
+    id: Joi.number().required(),
+  });
+
+  const { error } = schema.validate(req.params);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+
+  const { id } = req.params;
+
+  // get listing owner
+  const listing = await listings.getById(id);
+  if (listing[0].listing_id == null) {
+    return res.status(404).json({ error: "Listing not found" });
+  }
+  const listingOwner = listing[0].owner;
+  const isAdmin = await utils.hasRole(req.userData.userId, "admin");
+
+  // check that the user making the request is the owner of the listing or an admin
+  if (req.userData.userId != listingOwner && !isAdmin) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  try {
+    const deletedListing = await listings.delete(id);
+    if (deletedListing.affectedRows == 0) {
+      return res.status(404).json({ error: "Listing not found" });
+    }
+    return res.status(200).json({ message: "Listing deleted" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 const getUserListings = async (req, res) => {
   const schema = Joi.object({
@@ -202,6 +238,9 @@ module.exports = {
   createListing,
   getListings,
   getListing,
+  //   updateListing,
+  deleteListing,
   getUserListings,
+  //   searchListings,
   getCategories,
 };

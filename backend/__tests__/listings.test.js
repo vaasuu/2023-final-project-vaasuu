@@ -1,4 +1,11 @@
-const { describe, it, expect, afterAll, beforeAll } = require("@jest/globals");
+const {
+  describe,
+  it,
+  expect,
+  afterAll,
+  beforeAll,
+  beforeEach,
+} = require("@jest/globals");
 const request = require("supertest");
 const app = require("../app");
 const { generateLoginToken } = require("../utils/test_utils/token");
@@ -319,6 +326,85 @@ describe("Listings", () => {
           }),
         ])
       );
+    });
+  });
+
+  describe("Delete listing", () => {
+    let token;
+    beforeAll(() => {
+      token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
+    });
+
+    let listingId;
+    beforeEach(async () => {
+      const res = await request(app)
+        .post("/api/v1/listings")
+        .auth(token, {
+          type: "bearer",
+        })
+        .send({
+          title: "Test listing",
+          description: "Test description",
+          price: "100.00",
+          currency: "USD",
+          location: "San Francisco, CA",
+          category: "Electronics",
+        });
+
+      listingId = res.body.id;
+    });
+
+    it("should delete listing", async () => {
+      const res = await request(app)
+        .delete(`/api/v1/listings/${listingId}`)
+        .auth(token, {
+          type: "bearer",
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty("message", "Listing deleted");
+    });
+
+    it("should require login", async () => {
+      const res = await request(app).delete(`/api/v1/listings/${listingId}`);
+
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty("error", "Unauthorized");
+    });
+
+    it("should 404 on non-existent listing", async () => {
+      const res = await request(app).delete("/api/v1/listings/-1").auth(token, {
+        type: "bearer",
+      });
+
+      expect(res.statusCode).toEqual(404);
+      expect(res.body).toHaveProperty("error", "Listing not found");
+    });
+
+    it("should 403 on unauthorized listing", async () => {
+      token = generateLoginToken("bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89"); // login as a different user
+      const res = await request(app)
+        .delete(`/api/v1/listings/${listingId}`) // Listing owned by a different user (aaaaaaaa-0615-4d04-a795-9c5756ef5f4c)
+        .auth(token, {
+          type: "bearer",
+        });
+
+      expect(res.statusCode).toEqual(403);
+      expect(res.body).toHaveProperty("error", "Forbidden");
+    });
+
+    it("should work with admin", async () => {
+      const adminToken = generateLoginToken(
+        "cccccccc-681d-4475-84a2-fdd1d0dcd057"
+      ); // Admin user
+      const res = await request(app)
+        .delete(`/api/v1/listings/${listingId}`)
+        .auth(adminToken, {
+          type: "bearer",
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty("message", "Listing deleted");
     });
   });
 });

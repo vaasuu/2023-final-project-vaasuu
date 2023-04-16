@@ -222,7 +222,7 @@ GET {{baseUrl}}/api/v1/users/search
 Authorization: Bearer {{authToken}}
 
 ### create listing
-
+# @name createListing
 POST {{baseUrl}}/api/v1/listings
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
@@ -323,3 +323,7 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/api/v1/listings/categories
 Authorization: Bearer {{authToken}}
 
+### delete listing
+
+DELETE {{baseUrl}}/api/v1/listings/{{createListing.response.body.id}}
+Authorization: Bearer {{authToken}}

@@ -174,6 +174,19 @@ const listings = {
       throw error;
     }
   },
+  delete: async (id) => {
+    try {
+      const [rows] = await promisePool.query(
+        "DELETE FROM listings WHERE listing_id = ?",
+        [id]
+      );
+
+      return rows;
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+  },
 };
 
 module.exports = listings;
