@@ -15,6 +15,7 @@ CREATE TABLE `categories` (
     `name` varchar(255) NOT NULL,
     `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     PRIMARY KEY (`id`),
+    UNIQUE KEY `name` (`name`),
     KEY `id` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 INSERT INTO `categories` (`id`, `name`, `created_at`)
@@ -24,7 +25,7 @@ DROP TABLE IF EXISTS `listings`;
 CREATE TABLE `listings` (
     `listing_id` bigint(20) NOT NULL AUTO_INCREMENT,
     `title` varchar(255) NOT NULL,
-    `description` varchar(65535) NOT NULL,
+    `description` varchar(4095) NOT NULL,
     `asking_price` decimal(10, 2) NOT NULL,
     `currency` varchar(3) NOT NULL,
     `owner` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
@@ -51,7 +52,7 @@ VALUES (
         'MacBook Pro',
         '2019 MacBook Pro with 13\" Retina display, 2.4GHz quad-core Intel Core i5, 8GB RAM, and 256GB SSD storage.',
         1500.00,
-        `USD`,
+        'USD',
         'aaaaaaaa-0615-4d04-a795-9c5756ef5f4c',
         'San Francisco, CA',
         '2023-04-02 11:00:00',
@@ -62,7 +63,7 @@ VALUES (
         'iPhone 12 Pro',
         '256GB Pacific Blue iPhone 12 Pro with Ceramic Shield front cover, A14 Bionic chip, and Pro camera system.',
         1000.00,
-        `USD`,
+        'USD',
         'bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89',
         'New York, NY',
         '2023-04-02 12:00:00',
@@ -73,7 +74,7 @@ VALUES (
         'Peloton Bike',
         'Peloton Bike in great condition, comes with weights and shoes.',
         2000.00,
-        `EUR`,
+        'EUR',
         'cccccccc-681d-4475-84a2-fdd1d0dcd057',
         'Paris, France',
         '2023-04-02 13:00:00',
@@ -207,4 +208,4 @@ INSERT INTO `user_roles` (`user_id`, `role_id`)
 VALUES ('aaaaaaaa-0615-4d04-a795-9c5756ef5f4c', 1),
     ('bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89', 1),
     ('cccccccc-681d-4475-84a2-fdd1d0dcd057', 2);
--- 2023-04-15 15:50:25
+-- 2023-04-16 11:00:28
