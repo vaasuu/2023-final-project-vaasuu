@@ -13,7 +13,7 @@ const logger = winston.createLogger({
 if (!process.env.NODE_ENV?.match(/(production)|(test)/)) {
   logger.add(
     new winston.transports.Console({
-      format: winston.format.simple(),
+      format: winston.format.combine(winston.format.prettyPrint()),
     })
   );
 }
