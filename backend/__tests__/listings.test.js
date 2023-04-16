@@ -12,7 +12,7 @@ describe("Listings", () => {
 
   describe("Add new listing", () => {
     let token;
-    beforeEach(() => {
+    beforeAll(() => {
       token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
     });
 
@@ -85,7 +85,7 @@ describe("Listings", () => {
 
   describe("Get all listings", () => {
     let token;
-    beforeEach(() => {
+    beforeAll(() => {
       token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
     });
 
@@ -126,7 +126,7 @@ describe("Listings", () => {
 
   describe("Get listing by ID", () => {
     let token;
-    beforeEach(() => {
+    beforeAll(() => {
       token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
     });
 
