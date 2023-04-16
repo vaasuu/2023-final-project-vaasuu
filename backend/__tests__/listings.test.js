@@ -109,7 +109,7 @@ describe("Listings", () => {
             location: expect.any(String),
             created_at: expect.any(String),
             updated_at: expect.any(String),
-            url: expect.any(String),
+            picture_url: expect.any(String),
             blurhash: expect.any(String),
           }),
         ])

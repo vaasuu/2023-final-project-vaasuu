@@ -86,13 +86,14 @@ const listings = {
             l.location, 
             l.created_at, 
             l.updated_at, 
-            p.url, 
+            p.url as picture_url, 
             p.blurhash 
         FROM 
             listings l 
             INNER JOIN users u ON l.owner = u.id 
             LEFT JOIN pictures p ON l.listing_id = p.listing_id
-  `
+        GROUP BY l.listing_id
+        `
       );
       return rows;
     } catch (error) {
