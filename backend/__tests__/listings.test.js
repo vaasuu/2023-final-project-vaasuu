@@ -82,4 +82,45 @@ describe("Listings", () => {
       expect(res.body).toHaveProperty("error", "Unauthorized");
     });
   });
+
+  describe("Get all listings", () => {
+    let token;
+    beforeEach(() => {
+      token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
+    });
+
+    it("should get all listings", async () => {
+      const res = await request(app)
+        .get("/api/v1/listings")
+        .auth(token, { type: "bearer" });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty("listings");
+      expect(res.body.listings).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            listing_id: expect.any(Number),
+            title: expect.any(String),
+            description: expect.any(String),
+            asking_price: expect.any(String),
+            currency: expect.any(String),
+            owner: expect.any(String),
+            owner_name: expect.any(String),
+            location: expect.any(String),
+            created_at: expect.any(String),
+            updated_at: expect.any(String),
+            url: expect.any(String),
+            blurhash: expect.any(String),
+          }),
+        ])
+      );
+    });
+
+    it("should require login", async () => {
+      const res = await request(app).get("/api/v1/listings");
+
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty("error", "Unauthorized");
+    });
+  });
 });

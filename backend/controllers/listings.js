@@ -93,6 +93,29 @@ const createListing = async (req, res) => {
   }
 };
 
+const getListings = async (req, res) => {
+  try {
+    const listingsData = await listings.getAll();
+    return res.status(200).json({ listings: listingsData });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// const getListing = (req, res) => {};
+
+// const updateListing = (req, res) => {};
+
+// const deleteListing = (req, res) => {};
+
+// const getUserListings = (req, res) => {};
+
+// const searchListings = (req, res) => {};
+
+// const getCategories = (req, res) => {};
+
 module.exports = {
   createListing,
+  getListings,
 };

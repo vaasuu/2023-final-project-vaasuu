@@ -70,6 +70,36 @@ const listings = {
       throw error;
     }
   },
+
+  getAll: async () => {
+    try {
+      const [rows] = await promisePool.query(
+        `
+        SELECT 
+            l.listing_id, 
+            l.title, 
+            l.description, 
+            l.asking_price, 
+            l.currency, 
+            l.owner, 
+            u.name AS owner_name, 
+            l.location, 
+            l.created_at, 
+            l.updated_at, 
+            p.url, 
+            p.blurhash 
+        FROM 
+            listings l 
+            INNER JOIN users u ON l.owner = u.id 
+            LEFT JOIN pictures p ON l.listing_id = p.listing_id
+  `
+      );
+      return rows;
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+  },
 };
 
 module.exports = listings;
