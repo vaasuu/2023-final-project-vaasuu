@@ -10,7 +10,7 @@ const logger = winston.createLogger({
   transports: [new winston.transports.File({ filename: "app.log" })],
 });
 
-if (process.env.NODE_ENV !== "production") {
+if (!process.env.NODE_ENV?.match(/(production)|(test)/)) {
   logger.add(
     new winston.transports.Console({
       format: winston.format.simple(),
