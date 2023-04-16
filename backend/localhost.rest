@@ -281,3 +281,13 @@ Authorization: Bearer {{authToken}}
 
 GET {{baseUrl}}/api/v1/listings
 Authorization: Bearer {{authToken}}
+
+### get listing by id
+
+GET {{baseUrl}}/api/v1/listings/1
+Authorization: Bearer {{authToken}}
+
+### get listing by id - not found
+
+GET {{baseUrl}}/api/v1/listings/-1
+Authorization: Bearer {{authToken}}

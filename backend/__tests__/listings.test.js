@@ -123,4 +123,83 @@ describe("Listings", () => {
       expect(res.body).toHaveProperty("error", "Unauthorized");
     });
   });
+
+  describe("Get listing by ID", () => {
+    let token;
+    beforeEach(() => {
+      token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
+    });
+
+    it("should get a listing by ID", async () => {
+      const res = await request(app).get("/api/v1/listings/1").auth(token, {
+        type: "bearer",
+      });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty("listing");
+      expect(res.body.listing).toEqual(
+        expect.objectContaining({
+          listing_id: 1,
+          title: "MacBook Pro",
+          description:
+            '2019 MacBook Pro with 13" Retina display, 2.4GHz quad-core Intel Core i5, 8GB RAM, and 256GB SSD storage.',
+          asking_price: "1500.00",
+          currency: "USD",
+          owner: "aaaaaaaa-0615-4d04-a795-9c5756ef5f4c",
+          owner_name: "John Smith",
+          location: "San Francisco, CA",
+          created_at: "2023-04-02T08:00:00.000Z",
+          updated_at: "2023-04-15T11:24:52.000Z",
+          image_data: [
+            {
+              id: 1,
+              url: "https://placehold.co/400x300?text=MacBook+Pro+picture+1",
+              blurhash: "LEHV6nWB2yk8pyo0adR*.7kCMdnj",
+            },
+          ],
+        })
+      );
+    });
+
+    it("should get a listing by ID (no images)", async () => {
+      const res = await request(app).get("/api/v1/listings/3").auth(token, {
+        type: "bearer",
+      });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty("listing");
+      expect(res.body.listing).toEqual(
+        expect.objectContaining({
+          listing_id: 3,
+          title: "Peloton Bike",
+          description:
+            "Peloton Bike in great condition, comes with weights and shoes.",
+          asking_price: "2000.00",
+          currency: "EUR",
+          owner: "cccccccc-681d-4475-84a2-fdd1d0dcd057",
+          owner_name: "Bob Johnson",
+          location: "Paris, France",
+          created_at: "2023-04-02T10:00:00.000Z",
+          updated_at: "2023-04-15T11:25:07.000Z",
+          image_data: [],
+        })
+      );
+    });
+
+    it("should require login", async () => {
+      const res = await request(app).get("/api/v1/listings");
+
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty("error", "Unauthorized");
+    });
+
+    it("should 404 on non-existent listing", async () => {
+      const res = await request(app).get("/api/v1/listings/-1").auth(token, {
+        type: "bearer",
+      });
+
+      expect(res.statusCode).toEqual(404);
+      expect(res.body).toHaveProperty("error", "Listing not found");
+    });
+  });
 });

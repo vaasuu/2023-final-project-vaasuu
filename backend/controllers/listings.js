@@ -103,7 +103,59 @@ const getListings = async (req, res) => {
   }
 };
 
-// const getListing = (req, res) => {};
+const getListing = async (req, res) => {
+  const schema = Joi.object({
+    id: Joi.number().required(),
+  });
+
+  const { error } = schema.validate(req.params);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+
+  const { id } = req.params;
+
+  try {
+    let listingData = await listings.getById(id);
+    if (listingData[0].listing_id == null) {
+      return res.status(404).json({ error: "Listing not found" });
+    }
+
+    // Move the listing data from the array of size 1 to the object itself
+    listingData = listingData[0];
+
+    // convert strings of json arrays to actual arrays
+    listingData.picture_ids = JSON.parse(listingData.picture_ids);
+    listingData.picture_urls = JSON.parse(listingData.picture_urls);
+    listingData.blurhashes = JSON.parse(listingData.blurhashes);
+
+    const imgCount =
+      listingData.picture_ids[0] == null ? 0 : listingData.picture_ids.length;
+
+    // map the separate arrays to a array of objects
+    const imgDataArray = [];
+    for (let i = 0; i < imgCount; i++) {
+      imgDataArray.push({
+        id: listingData.picture_ids[i],
+        url: listingData.picture_urls[i],
+        blurhash: listingData.blurhashes[i],
+      });
+    }
+
+    // add the array of objects to the listingData object
+    listingData.image_data = imgDataArray;
+
+    // remove the old arrays from the listingData object
+    delete listingData.picture_ids;
+    delete listingData.picture_urls;
+    delete listingData.blurhashes;
+
+    return res.status(200).json({ listing: listingData });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 // const updateListing = (req, res) => {};
 
@@ -118,4 +170,5 @@ const getListings = async (req, res) => {
 module.exports = {
   createListing,
   getListings,
+  getListing,
 };

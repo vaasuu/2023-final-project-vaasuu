@@ -101,6 +101,36 @@ const listings = {
       throw error;
     }
   },
+  getById: async (id) => {
+    try {
+      const [rows] = await promisePool.query(
+        `
+        SELECT l.listing_id,
+            l.title,
+            l.description,
+            l.asking_price,
+            l.currency,
+            l.owner,
+            u.name AS owner_name,
+            l.location,
+            l.created_at,
+            l.updated_at,
+            JSON_ARRAYAGG(p.id) AS picture_ids,
+            JSON_ARRAYAGG(p.url) AS picture_urls,
+            JSON_ARRAYAGG(p.blurhash) AS blurhashes
+        FROM listings l
+            INNER JOIN users u ON l.owner = u.id
+            LEFT JOIN pictures p ON l.listing_id = p.listing_id
+        WHERE l.listing_id = ?
+        `,
+        [id]
+      );
+      return rows;
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+  },
 };
 
 module.exports = listings;
