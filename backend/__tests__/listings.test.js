@@ -62,6 +62,43 @@ describe("Listings", () => {
       );
     });
 
+    it("should work with missing image urls", async () => {
+      const res = await request(app)
+        .post("/api/v1/listings")
+        .send({
+          title: "Test Listing",
+          description: "Test Description",
+          category: "Test Category",
+          price: 100,
+          currency: "USD",
+          location: "Test Location",
+        })
+        .auth(token, { type: "bearer" });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty("id");
+      expect(res.body.id).toEqual(expect.any(Number));
+    });
+
+    it("should work with empty image_urls array", async () => {
+      const res = await request(app)
+        .post("/api/v1/listings")
+        .send({
+          title: "Test Listing",
+          description: "Test Description",
+          category: "Test Category",
+          price: 100,
+          currency: "USD",
+          location: "Test Location",
+          image_urls: [],
+        })
+        .auth(token, { type: "bearer" });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty("id");
+      expect(res.body.id).toEqual(expect.any(Number));
+    });
+
     it("should require login", async () => {
       const res = await request(app)
         .post("/api/v1/listings")

@@ -34,19 +34,21 @@ const createListing = async (req, res) => {
     image_urls,
   } = req.body;
 
-  // Check that all image URLs are HTTPS
-  image_urls.forEach((url) => {
-    if (!url.startsWith("https://")) {
-      return res.status(400).json({ error: "Image URL must be HTTPS" });
-    }
-  });
+  if (image_urls?.length > 0) {
+    // Check that all image URLs are HTTPS
+    image_urls.forEach((url) => {
+      if (!url.startsWith("https://")) {
+        return res.status(400).json({ error: "Image URL must be HTTPS" });
+      }
+    });
+  }
 
   let image_datas = []; // [{ url, blurhash }, ...]
 
   try {
     // Download and encode images to blurhash
     let imageDataPromises = [];
-    if (image_urls) {
+    if (image_urls?.length > 0) {
       // Create an array of promises that will download and encode images
       imageDataPromises = image_urls.map(async (url) => {
         let blurhash;
@@ -63,10 +65,10 @@ const createListing = async (req, res) => {
           blurhash,
         };
       });
-    }
 
-    // Wait for all promises to resolve and store the result in image_datas
-    image_datas = await Promise.all(imageDataPromises);
+      // Wait for all promises to resolve and store the result in image_datas
+      image_datas = await Promise.all(imageDataPromises);
+    }
   } catch (error) {
     logger.error(error);
     return res

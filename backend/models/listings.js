@@ -28,7 +28,7 @@ const listings = {
       const listingId = rows.insertId;
 
       // insert pictures if any
-      if (image_datas) {
+      if (image_datas?.length > 0) {
         const imageUrls = image_datas.map((data) => [
           data.url,
           data.blurhash,

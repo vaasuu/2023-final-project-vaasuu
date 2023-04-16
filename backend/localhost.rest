@@ -277,6 +277,22 @@ Authorization: Bearer {{authToken}}
     ]
 }
 
+### create listing - no images
+
+POST {{baseUrl}}/api/v1/listings
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Test Listing 2",
+    "description": "Test Description 2",
+    "category": "Test Category",
+    "price": 200,
+    "currency": "EUR",
+    "location": "Test Location 2"
+    //"image_urls": []
+}
+
 ### get all listings
 
 GET {{baseUrl}}/api/v1/listings
