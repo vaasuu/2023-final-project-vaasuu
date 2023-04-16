@@ -258,4 +258,30 @@ describe("Listings", () => {
       expect(res.body).toHaveProperty("error", "User not found");
     });
   });
+
+  describe("Get categories", () => {
+    let token;
+    beforeAll(() => {
+      token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
+    });
+
+    it("should get categories", async () => {
+      const res = await request(app)
+        .get("/api/v1/listings/categories")
+        .auth(token, {
+          type: "bearer",
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty("categories");
+      expect(res.body.categories).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.any(String),
+          }),
+        ])
+      );
+    });
+  });
 });

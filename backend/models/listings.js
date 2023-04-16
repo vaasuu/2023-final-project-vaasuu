@@ -163,6 +163,17 @@ const listings = {
       throw error;
     }
   },
+  getCategories: async () => {
+    try {
+      const [rows] = await promisePool.query(
+        "SELECT id, name FROM categories ORDER BY name ASC"
+      );
+      return rows;
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+  },
 };
 
 module.exports = listings;

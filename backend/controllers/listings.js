@@ -191,11 +191,15 @@ const getUserListings = async (req, res) => {
 
 // const searchListings = (req, res) => {};
 
-// const getCategories = (req, res) => {};
+const getCategories = async (req, res) => {
+  const categories = await listings.getCategories();
+  return res.status(200).json({ categories });
+};
 
 module.exports = {
   createListing,
   getListings,
   getListing,
   getUserListings,
+  getCategories,
 };

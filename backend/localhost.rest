@@ -301,3 +301,9 @@ Authorization: Bearer {{authToken}}
 
 GET {{baseUrl}}/api/v1/listings/user/user-does-not-exist
 Authorization: Bearer {{authToken}}
+
+### get categories
+
+GET {{baseUrl}}/api/v1/listings/categories
+Authorization: Bearer {{authToken}}
+
