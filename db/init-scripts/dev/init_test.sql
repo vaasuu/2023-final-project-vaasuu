@@ -93,6 +93,18 @@ INSERT INTO `listing_categories` (`listing_id`, `category_id`)
 VALUES (1, 1),
     (2, 1),
     (3, 2);
+CREATE TRIGGER `update_listings_timestamp_ai_listing_categories`
+AFTER
+INSERT ON `listing_categories` FOR EACH ROW
+UPDATE listings
+SET updated_at = CURRENT_TIMESTAMP
+WHERE listing_id = NEW.listing_id;
+CREATE TRIGGER `update_listings_timestamp_au_listing_categories`
+AFTER
+UPDATE ON `listing_categories` FOR EACH ROW
+UPDATE listings
+SET updated_at = CURRENT_TIMESTAMP
+WHERE listing_id = NEW.listing_id;
 DROP TABLE IF EXISTS `pictures`;
 CREATE TABLE `pictures` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -137,6 +149,18 @@ VALUES (
         '2023-04-02 12:02:00',
         '2023-04-10 08:34:04'
     );
+CREATE TRIGGER `update_listings_timestamp_ai_pictures`
+AFTER
+INSERT ON `pictures` FOR EACH ROW
+UPDATE listings
+SET updated_at = CURRENT_TIMESTAMP
+WHERE listing_id = NEW.listing_id;
+CREATE TRIGGER `update_listings_timestamp_au_pictures`
+AFTER
+UPDATE ON `pictures` FOR EACH ROW
+UPDATE listings
+SET updated_at = CURRENT_TIMESTAMP
+WHERE listing_id = NEW.listing_id;
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
     `role_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -208,4 +232,4 @@ INSERT INTO `user_roles` (`user_id`, `role_id`)
 VALUES ('aaaaaaaa-0615-4d04-a795-9c5756ef5f4c', 1),
     ('bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89', 1),
     ('cccccccc-681d-4475-84a2-fdd1d0dcd057', 2);
--- 2023-04-16 11:00:28
+-- 2023-04-16 14:15:01
