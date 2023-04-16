@@ -1,4 +1,4 @@
-const { describe, it, expect, beforeEach, afterAll } = require("@jest/globals");
+const { describe, it, expect, afterAll, beforeAll } = require("@jest/globals");
 const request = require("supertest");
 const app = require("../app");
 const { generateLoginToken } = require("../utils/test_utils/token");
@@ -200,6 +200,62 @@ describe("Listings", () => {
 
       expect(res.statusCode).toEqual(404);
       expect(res.body).toHaveProperty("error", "Listing not found");
+    });
+  });
+
+  describe("Get listings by user", () => {
+    let token;
+    beforeAll(() => {
+      token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
+    });
+
+    it("should get listings by user", async () => {
+      const res = await request(app)
+        .get("/api/v1/listings/user/aaaaaaaa-0615-4d04-a795-9c5756ef5f4c")
+        .auth(token, {
+          type: "bearer",
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty("listings");
+      expect(res.body.listings).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            listing_id: expect.any(Number),
+            title: expect.any(String),
+            description: expect.any(String),
+            asking_price: expect.any(String),
+            currency: expect.any(String),
+            owner: expect.any(String),
+            owner_name: expect.any(String),
+            location: expect.any(String),
+            created_at: expect.any(String),
+            updated_at: expect.any(String),
+            picture_url: expect.any(String),
+            blurhash: expect.any(String),
+          }),
+        ])
+      );
+    });
+
+    it("should require login", async () => {
+      const res = await request(app).get(
+        "/api/v1/listings/user/aaaaaaaa-0615-4d04-a795-9c5756ef5f4c"
+      );
+
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty("error", "Unauthorized");
+    });
+
+    it("should 404 on non-existent user", async () => {
+      const res = await request(app)
+        .get("/api/v1/listings/user/user-does-not-exist")
+        .auth(token, {
+          type: "bearer",
+        });
+
+      expect(res.statusCode).toEqual(404);
+      expect(res.body).toHaveProperty("error", "User not found");
     });
   });
 });

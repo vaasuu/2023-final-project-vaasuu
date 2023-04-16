@@ -6,6 +6,7 @@ const {
   createListing,
   getListings,
   getListing,
+  getUserListings,
 } = require("../controllers/listings");
 
 // Protect all routes below this middleware,
@@ -15,4 +16,5 @@ router.use(verifyAuth);
 router.post("/", createListing);
 router.get("/", getListings);
 router.get("/:id", getListing);
+router.get("/user/:userId", getUserListings);
 module.exports = router;

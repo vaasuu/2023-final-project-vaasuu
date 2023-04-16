@@ -6,6 +6,7 @@ const {
 const logger = require("../utils/log");
 
 const listings = require("../models/listings");
+const users = require("../models/users");
 
 const createListing = async (req, res) => {
   const schema = Joi.object({
@@ -161,7 +162,32 @@ const getListing = async (req, res) => {
 
 // const deleteListing = (req, res) => {};
 
-// const getUserListings = (req, res) => {};
+const getUserListings = async (req, res) => {
+  const schema = Joi.object({
+    userId: Joi.string().required(),
+  });
+
+  const { error } = schema.validate(req.params);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+
+  const { userId } = req.params;
+
+  // Check that the user is in the database
+  const user = await users.findById(userId);
+  if (user.length == 0) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  try {
+    const listingsData = await listings.getByUserId(userId);
+    return res.status(200).json({ listings: listingsData });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 // const searchListings = (req, res) => {};
 
@@ -171,4 +197,5 @@ module.exports = {
   createListing,
   getListings,
   getListing,
+  getUserListings,
 };
