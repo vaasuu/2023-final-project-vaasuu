@@ -9,6 +9,7 @@ const {
   updateListing,
   deleteListing,
   getUserListings,
+  searchListings,
   getCategories,
 } = require("../controllers/listings");
 
@@ -16,7 +17,10 @@ const {
 // needs valid JWT in Authorization header
 router.use(verifyAuth);
 
+// these are before the ones with ':id', otherwise it will think e.g 'categories' is an id
 router.get("/categories", getCategories);
+router.get("/search", searchListings);
+
 router.post("/", createListing);
 router.get("/", getListings);
 router.get("/:id", getListing);

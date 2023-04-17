@@ -526,4 +526,39 @@ describe("Listings", () => {
       expect(res.statusCode).toEqual(201);
     });
   });
+
+  describe("Search listings", () => {
+    let token;
+    beforeAll(async () => {
+      token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
+    });
+
+    it("should return relevant listings (category search)", async () => {
+      const res = await request(app)
+        .get("/api/v1/listings/search?query=electronics")
+        .auth(token, {
+          type: "bearer",
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty("listings");
+      expect(res.body.listings.length).toBeGreaterThan(1);
+    });
+
+    it("should return listings (listing title + description)", async () => {
+      const res = await request(app)
+        .get("/api/v1/listings/search?query=macbook+intel+ssd")
+        .auth(token, {
+          type: "bearer",
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty("listings");
+      expect(res.body.listings).toMatchObject([
+        {
+          title: "MacBook Pro",
+        },
+      ]);
+    });
+  });
 });

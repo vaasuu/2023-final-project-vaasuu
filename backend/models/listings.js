@@ -252,6 +252,41 @@ const listings = {
       throw error;
     }
   },
+  search: async (searchString) => {
+    try {
+      const [rows] = await promisePool.query(
+        `
+          SELECT l.listing_id,
+            l.title,
+            l.description,
+            l.asking_price,
+            l.currency,
+            l.owner,
+            u.name AS owner_name,
+            c.name AS category,
+            l.location,
+            l.created_at,
+            l.updated_at,
+            p.url as picture_url,
+            p.blurhash
+          FROM listings l
+            LEFT JOIN users u ON l.owner = u.id
+            LEFT JOIN pictures p ON l.listing_id = p.listing_id
+            LEFT JOIN listing_categories lc ON l.listing_id = lc.listing_id
+            LEFT JOIN categories c ON lc.category_id = c.id
+          WHERE MATCH (title, description, location) AGAINST (? IN NATURAL LANGUAGE MODE)
+            OR MATCH (c.name) AGAINST (? IN NATURAL LANGUAGE MODE)
+          GROUP BY l.listing_id
+          ORDER BY MATCH (title, description, location) AGAINST (? IN NATURAL LANGUAGE MODE) DESC;
+        `,
+        [searchString, searchString, searchString]
+      );
+      return rows;
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+  },
 };
 
 module.exports = listings;

@@ -359,3 +359,23 @@ Content-Type: application/json
         "https://placekitten.com/800/400"
     ]
 }
+
+### search listings - full text
+
+GET {{baseUrl}}/api/v1/listings/search?query=display+storage+ram+retina
+Authorization: Bearer {{authToken}}
+
+### search listings - category
+
+GET {{baseUrl}}/api/v1/listings/search?query=electronics
+Authorization: Bearer {{authToken}}
+
+### search listings - full text
+
+GET {{baseUrl}}/api/v1/listings/search?query=macbook+intel+ssd
+Authorization: Bearer {{authToken}}
+
+### search listings - no results
+
+GET {{baseUrl}}/api/v1/listings/search?query=fourzerofour
+Authorization: Bearer {{authToken}}

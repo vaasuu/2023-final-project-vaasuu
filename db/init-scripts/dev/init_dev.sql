@@ -25,7 +25,8 @@ CREATE TABLE `categories` (
     `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     PRIMARY KEY (`id`),
     UNIQUE KEY `name` (`name`),
-    KEY `id` (`id`)
+    KEY `id` (`id`),
+    FULLTEXT KEY `category_name` (`name`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 INSERT INTO `categories` (`id`, `name`, `created_at`)
@@ -46,6 +47,7 @@ CREATE TABLE `listings` (
     `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     PRIMARY KEY (`listing_id`),
     KEY `owner` (`owner`),
+    FULLTEXT KEY `title_description_location` (`title`, `description`, `location`),
     CONSTRAINT `listings_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 

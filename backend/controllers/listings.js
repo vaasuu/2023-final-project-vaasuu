@@ -339,7 +339,26 @@ const getUserListings = async (req, res) => {
   }
 };
 
-// const searchListings = (req, res) => {};
+const searchListings = async (req, res) => {
+  const schema = Joi.object({
+    query: Joi.string().required(),
+  });
+
+  const { error } = schema.validate(req.query);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+
+  const { query } = req.query;
+
+  try {
+    const listingsData = await listings.search(query);
+    return res.status(200).json({ listings: listingsData });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 const getCategories = async (req, res) => {
   const categories = await listings.getCategories();
@@ -353,6 +372,6 @@ module.exports = {
   updateListing,
   deleteListing,
   getUserListings,
-  //   searchListings,
+  searchListings,
   getCategories,
 };
