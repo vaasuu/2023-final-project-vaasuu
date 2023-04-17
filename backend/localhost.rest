@@ -158,6 +158,19 @@ Content-Type: application/json
     "password": "adaaanew.email"
 }
 
+### update user by id - add roles
+
+PATCH {{baseUrl}}/api/v1/users/{{signupToDelete.response.body.id}}
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{
+    "name": "New Name",
+    "email": "adaaanew.email@example.com",
+    "password": "adaaanew.email",
+    "roles": ["normal", "admin"]
+}
+
 ### get roles
 
 GET {{baseUrl}}/api/v1/roles
