@@ -340,6 +340,8 @@ const updateUserById = async (req, res) => {
         // update the roles
         await roles.setRole(requestedUserId, role);
       }
+      // remove the role from the request body
+      delete req.body.roles;
     }
 
     // check if user exists in the database
