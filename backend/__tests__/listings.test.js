@@ -172,7 +172,7 @@ describe("Listings", () => {
           currency: "USD",
           owner: "aaaaaaaa-0615-4d04-a795-9c5756ef5f4c",
           owner_name: "John Smith",
-          category: "Electronics",
+          category: "electronics",
           location: "San Francisco, CA",
           created_at: "2023-04-02T08:00:00.000Z",
           updated_at: "2023-04-15T11:24:52.000Z",
@@ -330,7 +330,7 @@ describe("Listings", () => {
           price: "100.00",
           currency: "USD",
           location: "San Francisco, CA",
-          category: "Electronics",
+          category: "electronics",
           image_urls: [],
         });
 
@@ -412,7 +412,7 @@ describe("Listings", () => {
           price: "99.99",
           currency: "USD",
           location: "San Francisco, CA",
-          category: "Electronics",
+          category: "electronics",
           image_urls: [],
         });
 
@@ -472,7 +472,7 @@ describe("Listings", () => {
           price: "99.99",
           currency: "USD",
           location: "San Francisco, CA",
-          category: "Electronics",
+          category: "electronics",
           image_urls: [],
         });
 
@@ -494,7 +494,7 @@ describe("Listings", () => {
           price: "99.99",
           currency: "USD",
           location: "San Francisco, CA",
-          category: "Electronics",
+          category: "electronics",
           image_urls: [],
         });
 
@@ -519,7 +519,7 @@ describe("Listings", () => {
           price: "99.99",
           currency: "USD",
           location: "San Francisco, CA",
-          category: "Electronics",
+          category: "electronics",
           image_urls: [],
         });
 
