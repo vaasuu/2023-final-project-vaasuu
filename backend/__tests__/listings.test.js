@@ -55,10 +55,7 @@ describe("Listings", () => {
           price: 100,
           currency: "USD",
           location: "Test Location",
-          image_urls: [
-            "https://httpbin.org/status/404",
-            "https://placekitten.com/550/350",
-          ],
+          image_urls: ["https://httpbin.org/status/404"],
         })
         .auth(token, { type: "bearer" });
 
@@ -67,25 +64,7 @@ describe("Listings", () => {
         "error",
         "Failed to download and encode image"
       );
-    });
-
-    it("should work with missing image urls", async () => {
-      const res = await request(app)
-        .post("/api/v1/listings")
-        .send({
-          title: "Test Listing",
-          description: "Test Description",
-          category: "Test Category",
-          price: 100,
-          currency: "USD",
-          location: "Test Location",
-        })
-        .auth(token, { type: "bearer" });
-
-      expect(res.statusCode).toEqual(201);
-      expect(res.body).toHaveProperty("id");
-      expect(res.body.id).toEqual(expect.any(Number));
-    });
+    }, 10000);
 
     it("should work with empty image_urls array", async () => {
       const res = await request(app)
@@ -349,12 +328,15 @@ describe("Listings", () => {
           currency: "USD",
           location: "San Francisco, CA",
           category: "Electronics",
+          image_urls: [],
         });
 
       listingId = res.body.id;
     });
 
     it("should delete listing", async () => {
+      expect(listingId).toBeDefined();
+
       const res = await request(app)
         .delete(`/api/v1/listings/${listingId}`)
         .auth(token, {

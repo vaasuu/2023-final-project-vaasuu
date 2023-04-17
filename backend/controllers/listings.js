@@ -17,7 +17,7 @@ const createListing = async (req, res) => {
     price: Joi.number().max(99_999_999).required(),
     currency: Joi.string().length(3).required(),
     location: Joi.string().max(255).required(),
-    image_urls: Joi.array().items(Joi.string().uri()).optional(),
+    image_urls: Joi.array().items(Joi.string().uri()).required(),
   });
 
   const { error } = schema.validate(req.body);
