@@ -340,3 +340,22 @@ Authorization: Bearer {{authToken}}
 
 DELETE {{baseUrl}}/api/v1/listings/{{createListing.response.body.id}}
 Authorization: Bearer {{authToken}}
+
+### update listing
+
+PUT {{baseUrl}}/api/v1/listings/{{createListing.response.body.id}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Updated listing title",
+    "description": "Updated listing description",
+    "category": "Updated listing category",
+    "price": 200,
+    "currency": "EUR",
+    "location": "Updated location",
+    "image_urls": [
+        "https://placekitten.com/700/300",
+        "https://placekitten.com/800/400"
+    ]
+}

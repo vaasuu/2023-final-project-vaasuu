@@ -6,6 +6,7 @@ const {
   createListing,
   getListings,
   getListing,
+  updateListing,
   deleteListing,
   getUserListings,
   getCategories,
@@ -22,6 +23,7 @@ router.get("/:id", getListing);
 router.get("/user/:userId", getUserListings);
 
 // Only accessible to listing owner or admin
+router.put("/:id", updateListing);
 router.delete("/:id", deleteListing);
 
 module.exports = router;

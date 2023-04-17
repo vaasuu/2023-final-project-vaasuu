@@ -193,6 +193,65 @@ const listings = {
       throw error;
     }
   },
+  update: async (listingData) => {
+    try {
+      await promisePool.query("START TRANSACTION");
+
+      const {
+        listing_id,
+        title,
+        description,
+        asking_price,
+        currency,
+        category,
+        location,
+        image_datas,
+      } = listingData;
+
+      await promisePool.query(
+        "UPDATE listings SET title = ?, description = ?, asking_price = ?, currency = ?, location = ? WHERE listing_id = ?",
+        [title, description, asking_price, currency, location, listing_id]
+      );
+
+      const [categoryRows] = await promisePool.query(
+        "INSERT INTO categories (name) VALUES (?) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), name = VALUES(name)",
+        [category]
+      );
+
+      const categoryId = categoryRows.insertId;
+
+      await promisePool.query(
+        "UPDATE listing_categories SET category_id = ? WHERE listing_id = ?",
+        [categoryId, listing_id]
+      );
+
+      // BAD: this is not a good way to update pictures, as it wastes DB ids and processing power, but it's the easiest way to remove pictures that are no longer in the listing, keep existing pictures and add new pictures
+      await promisePool.query("DELETE FROM pictures WHERE listing_id = ?", [
+        listing_id,
+      ]);
+
+      // insert pictures if there are any
+      if (image_datas?.length > 0) {
+        const imageUrls = image_datas.map((data) => [
+          data.url,
+          data.blurhash,
+          listing_id,
+        ]);
+
+        await promisePool.query(
+          "INSERT INTO pictures (url, blurhash, listing_id) VALUES ?",
+          [imageUrls]
+        );
+      }
+      // save changes to database as no errors were thrown
+      await promisePool.query("COMMIT");
+    } catch (error) {
+      logger.error(error);
+      // rollback changes if an error was thrown
+      await promisePool.query("ROLLBACK");
+      throw error;
+    }
+  },
 };
 
 module.exports = listings;

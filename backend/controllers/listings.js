@@ -161,7 +161,119 @@ const getListing = async (req, res) => {
   }
 };
 
-// const updateListing = (req, res) => {};
+const updateListing = async (req, res) => {
+  const paramsSchema = Joi.object({
+    id: Joi.number().required(),
+  });
+
+  const bodySchema = Joi.object({
+    title: Joi.string().max(255).required(),
+    description: Joi.string().max(4095).required(),
+    category: Joi.string().max(255).required(),
+    price: Joi.number().max(99_999_999).required(),
+    currency: Joi.string().length(3).required(),
+    location: Joi.string().max(255).required(),
+    image_urls: Joi.array().items(Joi.string().uri()).required(),
+  });
+
+  // validate request params
+  const { error } = paramsSchema.validate(req.params);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+
+  // validate request body
+  const { error: error2 } = bodySchema.validate(req.body);
+  if (error2) {
+    return res.status(400).json({ error: error2.details[0].message });
+  }
+
+  const { id: listing_id } = req.params;
+
+  const {
+    title,
+    description,
+    category,
+    price,
+    currency,
+    location,
+    image_urls,
+  } = req.body;
+
+  // get listing owner
+  const listing = await listings.getById(listing_id);
+  if (listing[0].listing_id == null) {
+    return res.status(404).json({ error: "Listing not found" });
+  }
+  const listingOwner = listing[0].owner;
+  const isAdmin = await utils.hasRole(req.userData.userId, "admin");
+
+  // check that the user making the request is the owner of the listing or an admin
+  if (req.userData.userId != listingOwner && !isAdmin) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  if (image_urls?.length > 0) {
+    // Check that all image URLs are HTTPS
+    image_urls.forEach((url) => {
+      if (!url.startsWith("https://")) {
+        return res.status(400).json({ error: "Image URL must be HTTPS" });
+      }
+    });
+  }
+
+  let image_datas = []; // [{ url, blurhash }, ...]
+
+  try {
+    // Download and encode images to blurhash
+    let imageDataPromises = [];
+    if (image_urls?.length > 0) {
+      // Create an array of promises that will download and encode images
+      imageDataPromises = image_urls.map(async (url) => {
+        let blurhash;
+        try {
+          const image = await downloadImage(url);
+          blurhash = await encodeImageToBlurhash(image);
+        } catch (error) {
+          logger.error(error);
+          throw Error("Failed to download and encode image");
+        }
+
+        return {
+          url,
+          blurhash,
+        };
+      });
+
+      // Wait for all promises to resolve and store the result in image_datas
+      image_datas = await Promise.all(imageDataPromises);
+    }
+  } catch (error) {
+    logger.error(error);
+    return res
+      .status(500)
+      .json({ error: "Failed to download and encode image" });
+  }
+
+  const listingData = {
+    listing_id,
+    title,
+    description,
+    asking_price: price,
+    currency,
+    category,
+    location,
+    image_datas,
+  };
+
+  try {
+    const newListing = await listings.update(listingData);
+    return res.status(201).json(newListing);
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 const deleteListing = async (req, res) => {
   const schema = Joi.object({
@@ -238,7 +350,7 @@ module.exports = {
   createListing,
   getListings,
   getListing,
-  //   updateListing,
+  updateListing,
   deleteListing,
   getUserListings,
   //   searchListings,

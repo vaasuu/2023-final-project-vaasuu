@@ -10,6 +10,7 @@ const request = require("supertest");
 const app = require("../app");
 const { generateLoginToken } = require("../utils/test_utils/token");
 const { promisePool } = require("../db/pool");
+const listings = require("../models/listings");
 
 describe("Listings", () => {
   afterAll(async () => {
@@ -389,6 +390,140 @@ describe("Listings", () => {
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toHaveProperty("message", "Listing deleted");
+    });
+  });
+
+  describe("Update listing", () => {
+    let token;
+    beforeAll(() => {
+      token = generateLoginToken("aaaaaaaa-0615-4d04-a795-9c5756ef5f4c");
+    });
+
+    let listingId;
+    beforeEach(async () => {
+      const res = await request(app)
+        .post("/api/v1/listings")
+        .auth(token, {
+          type: "bearer",
+        })
+        .send({
+          title: "Blender",
+          description: "Old blender that still works. Barely used.",
+          price: "99.99",
+          currency: "USD",
+          location: "San Francisco, CA",
+          category: "Electronics",
+          image_urls: [],
+        });
+
+      listingId = res.body.id;
+    });
+
+    it("should update listing", async () => {
+      expect(listingId).toBeDefined();
+
+      const res = await request(app)
+        .put(`/api/v1/listings/${listingId}`)
+        .auth(token, {
+          type: "bearer",
+        })
+        .send({
+          title: "Amazing blender",
+          description:
+            "Old blender that still works. Barely used. Comes with instructions and original box!",
+          price: "85.00",
+          currency: "CAD",
+          location: "Ottawa, ON, Canada",
+          category: "Kitchen Appliances",
+          image_urls: ["https://placehold.co/200x300/jpg?text=Amazing+blender"],
+        });
+
+      expect(res.statusCode).toEqual(201);
+
+      const [listing] = await listings.getById(listingId);
+      expect(listing).toHaveProperty("listing_id", listingId);
+      expect(listing).toHaveProperty("title", "Amazing blender");
+      expect(listing).toHaveProperty(
+        "description",
+        "Old blender that still works. Barely used. Comes with instructions and original box!"
+      );
+      expect(listing).toHaveProperty("asking_price", "85.00");
+      expect(listing).toHaveProperty("currency", "CAD");
+      expect(listing).toHaveProperty("location", "Ottawa, ON, Canada");
+      expect(listing).toHaveProperty("category", "Kitchen Appliances");
+    });
+
+    it("should require login", async () => {
+      const res = await request(app).put(`/api/v1/listings/${listingId}`);
+
+      expect(res.statusCode).toEqual(401);
+      expect(res.body).toHaveProperty("error", "Unauthorized");
+    });
+
+    it("should 404 on non-existent listing", async () => {
+      const res = await request(app)
+        .put("/api/v1/listings/-1")
+        .auth(token, {
+          type: "bearer",
+        })
+        .send({
+          title: "Blender",
+          description: "Old blender that still works. Barely used.",
+          price: "99.99",
+          currency: "USD",
+          location: "San Francisco, CA",
+          category: "Electronics",
+          image_urls: [],
+        });
+
+      expect(res.statusCode).toEqual(404);
+      expect(res.body).toHaveProperty("error", "Listing not found");
+    });
+
+    it("should 403 on unauthorized listing", async () => {
+      token = generateLoginToken("bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89"); // login as a different user
+
+      const res = await request(app)
+        .put(`/api/v1/listings/${listingId}`)
+        .auth(token, {
+          type: "bearer",
+        })
+        .send({
+          title: "Blender",
+          description: "Old blender that still works. Barely used.",
+          price: "99.99",
+          currency: "USD",
+          location: "San Francisco, CA",
+          category: "Electronics",
+          image_urls: [],
+        });
+
+      expect(res.statusCode).toEqual(403);
+      expect(res.body).toHaveProperty("error", "Forbidden");
+    });
+
+    it("should work with admin", async () => {
+      const adminToken = generateLoginToken(
+        "cccccccc-681d-4475-84a2-fdd1d0dcd057"
+      ); // Admin user
+
+      const res = await request(app)
+        .put(`/api/v1/listings/${listingId}`)
+        .auth(adminToken, {
+          type: "bearer",
+        })
+
+        .send({
+          title: "Blender",
+          description: "Old blender that still works. Barely used.",
+          price: "99.99",
+          currency: "USD",
+          location: "San Francisco, CA",
+          category: "Electronics",
+          image_urls: [],
+        });
+
+      expect(res.statusCode).toEqual(201);
     });
   });
 });
