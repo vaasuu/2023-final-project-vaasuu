@@ -83,6 +83,7 @@ const listings = {
             l.currency, 
             l.owner, 
             u.name AS owner_name, 
+            c.name AS category,
             l.location, 
             l.created_at, 
             l.updated_at, 
@@ -90,8 +91,10 @@ const listings = {
             p.blurhash 
         FROM 
             listings l 
-            INNER JOIN users u ON l.owner = u.id 
+            LEFT JOIN users u ON l.owner = u.id 
             LEFT JOIN pictures p ON l.listing_id = p.listing_id
+            LEFT JOIN listing_categories lc ON l.listing_id = lc.listing_id
+            LEFT JOIN categories c ON lc.category_id = c.id
         GROUP BY l.listing_id
         `
       );
@@ -112,6 +115,7 @@ const listings = {
             l.currency,
             l.owner,
             u.name AS owner_name,
+            c.name AS category,
             l.location,
             l.created_at,
             l.updated_at,
@@ -119,8 +123,10 @@ const listings = {
             JSON_ARRAYAGG(p.url) AS picture_urls,
             JSON_ARRAYAGG(p.blurhash) AS blurhashes
         FROM listings l
-            INNER JOIN users u ON l.owner = u.id
+            LEFT JOIN users u ON l.owner = u.id
             LEFT JOIN pictures p ON l.listing_id = p.listing_id
+            LEFT JOIN listing_categories lc ON l.listing_id = lc.listing_id
+            LEFT JOIN categories c ON lc.category_id = c.id
         WHERE l.listing_id = ?
         `,
         [id]
