@@ -290,8 +290,8 @@ const updateUserById = async (req, res) => {
     name: Joi.string().max(255).optional(),
     email: Joi.string().email().optional(),
     password: Joi.string().min(8).max(72).optional(),
-    role: Joi.array().items(Joi.string()).optional(),
-  }).or("name", "email", "password", "role");
+    roles: Joi.array().items(Joi.string()).optional(),
+  }).or("name", "email", "password", "roles");
 
   const { error } = schema.validate(req.body);
   if (error) {
@@ -319,7 +319,7 @@ const updateUserById = async (req, res) => {
         .json({ error: "You are not authorized to update this resource" });
     }
 
-    if (req.body.role) {
+    if (req.body.roles?.length > 0) {
       // check if user is an admin
       if (!isAdmin) {
         return res
@@ -327,13 +327,23 @@ const updateUserById = async (req, res) => {
           .json({ error: "You are not authorized to update roles" });
       }
 
-      // check if the role is valid
-      const validRoles = await roles.getAll();
-      if (!validRoles.includes(req.body.role)) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ error: "Invalid role" });
+      // check if the roles are valid
+      // const rolesObjStr = await roles.getAll();
+      const rolesObj = await roles.getAll();
+      // const validRolesObj = JSON.parse(rolesObjStr[0].roles);
+      // const validRoles = Object.keys(validRolesObj);
+      const validRoles = Object.keys(rolesObj[0].roles);
+      for (const role of req.body.roles) {
+        if (!validRoles.includes(role)) {
+          return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ error: "Invalid role" });
+        }
+        // update the roles
+        await roles.setRole(requestedUserId, role);
       }
+      // remove the role from the request body
+      delete req.body.roles;
     }
 
     // check if user exists in the database
@@ -381,12 +391,14 @@ const updateUserById = async (req, res) => {
       return res.status(StatusCodes.NO_CONTENT).json();
     } catch (err) {
       logger.error(err);
+      console.log(err);
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({ error: "Internal server error" });
     }
   } catch (err) {
     logger.error(err);
+    console.log(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });

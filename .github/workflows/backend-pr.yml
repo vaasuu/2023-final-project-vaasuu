@@ -55,6 +55,8 @@ jobs:
       EMAIL_SMTP_PASSWORD: password123
       EMAIL_FROM_NAME: Marketplace
       EMAIL_FROM_ADDRESS: noreply@marketplace.example.com
+      # Timezone
+      TZ: UTC
     steps:
       - name: Fetch code
         uses: actions/checkout@v3

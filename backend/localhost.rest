@@ -8,7 +8,7 @@
 
 # Dynamic Variables
 @authToken = {{login.response.body.token}}
-@authToken = {{signup.response.body.token}}
+//@authToken = {{signup.response.body.token}}
 
 @userId = {{login.response.body.id}}
 @userId = {{signup.response.body.id}}
@@ -158,6 +158,19 @@ Content-Type: application/json
     "password": "adaaanew.email"
 }
 
+### update user by id - add roles
+
+PATCH {{baseUrl}}/api/v1/users/{{signupToDelete.response.body.id}}
+Authorization: Bearer {{loginAdmin.response.body.token}}
+Content-Type: application/json
+
+{
+    "name": "New Name",
+    "email": "adaaanew.email@example.com",
+    "password": "adaaanew.email",
+    "roles": ["normal", "admin"]
+}
+
 ### get roles
 
 GET {{baseUrl}}/api/v1/roles
@@ -219,4 +232,150 @@ Authorization: Bearer {{authToken}}
 ### Search users - no query
 
 GET {{baseUrl}}/api/v1/users/search
+Authorization: Bearer {{authToken}}
+
+### create listing
+# @name createListing
+POST {{baseUrl}}/api/v1/listings
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Test Listing",
+    "description": "Test Description",
+    "category": "Test Category",
+    "price": 100,
+    "currency": "USD",
+    "location": "Test Location",
+    "image_urls": [
+        "https://placekitten.com/500/300"
+    ]
+}
+
+### create listing - reuse category
+
+POST {{baseUrl}}/api/v1/listings
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Test Listing 2",
+    "description": "Test Description 2",
+    "category": "Test Category",
+    "price": 200,
+    "currency": "EUR",
+    "location": "Test Location 2",
+    "image_urls": [
+        "https://placekitten.com/700/300",
+        "https://placekitten.com/800/400"
+    ]
+}
+
+### create listing - 404 image url
+
+POST {{baseUrl}}/api/v1/listings
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Test Listing 2",
+    "description": "Test Description 2",
+    "category": "Test Category",
+    "price": 200,
+    "currency": "EUR",
+    "location": "Test Location 2",
+    "image_urls": [
+        "https://example.com/image-404.jpg",
+        "https://placekitten.com/800/400"
+    ]
+}
+
+### create listing - no images
+
+POST {{baseUrl}}/api/v1/listings
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Test Listing 2",
+    "description": "Test Description 2",
+    "category": "Test Category",
+    "price": 200,
+    "currency": "EUR",
+    "location": "Test Location 2"
+    //"image_urls": []
+}
+
+### get all listings
+
+GET {{baseUrl}}/api/v1/listings
+Authorization: Bearer {{authToken}}
+
+### get listing by id
+
+GET {{baseUrl}}/api/v1/listings/1
+Authorization: Bearer {{authToken}}
+
+### get listing by id - not found
+
+GET {{baseUrl}}/api/v1/listings/-1
+Authorization: Bearer {{authToken}}
+
+### get all listings by user
+
+GET {{baseUrl}}/api/v1/listings/user/aaaaaaaa-0615-4d04-a795-9c5756ef5f4c
+Authorization: Bearer {{authToken}}
+
+### get all listings by user - user not found
+
+GET {{baseUrl}}/api/v1/listings/user/user-does-not-exist
+Authorization: Bearer {{authToken}}
+
+### get categories
+
+GET {{baseUrl}}/api/v1/listings/categories
+Authorization: Bearer {{authToken}}
+
+### delete listing
+
+DELETE {{baseUrl}}/api/v1/listings/{{createListing.response.body.id}}
+Authorization: Bearer {{authToken}}
+
+### update listing
+
+PUT {{baseUrl}}/api/v1/listings/{{createListing.response.body.id}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Updated listing title",
+    "description": "Updated listing description",
+    "category": "Updated listing category",
+    "price": 200,
+    "currency": "EUR",
+    "location": "Updated location",
+    "image_urls": [
+        "https://placekitten.com/700/300",
+        "https://placekitten.com/800/400"
+    ]
+}
+
+### search listings - full text
+
+GET {{baseUrl}}/api/v1/listings/search?query=display+storage+ram+retina
+Authorization: Bearer {{authToken}}
+
+### search listings - category
+
+GET {{baseUrl}}/api/v1/listings/search?query=electronics
+Authorization: Bearer {{authToken}}
+
+### search listings - full text
+
+GET {{baseUrl}}/api/v1/listings/search?query=macbook+intel+ssd
+Authorization: Bearer {{authToken}}
+
+### search listings - no results
+
+GET {{baseUrl}}/api/v1/listings/search?query=fourzerofour
 Authorization: Bearer {{authToken}}

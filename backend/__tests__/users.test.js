@@ -670,6 +670,7 @@ describe("Update a user", () => {
       .patch(`/api/v1/users/${signupRes.body.id}`)
       .send({
         name: "Name changed by admin user",
+        roles: ["admin"], // promote the user to admin
       })
       .auth(adminToken, {
         type: "bearer",
