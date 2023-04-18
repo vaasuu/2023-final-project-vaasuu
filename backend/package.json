@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watchAll",
-    "test:verbose": "jest --verbose",
-    "test:coverage": "jest --coverage",
+    "test": "TZ=UTC jest",
+    "test:watch": "TZ=UTC jest --watchAll",
+    "test:verbose": "TZ=UTC jest --verbose",
+    "test:coverage": "TZ=UTC jest --coverage",
     "dev": "nodemon server.js",
     "maildev": "maildev"
   },

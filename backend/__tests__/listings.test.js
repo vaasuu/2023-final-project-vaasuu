@@ -174,8 +174,8 @@ describe("Listings", () => {
           owner_name: "John Smith",
           category: "electronics",
           location: "San Francisco, CA",
-          created_at: "2023-04-02T08:00:00.000Z",
-          updated_at: "2023-04-15T11:24:52.000Z",
+          created_at: "2023-04-02T11:00:00.000Z",
+          updated_at: "2023-04-15T14:24:52.000Z",
           image_data: [
             {
               id: 1,
@@ -201,12 +201,13 @@ describe("Listings", () => {
           description:
             "Peloton Bike in great condition, comes with weights and shoes.",
           asking_price: "2000.00",
+          category: "exercise equipment",
           currency: "EUR",
           owner: "cccccccc-681d-4475-84a2-fdd1d0dcd057",
           owner_name: "Bob Johnson",
           location: "Paris, France",
-          created_at: "2023-04-02T10:00:00.000Z",
-          updated_at: "2023-04-15T11:25:07.000Z",
+          created_at: "2023-04-02T13:00:00.000Z",
+          updated_at: "2023-04-15T14:25:07.000Z",
           image_data: [],
         })
       );
