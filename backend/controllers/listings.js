@@ -121,7 +121,7 @@ const getListing = async (req, res) => {
 
   try {
     let listingData = await listings.getById(id);
-    if (listingData[0].listing_id == null) {
+    if (listingData[0]?.listing_id == null) {
       return res.status(404).json({ error: "Listing not found" });
     }
 
@@ -129,9 +129,9 @@ const getListing = async (req, res) => {
     listingData = listingData[0];
 
     // convert strings of json arrays to actual arrays
-    listingData.picture_ids = JSON.parse(listingData.picture_ids);
-    listingData.picture_urls = JSON.parse(listingData.picture_urls);
-    listingData.blurhashes = JSON.parse(listingData.blurhashes);
+    // listingData.picture_ids = JSON.parse(listingData.picture_ids);
+    // listingData.picture_urls = JSON.parse(listingData.picture_urls);
+    // listingData.blurhashes = JSON.parse(listingData.blurhashes);
 
     const imgCount =
       listingData.picture_ids[0] == null ? 0 : listingData.picture_ids.length;
@@ -202,7 +202,7 @@ const updateListing = async (req, res) => {
 
   // get listing owner
   const listing = await listings.getById(listing_id);
-  if (listing[0].listing_id == null) {
+  if (listing[0]?.listing_id == null) {
     return res.status(404).json({ error: "Listing not found" });
   }
   const listingOwner = listing[0].owner;
@@ -289,7 +289,7 @@ const deleteListing = async (req, res) => {
 
   // get listing owner
   const listing = await listings.getById(id);
-  if (listing[0].listing_id == null) {
+  if (listing[0]?.listing_id == null) {
     return res.status(404).json({ error: "Listing not found" });
   }
   const listingOwner = listing[0].owner;

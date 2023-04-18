@@ -95,7 +95,7 @@ const listings = {
             LEFT JOIN pictures p ON l.listing_id = p.listing_id
             LEFT JOIN listing_categories lc ON l.listing_id = lc.listing_id
             LEFT JOIN categories c ON lc.category_id = c.id
-        GROUP BY l.listing_id
+        GROUP BY l.listing_id, c.name, p.url, p.blurhash
         `
       );
       return rows;
@@ -128,6 +128,7 @@ const listings = {
             LEFT JOIN listing_categories lc ON l.listing_id = lc.listing_id
             LEFT JOIN categories c ON lc.category_id = c.id
         WHERE l.listing_id = ?
+        GROUP BY c.name
         `,
         [id]
       );
@@ -159,7 +160,7 @@ const listings = {
             INNER JOIN users u ON l.owner = u.id 
             LEFT JOIN pictures p ON l.listing_id = p.listing_id
         WHERE l.owner = ?
-        GROUP BY l.listing_id
+        GROUP BY l.listing_id, p.url, p.blurhash
         `,
         [userId]
       );
@@ -276,7 +277,7 @@ const listings = {
             LEFT JOIN categories c ON lc.category_id = c.id
           WHERE MATCH (title, description, location) AGAINST (? IN NATURAL LANGUAGE MODE)
             OR MATCH (c.name) AGAINST (? IN NATURAL LANGUAGE MODE)
-          GROUP BY l.listing_id
+          GROUP BY l.listing_id, c.name, p.url, p.blurhash
           ORDER BY MATCH (title, description, location) AGAINST (? IN NATURAL LANGUAGE MODE) DESC;
         `,
         [searchString, searchString, searchString]

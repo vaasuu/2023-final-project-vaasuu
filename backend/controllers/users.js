@@ -328,9 +328,11 @@ const updateUserById = async (req, res) => {
       }
 
       // check if the roles are valid
-      const rolesObjStr = await roles.getAll();
-      const validRolesObj = JSON.parse(rolesObjStr[0].roles);
-      const validRoles = Object.keys(validRolesObj);
+      // const rolesObjStr = await roles.getAll();
+      const rolesObj = await roles.getAll();
+      // const validRolesObj = JSON.parse(rolesObjStr[0].roles);
+      // const validRoles = Object.keys(validRolesObj);
+      const validRoles = Object.keys(rolesObj[0].roles);
       for (const role of req.body.roles) {
         if (!validRoles.includes(role)) {
           return res
@@ -389,12 +391,14 @@ const updateUserById = async (req, res) => {
       return res.status(StatusCodes.NO_CONTENT).json();
     } catch (err) {
       logger.error(err);
+      console.log(err);
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({ error: "Internal server error" });
     }
   } catch (err) {
     logger.error(err);
+    console.log(err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Internal server error" });
