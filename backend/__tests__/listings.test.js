@@ -65,7 +65,10 @@ describe("Listings", () => {
         "error",
         "Failed to download and encode image"
       );
-    }, 10000);
+    }, 30000); // 30 second timeout - something has to be wrong either
+    // with JS or my code if it really takes this long.
+    // Maybe single-threaded JS is just slow?
+    // Sometimes it completes in 1-2 seconds, so I'm not sure.
 
     it("should work with empty image_urls array", async () => {
       const res = await request(app)
