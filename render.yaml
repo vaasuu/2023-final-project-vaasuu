@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: marketplace-backend
+    env: docker
+    region: frankfurt
+    plan: free
+    branch: master
+    rootDir: backend
+    numInstances: 1
+    healthCheckPath: /health
+  - type: web
+    name: marketplace-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm run build
+    staticPublishDir: ./dist
+    routes:
+      - path: /*
+        type: rewrite
+        to: /index.html
+envVarGroups:
+  - name: marketplace-school-project
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: backend
+          property: host
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: frontend
+          property: host
