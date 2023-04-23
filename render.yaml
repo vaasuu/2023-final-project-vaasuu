@@ -24,10 +24,10 @@ envVarGroups:
       - key: BACKEND_URL
         fromService:
           type: web
-          name: backend
+          name: marketplace-backend
           property: host
       - key: FRONTEND_URL
         fromService:
           type: web
-          name: frontend
+          name: marketplace-frontend
           property: host
