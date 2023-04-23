@@ -26,10 +26,8 @@ services:
         source: /*
         destination: /index.html
     envVars:
-      - key: BACKEND_URL
+      - key: VITE_BACKEND_URL
         fromService:
           type: web
           name: marketplace-backend
           property: host
-envVarGroups:
-  - name: marketplace-school-project
