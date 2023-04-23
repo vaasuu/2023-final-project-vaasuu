@@ -8,6 +8,12 @@ services:
     rootDir: backend
     numInstances: 1
     healthCheckPath: /health
+    envVars:
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: marketplace-frontend
+          property: host
   - type: web
     name: marketplace-frontend
     env: static
@@ -18,16 +24,11 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
-envVarGroups:
-  - name: marketplace-school-project
     envVars:
       - key: BACKEND_URL
         fromService:
           type: web
           name: marketplace-backend
           property: host
-      - key: FRONTEND_URL
-        fromService:
-          type: web
-          name: marketplace-frontend
-          property: host
+envVarGroups:
+  - name: marketplace-school-project
