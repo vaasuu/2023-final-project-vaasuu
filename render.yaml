@@ -13,10 +13,10 @@ services:
     env: static
     rootDir: frontend
     buildCommand: npm run build
-    staticPublishDir: ./dist
+    staticPublishPath: ./dist
     routes:
-      - path: /*
-        type: rewrite
+      - type: rewrite
+        path: /*
         to: /index.html
 envVarGroups:
   - name: marketplace-school-project
