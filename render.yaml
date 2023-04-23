@@ -6,6 +6,7 @@ services:
     plan: free
     branch: main
     rootDir: backend
+    autoDeploy: false
     numInstances: 1
     envVars:
       - key: NODE_ENV
@@ -18,6 +19,7 @@ services:
     env: static
     branch: main
     rootDir: frontend
+    autoDeploy: false
     buildCommand: npm run build
     staticPublishPath: ./dist
     routes:
