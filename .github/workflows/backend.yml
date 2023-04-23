@@ -88,7 +88,7 @@ jobs:
         with:
           name: coverage
           path: ./backend/coverage
-      - name: link coverage report # because the coverage badge action expects the report to be in <repo root>/coverage/
+      - name: copy coverage report # because the coverage badge action expects the report to be in <repo root>/coverage/
         run: |
           mkdir -p ./coverage
           cp backend/coverage/coverage-summary.json ./coverage/coverage-summary.json
