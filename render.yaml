@@ -4,7 +4,7 @@ services:
     env: docker
     region: frankfurt
     plan: free
-    branch: master
+    branch: main
     rootDir: backend
     numInstances: 1
     healthCheckPath: /health
@@ -17,6 +17,7 @@ services:
   - type: web
     name: marketplace-frontend
     env: static
+    branch: main
     rootDir: frontend
     buildCommand: npm run build
     staticPublishPath: ./dist
