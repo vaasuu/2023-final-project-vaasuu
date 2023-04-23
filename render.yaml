@@ -16,8 +16,8 @@ services:
     staticPublishPath: ./dist
     routes:
       - type: rewrite
-        path: /*
-        to: /index.html
+        source: /*
+        destination: /index.html
 envVarGroups:
   - name: marketplace-school-project
     envVars:
