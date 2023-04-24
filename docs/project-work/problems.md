@@ -58,3 +58,7 @@ ERROR 1045 (28000): Access denied for user 'hkvahu'@'%' (using password: YES)
 #### Solution
 
 My solution was to use AWS RDS instead.
+
+And because I'm obsessed with spending _more_ time on this project, I also created a [terraform](https://www.terraform.io/) script to create the RDS instance, just because I wanted to try it out.
+
+I had some problems at first with the creads, but managed to fix it by reading the [AWS terraform provider documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#provider-configuration) (I had the wrong field name for the `token` field).
