@@ -32,7 +32,7 @@ const Landing = () => {
         <section className="landing-hero">
           <h1>Welcome to our Marketplace</h1>
           <p>Find the best products from top sellers around the world</p>
-          <Link to="/listings" className="btn-primary">
+          <Link to="/market/listings" className="btn-primary">
             Explore listings now
           </Link>
         </section>
