@@ -5,7 +5,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import Landing from "./components/pages/Landing/Landing";
-import Login from "./components/pages/Login/Login";
+import Auth from "./components/pages/Auth/Auth";
 import Register from "./components/pages/Register/Register";
 import Users from "./components/pages/Users/Users";
 import User from "./components/pages/User/User";
@@ -26,8 +26,7 @@ import "./App.css";
 const router = createBrowserRouter(
   createRoutesFromElements([
     <Route path="/" element={<Landing />} />,
-    <Route path="/login" element={<Login />} />,
-    <Route path="/register" element={<Register />} />,
+    <Route path="/auth" element={<Auth />} />,
     <Route path="/market" element={<MarketLayout />}>
       {/* sidebar is included under these routes: */}
       <Route index element={<Listings />} />

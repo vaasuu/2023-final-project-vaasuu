@@ -2,11 +2,6 @@ import { Link } from "react-router-dom";
 import illustration from "../../../assets/landingPage/undraw_empty_cart_co35.svg";
 import "./Landing.css";
 
-const topNavLinks = [
-  { to: "/login", text: "Login" },
-  { to: "/register", text: "Register" },
-];
-
 const bottomLinks = [
   { to: "/tos", text: "Terms of Service" },
   { to: "/privacy", text: "Privacy Policy" },
@@ -20,11 +15,7 @@ const Landing = () => {
     <div className="landing">
       <header className="landing-header">
         <nav className="landing-nav">
-          {topNavLinks.map(({ to, text }) => (
-            <Link key={to} to={to}>
-              {text}
-            </Link>
-          ))}
+          <Link to={"/auth"}>Authenticate</Link>
         </nav>
       </header>
 
