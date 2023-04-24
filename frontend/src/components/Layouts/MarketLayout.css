@@ -1,0 +1,11 @@
+@media (min-width: 576px) {
+  .smallScreenToggleSidebar {
+    display: none;
+  }
+}
+
+.sidebar-collapse-button {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px;
+}

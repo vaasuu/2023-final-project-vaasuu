@@ -19,6 +19,9 @@ import MarketLayout from "./components/Layouts/MarketLayout";
 import TermsOfService from "./components/pages/TermsOfService/TermsOfService";
 import PrivacyPolicy from "./components/pages/PrivacyPolicy/PrivacyPolicy";
 import Acknowledgements from "./components/pages/Acknowledgements/Acknowledgements";
+import { ProSidebarProvider } from "react-pro-sidebar";
+
+import "./App.css";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
@@ -45,9 +48,11 @@ const router = createBrowserRouter(
 
 const App = () => {
   return (
-    <div className="App">
-      <RouterProvider router={router} />
-    </div>
+    <ProSidebarProvider>
+      <div className="App">
+        <RouterProvider router={router} />
+      </div>
+    </ProSidebarProvider>
   );
 };
 
