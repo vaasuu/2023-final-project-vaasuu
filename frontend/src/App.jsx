@@ -1,7 +1,6 @@
 import {
   Route,
   RouterProvider,
-  Routes,
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
@@ -17,6 +16,9 @@ import EditListing from "./components/pages/EditListing/EditListing";
 import ResetPassword from "./components/pages/ResetPassword/ResetPassword";
 import NotFound from "./components/pages/NotFound/NotFound";
 import MarketLayout from "./components/Layouts/MarketLayout";
+import TermsOfService from "./components/pages/TermsOfService/TermsOfService";
+import PrivacyPolicy from "./components/pages/PrivacyPolicy/PrivacyPolicy";
+import Acknowledgements from "./components/pages/Acknowledgements/Acknowledgements";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
@@ -34,6 +36,9 @@ const router = createBrowserRouter(
       <Route path="users/:id/edit" element={<EditUser />} />
     </Route>,
     <Route path="/reset-password" element={<ResetPassword />} />,
+    <Route path="/tos" element={<TermsOfService />} />,
+    <Route path="/privacy" element={<PrivacyPolicy />} />,
+    <Route path="/acknowledgements" element={<Acknowledgements />} />,
     <Route path="*" element={<NotFound />} />,
   ])
 );

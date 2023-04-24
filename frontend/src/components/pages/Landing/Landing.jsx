@@ -14,6 +14,8 @@ const bottomLinks = [
 ];
 
 const Landing = () => {
+  document.title = "Marketplace";
+
   return (
     <div className="landing">
       <header className="landing-header">
