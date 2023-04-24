@@ -65,7 +65,7 @@ const Landing = () => {
           ))}
         </nav>
         <p className="landing-copyright">
-          &copy; {new Date().getFullYear()} Marketplace site.
+          &copy; {new Date().getFullYear()} Marketplace site
         </p>
       </footer>
     </div>
