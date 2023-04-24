@@ -16,13 +16,6 @@ const Layout = () => {
   const { collapseSidebar, toggleSidebar, collapsed, toggled, broken, rtl } =
     useProSidebar();
 
-  useEffect(() => {
-    console.log("collapsed", collapsed);
-    console.log("toggled", toggled);
-    console.log("broken", broken);
-    console.log("rtl", rtl);
-  }, [collapsed, toggled, broken, rtl]);
-
   const currentUserId = "1"; // TODO: get current user id
 
   const handleLogout = () => {
