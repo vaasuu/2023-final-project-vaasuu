@@ -5,6 +5,8 @@ import "./Auth.css";
 import { useMutation } from "react-query";
 import { login, signup } from "../../../api/users/users";
 import { AuthContext } from "../../../shared/context/auth-context";
+import { useNavigate } from "react-router-dom";
+import { NavigationContext } from "../../../shared/context/navigation-context";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,12 +18,21 @@ const Auth = () => {
   } = useForm();
 
   const auth = useContext(AuthContext);
+  const navigationContext = useContext(NavigationContext);
+  const navigate = useNavigate();
 
   const signupMutation = useMutation({
     mutationKey: "signup",
     mutationFn: signup,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       auth.login(data.id, data.token, data.roles);
+      console.log(data);
+      const previousPage = navigationContext.originalPage || "/";
+
+      // wait for the auth context to update
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      navigate(previousPage);
     },
     onError: (error) => {
       console.log(error);
@@ -31,8 +42,15 @@ const Auth = () => {
   const loginMutation = useMutation({
     mutationKey: "login",
     mutationFn: login,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       auth.login(data.id, data.token, data.roles);
+      console.log(data);
+      const previousPage = navigationContext.originalPage || "/";
+
+      // wait for the auth context to update
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      navigate(previousPage);
     },
     onError: (error) => {
       console.log(error);

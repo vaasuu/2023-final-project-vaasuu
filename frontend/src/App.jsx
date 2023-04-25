@@ -25,6 +25,7 @@ import { AuthContext } from "./shared/context/auth-context";
 import { parseJwt } from "./shared/utils/utils";
 import { useCallback, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { NavigationContext } from "./shared/context/navigation-context";
 
 const queryClient = new QueryClient();
 
@@ -51,10 +52,13 @@ const router = createBrowserRouter(
 );
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(null); // null = not checked yet, true = logged in, false = not logged in
   const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const [roles, setRoles] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [originalPage, setOriginalPage] = useState(null);
 
   /**
    * Login function. Stores user data in local storage and sets state.
@@ -64,10 +68,12 @@ const App = () => {
    * @param {number} tokenExpiration - Token expiration timestamp in seconds
    */
   const login = useCallback((uid, token, roles, tokenExpiration = null) => {
+    setIsLoggedIn(true);
     setUserId(uid);
     setToken(token);
     setRoles(roles);
     setIsAdmin(roles.includes("admin"));
+    setIsLoaded(true);
     const tokenExpirationTimestamp = tokenExpiration || parseJwt(token).exp; // get expiration from token if not passed
 
     localStorage.setItem(
@@ -98,6 +104,8 @@ const App = () => {
         storedData.roles,
         storedData.expiration
       );
+    } else {
+      setIsLoggedIn(false); // we didn't find a valid token, so user is not logged in
     }
   }, [login]);
 
@@ -105,10 +113,12 @@ const App = () => {
    * Logout function. Clears userAuthData from local storage and clears states.
    */
   const logout = useCallback(() => {
+    setIsLoggedIn(false);
     setUserId(null);
     setToken(null);
     setRoles([]);
     setIsAdmin(false);
+    setIsLoaded(true);
     localStorage.removeItem("userAuthData");
   }, []);
 
@@ -128,25 +138,33 @@ const App = () => {
   }, [token, logout]); // re-run when token changes
 
   return (
-    <AuthContext.Provider
+    <NavigationContext.Provider
       value={{
-        isLoggedIn: Boolean(token),
-        token: token,
-        userId: userId,
-        roles: roles,
-        isAdmin: isAdmin,
-        login: login,
-        logout: logout,
+        originalPage: originalPage,
+        setOriginalPage: setOriginalPage,
       }}
     >
-      <QueryClientProvider client={queryClient}>
-        <ProSidebarProvider>
-          <div className="App">
-            <RouterProvider router={router} />
-          </div>
-        </ProSidebarProvider>
-      </QueryClientProvider>
-    </AuthContext.Provider>
+      <AuthContext.Provider
+        value={{
+          isLoggedIn: Boolean(token),
+          token: token,
+          userId: userId,
+          roles: roles,
+          isAdmin: isAdmin,
+          isLoaded: isLoaded,
+          login: login,
+          logout: logout,
+        }}
+      >
+        <QueryClientProvider client={queryClient}>
+          <ProSidebarProvider>
+            <div className="App">
+              <RouterProvider router={router} />
+            </div>
+          </ProSidebarProvider>
+        </QueryClientProvider>
+      </AuthContext.Provider>
+    </NavigationContext.Provider>
   );
 };
 

@@ -1,5 +1,5 @@
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { FaBars, FaListAlt, FaPlus } from "react-icons/fa";
 import { FiLogOut, FiUsers } from "react-icons/fi";
 import { GrUserSettings } from "react-icons/gr";
@@ -8,19 +8,32 @@ import {
   HiOutlineChevronDoubleRight,
 } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import "./MarketLayout.css";
+import { AuthContext } from "../../shared/context/auth-context";
+import { NavigationContext } from "../../shared/context/navigation-context";
 
 const Layout = () => {
   const { collapseSidebar, toggleSidebar, collapsed, toggled, broken, rtl } =
     useProSidebar();
+  const auth = useContext(AuthContext);
+  const navigationContext = useContext(NavigationContext);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const currentUserId = "1"; // TODO: get current user id
+  useEffect(() => {
+    console.log(auth);
+    if (auth.isLoggedIn != null && !auth.isLoggedIn) {
+      if (location.pathname != "/auth") {
+        navigationContext.setOriginalPage(location.pathname);
+        navigate("/auth");
+      }
+    }
+  }, [auth.isLoggedIn, auth.isLoaded, location.pathname]);
 
   const handleLogout = () => {
-    console.log("logout");
-    // TODO: logout
+    auth.logout();
   };
 
   const SidebarChevronIcon = () => {
@@ -65,7 +78,7 @@ const Layout = () => {
           </MenuItem>
           <MenuItem
             icon={<GrUserSettings />}
-            component={<Link to={`/market/users/${currentUserId}/edit`} />}
+            component={<Link to={`/market/users/${auth.userId}/edit`} />}
           >
             User settings
           </MenuItem>
