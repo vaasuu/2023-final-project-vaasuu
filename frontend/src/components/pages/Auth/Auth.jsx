@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import "./Auth.css";
+import { useMutation } from "react-query";
+import { login, signup } from "../../../api/users/users";
+import { AuthContext } from "../../../shared/context/auth-context";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,7 +14,38 @@ const Auth = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+
+  const auth = useContext(AuthContext);
+
+  const signupMutation = useMutation({
+    mutationKey: "signup",
+    mutationFn: signup,
+    onSuccess: (data) => {
+      auth.login(data.id, data.token, data.roles);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const loginMutation = useMutation({
+    mutationKey: "login",
+    mutationFn: login,
+    onSuccess: (data) => {
+      auth.login(data.id, data.token, data.roles);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const onSubmit = (data) => {
+    if (isLogin) {
+      loginMutation.mutate(data);
+    } else {
+      signupMutation.mutate(data);
+    }
+  };
 
   document.title = isLogin ? "Login | Marketplace" : "Register | Marketplace";
 
@@ -64,7 +98,7 @@ const Auth = () => {
             id="password"
             minLength={8}
             maxLength={72}
-            placeholder="********"
+            placeholder="password"
             {...register("password", {
               required: true,
               minLength: 8,
@@ -84,7 +118,7 @@ const Auth = () => {
                 id="confirmPassword"
                 minLength={8}
                 maxLength={72}
-                placeholder="********"
+                placeholder="password"
                 {...register("confirmPassword", {
                   required: true,
                   validate: (value) => value === watch("password"),

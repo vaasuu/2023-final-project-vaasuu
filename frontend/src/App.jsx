@@ -24,6 +24,9 @@ import "./App.css";
 import { AuthContext } from "./shared/context/auth-context";
 import { parseJwt } from "./shared/utils/utils";
 import { useCallback, useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
   createRoutesFromElements([
@@ -136,11 +139,13 @@ const App = () => {
         logout: logout,
       }}
     >
-      <ProSidebarProvider>
-        <div className="App">
-          <RouterProvider router={router} />
-        </div>
-      </ProSidebarProvider>
+      <QueryClientProvider client={queryClient}>
+        <ProSidebarProvider>
+          <div className="App">
+            <RouterProvider router={router} />
+          </div>
+        </ProSidebarProvider>
+      </QueryClientProvider>
     </AuthContext.Provider>
   );
 };
