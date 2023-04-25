@@ -106,6 +106,7 @@ const App = () => {
       );
     } else {
       setIsLoggedIn(false); // we didn't find a valid token, so user is not logged in
+      setIsLoaded(true); // we're done checking for a local token
     }
   }, [login]);
 

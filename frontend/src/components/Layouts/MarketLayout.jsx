@@ -24,13 +24,13 @@ const Layout = () => {
 
   useEffect(() => {
     console.log(auth);
-    if (auth.isLoggedIn != null && !auth.isLoggedIn) {
+    if (auth.isLoaded && auth.isLoggedIn != null && !auth.isLoggedIn) {
       if (location.pathname != "/auth") {
         navigationContext.setOriginalPage(location.pathname);
         navigate("/auth");
       }
     }
-  }, [auth.isLoggedIn, auth.isLoaded, location.pathname]);
+  }, [auth.isLoggedIn, auth.isLoaded]);
 
   const handleLogout = () => {
     auth.logout();
