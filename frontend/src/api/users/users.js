@@ -142,3 +142,30 @@ export const deleteUser = async ({ token, userId }) => {
     }
   });
 };
+
+export const searchUsers = async ({ token, searchTerm }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(
+        `${BACKEND_URL}/api/v1/users/search?name=${searchTerm}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        const data = await res.json();
+        resolve(data);
+      } else {
+        const data = await res.json();
+        reject(data);
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
