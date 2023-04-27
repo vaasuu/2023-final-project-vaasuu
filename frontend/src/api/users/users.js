@@ -119,3 +119,26 @@ export const updateUser = async ({ userId, name, email, password }) => {
     }
   });
 };
+
+export const deleteUser = async ({ token, userId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/v1/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 204) {
+        resolve();
+      } else {
+        const data = await res.json();
+        reject(data);
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
