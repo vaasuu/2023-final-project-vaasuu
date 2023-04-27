@@ -23,7 +23,6 @@ const Layout = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(auth);
     if (auth.isLoaded && auth.isLoggedIn != null && !auth.isLoggedIn) {
       if (location.pathname != "/auth") {
         navigationContext.setOriginalPage(location.pathname);

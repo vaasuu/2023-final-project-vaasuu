@@ -27,7 +27,6 @@ const Auth = () => {
     mutationFn: signup,
     onSuccess: async (data) => {
       auth.login(data.id, data.token, data.roles);
-      console.log(data);
       const previousPage = navigationContext.originalPage || "/";
 
       // wait for the auth context to update
@@ -45,7 +44,6 @@ const Auth = () => {
     mutationFn: login,
     onSuccess: async (data) => {
       auth.login(data.id, data.token, data.roles);
-      console.log(data);
       const previousPage = navigationContext.originalPage || "/";
 
       // wait for the auth context to update
