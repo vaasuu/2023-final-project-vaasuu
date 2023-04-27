@@ -72,3 +72,26 @@ export const getAllUsers = async ({ queryKey }) => {
     }
   });
 };
+
+export const getUser = async (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/v1/users/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.status === 200) {
+        const data = await res.json();
+        resolve(data);
+      } else {
+        const data = await res.json();
+        reject(data);
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
