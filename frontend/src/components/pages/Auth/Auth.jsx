@@ -10,6 +10,7 @@ import { NavigationContext } from "../../../shared/context/navigation-context";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
   const {
     register,
     handleSubmit,
@@ -34,8 +35,8 @@ const Auth = () => {
 
       navigate(previousPage);
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (data) => {
+      setErrorMsg(data.error);
     },
   });
 
@@ -52,8 +53,8 @@ const Auth = () => {
 
       navigate(previousPage);
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (data) => {
+      setErrorMsg(data.error);
     },
   });
 
@@ -150,6 +151,13 @@ const Auth = () => {
             </>
           )}
           <input type="submit" />
+        </div>
+        <div className="auth-error-msg">
+          {errorMsg && (
+            <p role="alert" className="form-error">
+              {errorMsg}
+            </p>
+          )}
         </div>
       </form>
     </div>
