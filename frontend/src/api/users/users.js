@@ -47,3 +47,28 @@ export const login = async ({ email, password }) => {
     }
   });
 };
+
+export const getAllUsers = async ({ queryKey }) => {
+  const [_, token] = queryKey;
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/v1/users`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        const data = await res.json();
+        resolve(data);
+      } else {
+        const data = await res.json();
+        reject(data);
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
