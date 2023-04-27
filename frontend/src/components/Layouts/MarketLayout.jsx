@@ -2,7 +2,7 @@ import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { FaBars, FaListAlt, FaPlus } from "react-icons/fa";
 import { FiLogOut, FiUsers } from "react-icons/fi";
-import { GrUserSettings } from "react-icons/gr";
+import { GrUser, GrUserSettings } from "react-icons/gr";
 import {
   HiOutlineChevronDoubleLeft,
   HiOutlineChevronDoubleRight,
@@ -74,6 +74,12 @@ const Layout = () => {
             component={<Link to="/market/listings/new" />}
           >
             Create new listing
+          </MenuItem>
+          <MenuItem
+            icon={<GrUser />}
+            component={<Link to={`/market/users/${auth.userId}`} />}
+          >
+            My profile
           </MenuItem>
           <MenuItem
             icon={<GrUserSettings />}
