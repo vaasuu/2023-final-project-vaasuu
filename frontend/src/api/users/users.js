@@ -73,13 +73,18 @@ export const getAllUsers = async ({ queryKey }) => {
   });
 };
 
-export const getUser = async (userId) => {
+export const getUser = async ({ queryKey }) => {
+  const [_, userId, token] = queryKey;
+
+  console.log(queryKey);
+
   return new Promise(async (resolve, reject) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/users/${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 
