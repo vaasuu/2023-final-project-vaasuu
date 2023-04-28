@@ -11,11 +11,10 @@ export const signup = async ({ name, email, password }) => {
         body: JSON.stringify({ name, email, password }),
       });
 
+      const data = await res.json();
       if (res.status === 201) {
-        const data = await res.json();
         resolve(data);
       } else {
-        const data = await res.json();
         reject(data);
       }
     } catch (err) {
@@ -35,11 +34,10 @@ export const login = async ({ email, password }) => {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await res.json();
       if (res.status === 200) {
-        const data = await res.json();
         resolve(data);
       } else {
-        const data = await res.json();
         reject(data);
       }
     } catch (err) {
@@ -59,11 +57,10 @@ export const getAllUsers = async (token) => {
         },
       });
 
+      const data = await res.json();
       if (res.status === 200) {
-        const data = await res.json();
         resolve(data);
       } else {
-        const data = await res.json();
         reject(data);
       }
     } catch (err) {
@@ -85,11 +82,10 @@ export const getUser = async (userId, token) => {
         },
       });
 
+      const data = await res.json();
       if (res.status === 200) {
-        const data = await res.json();
         resolve(data);
       } else {
-        const data = await res.json();
         reject(data);
       }
     } catch (err) {
@@ -114,11 +110,10 @@ export const updateUser = async (
         body: JSON.stringify({ name, email, password, roles }),
       });
 
+      const data = await res.json();
       if (res.status === 204) {
-        const data = await res.json();
         resolve(data);
       } else {
-        const data = await res.json();
         reject(data);
       }
     } catch (err) {
@@ -164,11 +159,10 @@ export const searchUsers = async (token, searchTerm) => {
         }
       );
 
+      const data = await res.json();
       if (res.status === 200) {
-        const data = await res.json();
         resolve(data);
       } else {
-        const data = await res.json();
         reject(data);
       }
     } catch (err) {
