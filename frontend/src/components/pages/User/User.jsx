@@ -5,6 +5,7 @@ import { AuthContext } from "../../../shared/context/auth-context";
 import { useContext } from "react";
 import { SyncLoader } from "react-spinners";
 import { getUserListings } from "../../../api/listings/listings";
+import UserProfileDetails from "./UserProfileDetails";
 
 const User = () => {
   document.title = "User | Marketplace";
@@ -29,7 +30,7 @@ const User = () => {
     <div>
       <h1> User </h1>
       {userDataIsLoading && <SyncLoader />}
-      {JSON.stringify(userData)}
+      {userData && <UserProfileDetails user={userData.user} />}
     </div>
   );
 };
