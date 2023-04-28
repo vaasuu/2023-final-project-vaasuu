@@ -21,9 +21,9 @@ router.use(verifyAuth);
 
 router.get("/", getAllUsers);
 router.get("/search", searchUsers);
+router.get("/:id", getUserById); // email is only accessible to respective user or admin
 
 // These routes are only accessible to their respective users or admins
-router.get("/:id", getUserById);
 router.delete("/:id", deleteUserById);
 router.patch("/:id", updateUserById);
 

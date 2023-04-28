@@ -197,17 +197,8 @@ const getUserById = async (req, res) => {
   const tokenUserId = req.userData.userId;
   const isAdmin = await utils.hasRole(tokenUserId, "admin");
 
-  // Check if user is authorized to access this resource
-  // User can only get their own account information.
-  // Admin can get any user's account information.
-
-  // if user is not an admin and is not requesting their own account information
-  if (!isAdmin && tokenUserId !== requestedUserId) {
-    // return 403 forbidden
-    return res
-      .status(StatusCodes.FORBIDDEN)
-      .json({ error: "You are not authorized to access this resource" });
-  }
+  // only show email if the user is requesting their own details or if they are an admin
+  const canSeeEmail = requestedUserId === tokenUserId || isAdmin;
 
   // check if user exists in the database
   try {
@@ -221,7 +212,7 @@ const getUserById = async (req, res) => {
     const user = foundUsers[0];
     const userDetailsToReturn = {
       id: user.id,
-      email: user.email,
+      email: canSeeEmail ? user.email : undefined,
       name: user.name,
       created_at: user.created_at,
       updated_at: user.updated_at,

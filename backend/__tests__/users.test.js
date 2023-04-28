@@ -394,11 +394,14 @@ describe("GET a user", () => {
         type: "bearer",
       });
 
-    expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty(
-      "error",
-      "You are not authorized to access this resource"
-    );
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("user");
+    expect(res.body.user).toEqual({
+      id: "bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89",
+      name: "Jane Doe",
+      created_at: expect.any(String),
+      updated_at: expect.any(String),
+    });
   });
 
   it("should let an admin user get other user details", async () => {
@@ -510,7 +513,7 @@ describe("DELETE a user", () => {
     expect(res.body).toEqual({});
   });
 
-  it("should not let a normal user get other user details", async () => {
+  it("should not let a normal user delete other user", async () => {
     const res = await request(app)
       .delete("/api/v1/users/bbbbbbbb-f9e0-4047-99a5-6f0ed153ba89")
       .auth(signupRes.body.token, {
@@ -524,7 +527,7 @@ describe("DELETE a user", () => {
     );
   });
 
-  it("should let an admin user delete other user details", async () => {
+  it("should let an admin user delete other user", async () => {
     // get a token
     const loginRes = await request(app).post("/api/v1/users/login").send({
       email: "bob.johnson@example.com",
