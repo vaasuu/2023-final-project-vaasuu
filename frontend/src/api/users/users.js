@@ -48,8 +48,7 @@ export const login = async ({ email, password }) => {
   });
 };
 
-export const getAllUsers = async ({ queryKey }) => {
-  const [_, token] = queryKey;
+export const getAllUsers = async (token) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/users`, {
@@ -73,10 +72,8 @@ export const getAllUsers = async ({ queryKey }) => {
   });
 };
 
-export const getUser = async ({ queryKey }) => {
-  const [_, userId, token] = queryKey;
-
-  console.log(queryKey);
+export const getUser = async (userId, token) => {
+  console.log("here", userId, token);
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -101,15 +98,20 @@ export const getUser = async ({ queryKey }) => {
   });
 };
 
-export const updateUser = async ({ userId, name, email, password }) => {
+export const updateUser = async (
+  userId,
+  token,
+  { name, email, password, roles }
+) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/users/${userId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, roles }),
       });
 
       if (res.status === 204) {
@@ -125,7 +127,7 @@ export const updateUser = async ({ userId, name, email, password }) => {
   });
 };
 
-export const deleteUser = async ({ token, userId }) => {
+export const deleteUser = async (userId, token) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/users/${userId}`, {
@@ -148,7 +150,7 @@ export const deleteUser = async ({ token, userId }) => {
   });
 };
 
-export const searchUsers = async ({ token, searchTerm }) => {
+export const searchUsers = async (token, searchTerm) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await fetch(

@@ -13,15 +13,15 @@ const User = () => {
   const auth = useContext(AuthContext);
   const { id } = useParams();
 
-  const { isLoading: userDataIsLoading, data: userData } = useQuery(
-    ["userGet", id, auth.token],
-    getUser
-  );
+  const { isLoading: userDataIsLoading, data: userData } = useQuery({
+    queryKey: ["userGet", id, auth.token],
+    queryFn: () => getUser(id, auth.token),
+  });
 
-  const { isLoading: usersListingsIsLoading, data: usersListings } = useQuery(
-    ["userListings", id, auth.token],
-    getUserListings
-  );
+  const { isLoading: usersListingsIsLoading, data: usersListings } = useQuery({
+    queryKey: ["userListings", id, auth.token],
+    queryFn: () => getUserListings(id, auth.token),
+  });
 
   console.log(userData);
   console.log(usersListings);

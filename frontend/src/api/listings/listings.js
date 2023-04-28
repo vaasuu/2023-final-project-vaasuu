@@ -1,10 +1,6 @@
 import { BACKEND_URL } from "../../shared/utils/utils";
 
-export const getUserListings = async ({ queryKey }) => {
-  const [_, userId, token] = queryKey;
-
-  console.log(queryKey);
-
+export const getUserListings = async (userId, token) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/listings/user/${userId}`, {

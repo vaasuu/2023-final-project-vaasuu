@@ -14,7 +14,10 @@ const Users = () => {
   const auth = useContext(AuthContext);
   let [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
-  const { isLoading, data } = useQuery(["users", auth.token], getAllUsers);
+  const { isLoading, data } = useQuery({
+    queryKey: ["users", auth.token],
+    queryFn: () => getAllUsers(auth.token),
+  });
 
   const handleSearchTermChange = (e) => {
     setSearchTerm(e.target.value);
