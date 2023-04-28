@@ -50,7 +50,7 @@ const Layout = () => {
   };
 
   return (
-    <div style={{ display: "flex", height: "100%", minHeight: "400px" }}>
+    <div className="market-layout-container">
       <Sidebar breakPoint="sm" backgroundColor="rgb(249, 249, 249, 0.95)">
         <div className="sidebar-collapse-button">
           <SidebarChevronIcon />
@@ -92,7 +92,7 @@ const Layout = () => {
           </MenuItem>
         </Menu>
       </Sidebar>
-      <main style={{ display: "flex", padding: "10px" }}>
+      <main className="market-layout__main-content">
         <div className="smallScreenToggleSidebar">
           <FaBars onClick={() => toggleSidebar()} />
         </div>

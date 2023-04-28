@@ -9,3 +9,16 @@
   justify-content: flex-end;
   margin: 10px;
 }
+
+.market-layout-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.market-layout__main-content {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  width: 100%;
+}
