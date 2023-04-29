@@ -70,8 +70,6 @@ export const getAllUsers = async (token) => {
 };
 
 export const getUser = async (userId, token) => {
-  console.log("here", userId, token);
-
   return new Promise(async (resolve, reject) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/users/${userId}`, {
