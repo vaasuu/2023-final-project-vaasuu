@@ -108,10 +108,10 @@ export const updateUser = async (
         body: JSON.stringify({ name, email, password, roles }),
       });
 
-      const data = await res.json();
       if (res.status === 204) {
-        resolve(data);
+        resolve();
       } else {
+        const data = await res.json();
         reject(data);
       }
     } catch (err) {
