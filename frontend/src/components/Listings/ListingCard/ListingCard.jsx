@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import "./ListingCard.css";
+import BlurHashImage from "../../BlurHashImage/BlurHashImage";
 
 const ListingCard = ({ listingData }) => {
   const {
@@ -22,7 +23,7 @@ const ListingCard = ({ listingData }) => {
       >
         {picture_url && (
           <div className="listing-card__image">
-            <img src={picture_url} alt={title} />
+            <BlurHashImage blurhash={blurhash} url={picture_url} alt={title} />
           </div>
         )}
         <p className="listing-card__title">{title}</p>
