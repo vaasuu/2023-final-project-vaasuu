@@ -26,3 +26,13 @@
   font-size: 32px;
   font-weight: bold;
 }
+
+.user-profile-details__edit-profile-button {
+  align-self: flex-end;
+}
+
+.user-profile-details__edit-profile-button a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
