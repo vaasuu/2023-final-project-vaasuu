@@ -92,12 +92,14 @@ const Layout = () => {
           </MenuItem>
         </Menu>
       </Sidebar>
-      <main className="market-layout__main-content">
+      <div className="market-layout__main-content-container">
         <div className="smallScreenToggleSidebar">
           <FaBars onClick={() => toggleSidebar()} />
         </div>
-        <Outlet />
-      </main>
+        <main className="market-layout__main-content">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };
