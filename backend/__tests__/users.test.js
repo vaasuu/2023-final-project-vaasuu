@@ -428,6 +428,7 @@ describe("GET a user", () => {
       email: "jane.doe@example.com",
       created_at: expect.any(String),
       updated_at: expect.any(String),
+      roles: ["normal"],
     });
   });
 
