@@ -1,0 +1,38 @@
+.user-profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+}
+
+.user-profile-details__avatar {
+  flex-shrink: 0;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.user-profile-details__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-profile-details__name {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.user-profile-details__edit-profile-button {
+  align-self: flex-end;
+}
+
+.user-profile-details__edit-profile-button a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}

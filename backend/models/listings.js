@@ -83,19 +83,19 @@ const listings = {
             l.currency, 
             l.owner, 
             u.name AS owner_name, 
-            c.name AS category,
+            MIN(c.name) AS category,
             l.location, 
             l.created_at, 
             l.updated_at, 
-            p.url as picture_url, 
-            p.blurhash 
+            MIN(p.url) as picture_url, 
+            MIN(p.blurhash) as blurhash
         FROM 
             listings l 
             LEFT JOIN users u ON l.owner = u.id 
             LEFT JOIN pictures p ON l.listing_id = p.listing_id
             LEFT JOIN listing_categories lc ON l.listing_id = lc.listing_id
             LEFT JOIN categories c ON lc.category_id = c.id
-        GROUP BY l.listing_id, c.name, p.url, p.blurhash
+        GROUP BY l.listing_id
         `
       );
       return rows;
@@ -115,7 +115,7 @@ const listings = {
             l.currency,
             l.owner,
             u.name AS owner_name,
-            c.name AS category,
+            MIN(c.name) AS category,
             l.location,
             l.created_at,
             l.updated_at,
@@ -128,7 +128,6 @@ const listings = {
             LEFT JOIN listing_categories lc ON l.listing_id = lc.listing_id
             LEFT JOIN categories c ON lc.category_id = c.id
         WHERE l.listing_id = ?
-        GROUP BY c.name
         `,
         [id]
       );
@@ -153,14 +152,14 @@ const listings = {
             l.location, 
             l.created_at, 
             l.updated_at, 
-            p.url as picture_url, 
-            p.blurhash 
+            MIN(p.url) as picture_url, 
+            MIN(p.blurhash) as blurhash
         FROM 
             listings l 
             INNER JOIN users u ON l.owner = u.id 
             LEFT JOIN pictures p ON l.listing_id = p.listing_id
         WHERE l.owner = ?
-        GROUP BY l.listing_id, p.url, p.blurhash
+        GROUP BY l.listing_id
         `,
         [userId]
       );

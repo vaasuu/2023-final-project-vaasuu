@@ -210,12 +210,14 @@ const getUserById = async (req, res) => {
     }
 
     const user = foundUsers[0];
+    const roles = await utils.getRoles(id);
     const userDetailsToReturn = {
       id: user.id,
       email: canSeeEmail ? user.email : undefined,
       name: user.name,
       created_at: user.created_at,
       updated_at: user.updated_at,
+      roles: isAdmin ? roles : undefined, // only show roles if the user requesting is an admin
     };
 
     // return the user details
