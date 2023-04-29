@@ -1,0 +1,8 @@
+.listings-list {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 20px;
+  overflow: scroll;
+}
