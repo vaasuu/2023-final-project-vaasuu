@@ -66,7 +66,7 @@ const EditUser = () => {
       password: passwordRef?.current?.value
         ? passwordRef.current.value
         : undefined,
-      roles: adminRef.current.checked ? ["admin"] : ["normal"],
+      roles: adminRef?.current?.checked ? ["admin"] : undefined,
     };
 
     updateUserMutation.mutate(data);
@@ -84,6 +84,8 @@ const EditUser = () => {
             id="name"
             ref={nameRef}
             defaultValue={userData?.user?.name}
+            minLength={1}
+            maxLength={255}
           />
 
           <label htmlFor="email">Email</label>
@@ -101,6 +103,9 @@ const EditUser = () => {
             name="password"
             id="password"
             ref={passwordRef}
+            minLength={8}
+            maxLength={72}
+            placeholder="Leave blank to keep the same password"
           />
 
           {auth.isAdmin && userData?.user && (
