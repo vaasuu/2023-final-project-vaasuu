@@ -551,7 +551,7 @@ describe("Listings", () => {
 
     it("should return listings (listing title + description)", async () => {
       const res = await request(app)
-        .get("/api/v1/listings/search?query=macbook+intel+ssd")
+        .get("/api/v1/listings/search?query=intel+ssd")
         .auth(token, {
           type: "bearer",
         });
