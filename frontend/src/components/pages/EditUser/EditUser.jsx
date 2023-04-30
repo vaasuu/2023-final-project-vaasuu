@@ -7,7 +7,7 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { getUser, updateUser } from "../../../api/users/users";
+import { deleteUser, getUser, updateUser } from "../../../api/users/users";
 
 import "./EditUser.css";
 
@@ -72,9 +72,25 @@ const EditUser = () => {
     updateUserMutation.mutate(data);
   };
 
+  const deleteUserMutation = useMutation({
+    mutationKey: ["userDelete", id, auth.token],
+    mutationFn: () => deleteUser(id, auth.token),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["userGet", id, auth.token]);
+      if (auth.userId === id) {
+        auth.logout(); // logout if the user deletes their own account
+      } else {
+        navigate(`/market/users`); // navigate to the users list if the user deletes another user
+      }
+    },
+    onError: (errorData) => {
+      setErrorMsg(errorData.error);
+    },
+  });
+
   return (
     <div className="edit-user-page">
-      <h1>EditUser</h1>
+      <h1>Edit User</h1>
       <div className="edit-user__form-control">
         <form className="edit-user__form" onSubmit={submitHandler}>
           <label htmlFor="name">Name</label>
@@ -125,6 +141,26 @@ const EditUser = () => {
           <button type="submit">Save</button>
         </form>
         {errorMsg && <p className="form-error">{errorMsg}</p>}
+      </div>
+
+      <div className="edit-user__delete-user">
+        <h2>Delete user</h2>
+        <p>
+          Deleting a user will also delete all their listings. This action
+          cannot be undone.
+        </p>
+        <button
+          className="delete-user__button"
+          onClick={() => {
+            if (window.confirm("Are you sure you want to delete this user?")) {
+              deleteUserMutation.mutate();
+            }
+          }}
+        >
+          Delete User
+        </button>
+
+        {deleteUserMutation.isLoading && <p>Deleting user...</p>}
       </div>
     </div>
   );
