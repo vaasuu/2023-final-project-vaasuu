@@ -5,7 +5,7 @@ import "./Auth.css";
 import { useMutation } from "react-query";
 import { login, signup } from "../../../api/users/users";
 import { AuthContext } from "../../../shared/context/auth-context";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NavigationContext } from "../../../shared/context/navigation-context";
 
 const Auth = () => {
@@ -158,6 +158,9 @@ const Auth = () => {
           )}
         </div>
       </form>
+      <Link className="auth__forgot-password" to="/reset-password">
+        Forgot your password?
+      </Link>
     </div>
   );
 };

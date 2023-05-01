@@ -66,3 +66,8 @@
 .form-control input:invalid {
   border-color: red;
 }
+
+.auth__forgot-password {
+  font-size: 0.8rem;
+  margin-top: 10px;
+}
