@@ -34,9 +34,6 @@ const User = () => {
     queryFn: () => getUserListings(id, auth.token),
   });
 
-  console.log(userData);
-  console.log(usersListings);
-
   return (
     <div>
       <h1> User </h1>
