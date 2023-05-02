@@ -19,6 +19,10 @@ const Acknowledgements = () => {
         </a>
         .
       </p>
+      <p>
+        Robohash user profile images are from robohash.org and are licensed
+        under the CC-BY license.
+      </p>
     </div>
   );
 };
