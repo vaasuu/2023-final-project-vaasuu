@@ -62,14 +62,14 @@ const EditListing = () => {
 
   return (
     <div className="new-listing">
-      <h1>New Listing</h1>
+      <h1>Edit Listing</h1>
       {isLoading && <SyncLoader />}
       {formData && (
         <ListingForm
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
-          submitButtonText="Edit Listing"
+          submitButtonText="Save changes"
           errorMsg={errorMsg}
         />
       )}
