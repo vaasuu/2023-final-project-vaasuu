@@ -58,6 +58,9 @@ const Listing = () => {
           <p className="listing__info">
             Listing updated: {new Date(listing.updated_at).toLocaleString()}
           </p>
+          {(listingData?.listing?.owner === auth.userId || auth.isAdmin) && (
+            <Link to={`/market/listings/${listing.listing_id}/edit`}>Edit</Link>
+          )}
         </>
       )}
     </div>
@@ -65,31 +68,3 @@ const Listing = () => {
 };
 
 export default Listing;
-
-/*
-
-
-{
-  "listing": {
-    "listing_id": 1,
-    "title": "MacBook Pro",
-    "description": "2019 MacBook Pro with 13\" Retina display, 2.4GHz quad-core Intel Core i5, 8GB RAM, and 256GB SSD storage.",
-    "asking_price": "1500.00",
-    "currency": "USD",
-    "owner": "aaaaaaaa-0615-4d04-a795-9c5756ef5f4c",
-    "owner_name": "John Smith",
-    "category": "electronics",
-    "location": "San Francisco, CA",
-    "created_at": "2023-04-02T11:00:00.000Z",
-    "updated_at": "2023-04-15T14:24:52.000Z",
-    "image_data": [
-      {
-        "id": 1,
-        "url": "https://placehold.co/400x300?text=MacBook+Pro+picture+1",
-        "blurhash": "LEHV6nWB2yk8pyo0adR*.7kCMdnj"
-      }
-    ]
-  }
-}
-
-*/

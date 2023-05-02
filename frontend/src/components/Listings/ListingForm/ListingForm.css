@@ -54,3 +54,10 @@ ul li button:hover {
   color: red;
   margin-top: 0.5rem;
 }
+
+.listing-form__image-urls-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 1rem;
+  margin-bottom: 1rem;
+}

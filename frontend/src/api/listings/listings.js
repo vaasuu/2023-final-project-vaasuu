@@ -147,3 +147,27 @@ export const createListing = async (token, listingData) => {
     }
   });
 };
+
+export const updateListing = async (token, listingId, listingData) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/v1/listings/${listingId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(listingData),
+      });
+
+      if (res.status === 201) {
+        resolve();
+      } else {
+        const data = await res.json();
+        reject(data);
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
