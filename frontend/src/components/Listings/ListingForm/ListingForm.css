@@ -1,0 +1,63 @@
+/* New Listing form */
+.listing-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 1rem;
+}
+
+/* Form labels */
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+/* Input fields */
+input[type="text"],
+textarea,
+select,
+input[type="number"],
+input[type="url"] {
+  display: block;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: border-color 0.2s ease-in-out;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus,
+input[type="number"]:focus,
+input[type="url"]:focus {
+  outline: none;
+  border-color: #0077cc;
+}
+
+/* Button to remove image URLs */
+ul li button {
+  margin-left: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #0077cc;
+}
+
+ul li button:hover {
+  text-decoration: underline;
+}
+
+/* Error message */
+.error {
+  color: red;
+  margin-top: 0.5rem;
+}
+
+.listing-form__image-urls-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 1rem;
+  margin-bottom: 1rem;
+}

@@ -142,24 +142,31 @@ const listings = {
       const [rows] = await promisePool.query(
         `
         SELECT 
-            l.listing_id, 
-            l.title, 
-            l.description, 
-            l.asking_price, 
-            l.currency, 
-            l.owner, 
-            u.name AS owner_name, 
-            l.location, 
-            l.created_at, 
-            l.updated_at, 
-            MIN(p.url) as picture_url, 
-            MIN(p.blurhash) as blurhash
-        FROM 
-            listings l 
-            INNER JOIN users u ON l.owner = u.id 
-            LEFT JOIN pictures p ON l.listing_id = p.listing_id
-        WHERE l.owner = ?
-        GROUP BY l.listing_id
+        l.listing_id, 
+        l.title, 
+        l.description, 
+        l.asking_price, 
+        l.currency, 
+        l.owner, 
+        u.name AS owner_name, 
+        l.location, 
+        l.created_at, 
+        l.updated_at, 
+        p.url AS picture_url, 
+        p.blurhash AS blurhash
+      FROM 
+        listings l 
+        INNER JOIN users u ON l.owner = u.id 
+        LEFT JOIN (
+          SELECT listing_id, MIN(id) AS id 
+          FROM pictures 
+          GROUP BY listing_id
+        ) AS pmin ON l.listing_id = pmin.listing_id
+        LEFT JOIN pictures p ON pmin.id = p.id
+      WHERE 
+        l.owner = ?
+      GROUP BY 
+        l.listing_id
         `,
         [userId]
       );
@@ -256,28 +263,33 @@ const listings = {
     try {
       const [rows] = await promisePool.query(
         `
-          SELECT l.listing_id,
-            l.title,
-            l.description,
-            l.asking_price,
-            l.currency,
-            l.owner,
-            u.name AS owner_name,
-            c.name AS category,
-            l.location,
-            l.created_at,
-            l.updated_at,
-            p.url as picture_url,
-            p.blurhash
-          FROM listings l
-            LEFT JOIN users u ON l.owner = u.id
-            LEFT JOIN pictures p ON l.listing_id = p.listing_id
-            LEFT JOIN listing_categories lc ON l.listing_id = lc.listing_id
-            LEFT JOIN categories c ON lc.category_id = c.id
-          WHERE MATCH (title, description, location) AGAINST (? IN NATURAL LANGUAGE MODE)
-            OR MATCH (c.name) AGAINST (? IN NATURAL LANGUAGE MODE)
-          GROUP BY l.listing_id, c.name, p.url, p.blurhash
-          ORDER BY MATCH (title, description, location) AGAINST (? IN NATURAL LANGUAGE MODE) DESC;
+        SELECT l.listing_id,
+          l.title,
+          l.description,
+          l.asking_price,
+          l.currency,
+          l.owner,
+          u.name AS owner_name,
+          c.name AS category,
+          l.location,
+          l.created_at,
+          l.updated_at,
+          p.url as picture_url,
+          p.blurhash
+        FROM listings l
+          LEFT JOIN users u ON l.owner = u.id
+          LEFT JOIN (
+            SELECT MIN(id) AS id, listing_id
+            FROM pictures
+            GROUP BY listing_id
+          ) p1 ON l.listing_id = p1.listing_id
+          LEFT JOIN pictures p ON p1.id = p.id
+          LEFT JOIN listing_categories lc ON l.listing_id = lc.listing_id
+          LEFT JOIN categories c ON lc.category_id = c.id
+        WHERE (MATCH (title, description, location) AGAINST (? IN NATURAL LANGUAGE MODE)
+                OR MATCH (c.name) AGAINST (? IN NATURAL LANGUAGE MODE))
+        GROUP BY l.listing_id, c.name
+        ORDER BY MATCH (title, description, location) AGAINST (? IN NATURAL LANGUAGE MODE) DESC;
         `,
         [searchString, searchString, searchString]
       );

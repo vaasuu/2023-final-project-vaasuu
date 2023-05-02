@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { SyncLoader } from "react-spinners";
 import { getUserListings } from "../../../api/listings/listings";
 import UserProfileDetails from "./UserProfileDetails";
+import ListingsList from "../../Listings/ListingsList/ListingsList";
 
 const User = () => {
   const [userName, setUserName] = useState("");
@@ -33,14 +34,16 @@ const User = () => {
     queryFn: () => getUserListings(id, auth.token),
   });
 
-  console.log(userData);
-  console.log(usersListings);
-
   return (
     <div>
       <h1> User </h1>
       {userDataIsLoading && <SyncLoader />}
       {userData && <UserProfileDetails user={userData.user} />}
+
+      {usersListingsIsLoading && <SyncLoader />}
+      {!usersListingsIsLoading && (
+        <ListingsList listings={usersListings?.listings} />
+      )}
     </div>
   );
 };

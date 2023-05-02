@@ -43,6 +43,7 @@ const Users = () => {
       {isLoading && <SyncLoader />}
       <div className="search-bar">
         <input
+          className="search-bar-input"
           type="search"
           placeholder="Search"
           value={searchTerm}

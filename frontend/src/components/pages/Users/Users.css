@@ -9,3 +9,12 @@
 .search-bar {
   margin-bottom: 20px;
 }
+
+.search-bar-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  margin: 10px 0;
+  width: 100%;
+}

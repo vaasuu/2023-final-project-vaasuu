@@ -1,0 +1,52 @@
+.listing {
+  display: flex;
+  flex-direction: column;
+}
+
+.listing h1 {
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+.listing p {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.listing a {
+  color: #0077cc;
+  text-decoration: none;
+}
+
+.listing a:hover {
+  text-decoration: underline;
+}
+
+.image-gallery {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.image-gallery .image-gallery-slide img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+.image-gallery .image-gallery-thumbnails-container {
+  margin-top: 1rem;
+}
+
+.image-gallery .image-gallery-thumbnail img {
+  object-fit: cover;
+  width: 60px;
+  height: 60px;
+  margin-right: 0.5rem;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.image-gallery .image-gallery-thumbnail.active img {
+  border: 2px solid #0077cc;
+}

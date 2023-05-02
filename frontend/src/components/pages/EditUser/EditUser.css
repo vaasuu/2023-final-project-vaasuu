@@ -64,3 +64,14 @@
 .edit-user__form-control input:invalid {
   border-color: red;
 }
+
+.delete-user__button {
+  padding: 10px;
+  margin: 16px 0;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  background-color: #d0342c;
+  color: #fff;
+  cursor: pointer;
+}
