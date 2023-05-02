@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../../shared/context/auth-context";
 import {
-  createListing,
   getListingById,
   updateListing,
+  deleteListing,
 } from "../../../api/listings/listings";
 import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -60,8 +60,27 @@ const EditListing = () => {
     EditListingMutation.mutate(formData);
   };
 
+  const DeleteListingMutation = useMutation({
+    mutationKey: ["DeleteListing", auth.token, id],
+    mutationFn: () => deleteListing(auth.token, id),
+    onSuccess: (data) => {
+      console.log(data);
+      navigate(`/market/listings`);
+    },
+    onError: (data) => {
+      setErrorMsg(data.error);
+    },
+  });
+
+  const handleDelete = (event) => {
+    event.preventDefault();
+    if (window.confirm("Are you sure you want to delete this listing?")) {
+      DeleteListingMutation.mutate();
+    }
+  };
+
   return (
-    <div className="new-listing">
+    <div className="edit-listing">
       <h1>Edit Listing</h1>
       {isLoading && <SyncLoader />}
       {formData && (
@@ -73,6 +92,12 @@ const EditListing = () => {
           errorMsg={errorMsg}
         />
       )}
+      <button
+        style={{ background: "#d0342c", color: "#fff" }}
+        onClick={handleDelete}
+      >
+        Delete Listing
+      </button>
     </div>
   );
 };

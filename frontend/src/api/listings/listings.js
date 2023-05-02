@@ -171,3 +171,27 @@ export const updateListing = async (token, listingId, listingData) => {
     }
   });
 };
+
+export const deleteListing = async (token, listingId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/v1/listings/${listingId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        const data = await res.json();
+        resolve(data);
+      } else {
+        const data = await res.json();
+        reject(data);
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
