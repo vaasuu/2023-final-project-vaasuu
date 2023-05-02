@@ -26,7 +26,6 @@ const NewListing = () => {
     mutationKey: ["newListing", auth.token, formData],
     mutationFn: (formData) => createListing(auth.token, formData),
     onSuccess: (data) => {
-      console.log(data);
       navigate(`/market/listings/${data.id}`);
     },
     onError: (data) => {
@@ -36,7 +35,6 @@ const NewListing = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData);
     newListingMutation.mutate(formData);
   };
 

@@ -174,9 +174,6 @@ const ListingForm = ({
         maxLength={1000}
         pattern="https://.+"
         placeholder="https://..."
-        onInvalid={() => {
-          console.log("invalid url");
-        }}
         onBlur={async (e) => {
           if (e.target.value === "") {
             return; // do nothing if the user didn't enter a url

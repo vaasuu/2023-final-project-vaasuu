@@ -25,7 +25,6 @@ const EditListing = () => {
     queryKey: ["listingGet", auth.token, id],
     queryFn: () => getListingById(auth.token, id),
     onSuccess: (listingData) => {
-      console.log(listingData);
       const defaultFormData = {
         title: listingData?.listing.title,
         description: listingData?.listing.description,
@@ -35,7 +34,6 @@ const EditListing = () => {
         location: listingData?.listing.location,
         image_urls: listingData?.listing.image_data.map((img) => img.url),
       };
-      console.log(defaultFormData);
 
       setFormData(defaultFormData);
     },
@@ -45,8 +43,7 @@ const EditListing = () => {
   const EditListingMutation = useMutation({
     mutationKey: ["EditListing", auth.token, formData],
     mutationFn: (formData) => updateListing(auth.token, id, formData),
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: () => {
       navigate(`/market/listings/${id}`);
     },
     onError: (data) => {
@@ -56,7 +53,6 @@ const EditListing = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData);
     EditListingMutation.mutate(formData);
   };
 
@@ -64,7 +60,6 @@ const EditListing = () => {
     mutationKey: ["DeleteListing", auth.token, id],
     mutationFn: () => deleteListing(auth.token, id),
     onSuccess: (data) => {
-      console.log(data);
       navigate(`/market/listings`);
     },
     onError: (data) => {
