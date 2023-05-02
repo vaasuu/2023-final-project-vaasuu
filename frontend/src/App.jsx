@@ -11,6 +11,7 @@ import User from "./components/pages/User/User";
 import EditUser from "./components/pages/EditUser/EditUser";
 import Listings from "./components/pages/Listings/Listings";
 import Listing from "./components/pages/Listing/Listing";
+import NewListing from "./components/pages/NewListing/NewListing";
 import EditListing from "./components/pages/EditListing/EditListing";
 import ResetPassword from "./components/pages/ResetPassword/ResetPassword";
 import NotFound from "./components/pages/NotFound/NotFound";
@@ -36,10 +37,11 @@ const router = createBrowserRouter(
     <Route path="/market" element={<MarketLayout />}>
       {/* sidebar is included under these routes: */}
       <Route index element={<Listings />} />
-      <Route path="listings/*" element={<Listings />} />
+      <Route path="listings" element={<Listings />} />
+      <Route path="listings/new" element={<NewListing />} />
       <Route path="listings/:id" element={<Listing />} />
       <Route path="listings/:id/edit" element={<EditListing />} />
-      <Route path="users/*" element={<Users />} />
+      <Route path="users" element={<Users />} />
       <Route path="users/:id" element={<User />} />
       <Route path="users/:id/edit" element={<EditUser />} />
     </Route>,
