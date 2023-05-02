@@ -37,7 +37,7 @@ const Listing = () => {
       {isError && <p>{error.error}</p>}
       {listingData && (
         <>
-          <ImageGallery items={images} />
+          {images.length > 0 && <ImageGallery items={images} />}
           <h1>{listing.title}</h1>
           <p className="listing__info">{listing.description}</p>
           <p className="listing__info">
