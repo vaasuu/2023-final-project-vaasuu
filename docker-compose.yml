@@ -1,0 +1,77 @@
+services:
+  api:
+    image: node:18.15-alpine
+    working_dir: /usr/src/app
+    restart: unless-stopped
+    command: "sh -c 'npm i && npm run dev'"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - db
+      - maildev
+    environment:
+      # MYSQL database
+      - MYSQL_HOST=db
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=dev
+      - MYSQL_PORT=3306
+      # JSON Web Tokens
+      - JWT_SECRET=secret
+      - JWT_PASSWORD_RESET_SECRET=resetsecret
+      # Backend API server
+      - PORT=3000
+      - FRONTEND_URL=http://localhost:5173
+      # Email
+      - EMAIL_SMTP_HOST=maildev
+      - EMAIL_SMTP_PORT=1025
+      - EMAIL_SMTP_SECURE=false
+      - EMAIL_SMTP_USERNAME=noreply@marketplace.example.com
+      - EMAIL_SMTP_PASSWORD=password123
+      - EMAIL_FROM_NAME=Marketplace
+      - EMAIL_FROM_ADDRESS=noreply@marketplace.example.com
+      # Timezone
+      - TZ=UTC
+  frontend:
+    image: node:18.15-alpine
+    working_dir: /usr/src/app
+    restart: unless-stopped
+    command: "sh -c 'npm i && npx vite --host'"
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend:/usr/src/app
+    depends_on:
+      - api
+    environment:
+      - VITE_BACKEND_URL=http://localhost:3000
+  db:
+    image: mysql:8
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "./db/init-scripts/dev:/docker-entrypoint-initdb.d"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: dev
+      TZ: UTC
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: "mysql -u root -ppassword -e 'SELECT 1'"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080" # http
+      - "1025:1025" # smtp
+    restart: unless-stopped
