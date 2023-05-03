@@ -16,5 +16,8 @@
     "sourceType": "module"
   },
   "plugins": ["react"],
-  "rules": {}
+  "rules": {
+    "no-async-promise-executor": "off",
+    "react/prop-types": "off"
+  }
 }

@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import ListingCard from "./ListingCard";
+import { describe, expect, it } from "vitest";
 
 describe("ListingCard", () => {
   const listingData = {

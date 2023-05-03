@@ -32,6 +32,7 @@ const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
   createRoutesFromElements([
+    /* eslint-disable react/jsx-key */
     <Route path="/" element={<Landing />} />,
     <Route path="/auth" element={<Auth />} />,
     <Route path="/market" element={<MarketLayout />}>
@@ -50,11 +51,11 @@ const router = createBrowserRouter(
     <Route path="/privacy" element={<PrivacyPolicy />} />,
     <Route path="/acknowledgements" element={<Acknowledgements />} />,
     <Route path="*" element={<NotFound />} />,
+    /* eslint-enable react/jsx-key */
   ])
 );
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(null); // null = not checked yet, true = logged in, false = not logged in
   const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const [roles, setRoles] = useState([]);
@@ -70,7 +71,6 @@ const App = () => {
    * @param {number} tokenExpiration - Token expiration timestamp in seconds
    */
   const login = useCallback((uid, token, roles, tokenExpiration = null) => {
-    setIsLoggedIn(true);
     setUserId(uid);
     setToken(token);
     setRoles(roles);
@@ -107,7 +107,6 @@ const App = () => {
         storedData.expiration
       );
     } else {
-      setIsLoggedIn(false); // we didn't find a valid token, so user is not logged in
       setIsLoaded(true); // we're done checking for a local token
     }
   }, [login]);
@@ -116,7 +115,6 @@ const App = () => {
    * Logout function. Clears userAuthData from local storage and clears states.
    */
   const logout = useCallback(() => {
-    setIsLoggedIn(false);
     setUserId(null);
     setToken(null);
     setRoles([]);

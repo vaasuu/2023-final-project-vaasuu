@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
 import BlurHashImage from "./BlurHashImage";
+import { describe, expect, it } from "vitest";
 
 describe("BlurHashImage", () => {
   it("renders image with blurhash", () => {

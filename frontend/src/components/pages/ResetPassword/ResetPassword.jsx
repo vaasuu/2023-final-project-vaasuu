@@ -14,7 +14,7 @@ const PasswordResetEmailRequest = () => {
   const passwordResetEmailRequestMutation = useMutation({
     mutationKey: "passwordResetEmailRequest",
     mutationFn: (email) => requestPasswordReset(email),
-    onSuccess: (data) => {
+    onSuccess: () => {
       setSuccessMsg(
         "Password reset email sent. Please check your email for further instructions."
       );

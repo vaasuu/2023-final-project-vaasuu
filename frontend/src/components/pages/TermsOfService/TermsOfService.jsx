@@ -37,7 +37,7 @@ const TermsOfService = () => {
       </p>
       <h2>Disclaimer of Warranties</h2>
       <p>
-        This site is provided "as is" and without warranty of any kind, either
+        This site is provided &quot;is&quot; and without warranty of any kind,
         express or implied, including but not limited to warranties of
         merchantability, fitness for a particular purpose, or non-infringement.
         We do not guarantee that the site will be error-free or uninterrupted,

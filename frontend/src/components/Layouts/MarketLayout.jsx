@@ -15,8 +15,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { NavigationContext } from "../../shared/context/navigation-context";
 
 const Layout = () => {
-  const { collapseSidebar, toggleSidebar, collapsed, toggled, broken, rtl } =
-    useProSidebar();
+  const { collapseSidebar, toggleSidebar, collapsed } = useProSidebar();
   const auth = useContext(AuthContext);
   const navigationContext = useContext(NavigationContext);
   const navigate = useNavigate();

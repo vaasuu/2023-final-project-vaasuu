@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import MarketLayout from "./MarketLayout";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import { BrowserRouter } from "react-router-dom";
+import { describe, expect, it } from "vitest";
 
 window.matchMedia =
   window.matchMedia ||

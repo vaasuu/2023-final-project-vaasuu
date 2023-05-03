@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import UserCard from "./UserCard";
+import { describe, expect, test } from "vitest";
 
 describe("UserCard", () => {
   const user = {

@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import UserCardList from "./UserCardList";
 import { BrowserRouter } from "react-router-dom";
+import { describe, expect, it } from "vitest";
 
 describe("UserCardList", () => {
   const users = [
