@@ -64,7 +64,7 @@ const Listings = () => {
           minLength={3}
         />
       </div>
-      {isLoadingAllListings && <SyncLoader />}
+      {isLoadingAllListings && <SyncLoader data-testid="loader" />}
       {listings.length > 0 && (
         <div>
           <ListingsList listings={listings} />
