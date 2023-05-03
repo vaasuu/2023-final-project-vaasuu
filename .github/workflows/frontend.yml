@@ -1,9 +1,11 @@
-name: Frontend PR
+name: Frontend
 on:
-  pull_request:
+  push:
+    branches:
+      - main
     paths:
       - frontend/**
-      - .github/workflows/frontend-pr.yml
+      - .github/workflows/frontend.yml
   workflow_dispatch:
 jobs:
   prettier-check:
