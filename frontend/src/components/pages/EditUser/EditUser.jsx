@@ -1,12 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../../shared/context/auth-context";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { deleteUser, getUser, updateUser } from "../../../api/users/users";
 
 import "./EditUser.css";
@@ -23,7 +18,7 @@ const EditUser = () => {
   const auth = useContext(AuthContext);
   const { id } = useParams();
 
-  const { isLoading: userDataIsLoading, data: userData } = useQuery({
+  const { data: userData } = useQuery({
     queryKey: ["userGet", id, auth.token],
     queryFn: () => getUser(id, auth.token),
   });

@@ -1,9 +1,8 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../../shared/context/auth-context";
-import { createListing, getCategories } from "../../../api/listings/listings";
-import { useMutation, useQuery } from "react-query";
+import { getCategories } from "../../../api/listings/listings";
+import { useQuery } from "react-query";
 import currencyCodes from "currency-codes";
-import { useNavigate } from "react-router-dom";
 
 import "./ListingForm.css";
 

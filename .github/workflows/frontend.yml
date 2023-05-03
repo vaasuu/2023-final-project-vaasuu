@@ -1,0 +1,67 @@
+name: Frontend
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - frontend/**
+      - .github/workflows/frontend.yml
+  workflow_dispatch:
+jobs:
+  prettier-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Run prettier style check
+        working-directory: ./frontend
+        run: npx prettier --check .
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install node-modules
+        working-directory: ./frontend
+        run: npm ci
+      - name: Run eslint
+        working-directory: ./frontend
+        run: npx eslint . --ext ".js,.jsx"
+  tests:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install node-modules
+        working-directory: ./frontend
+        run: npm ci
+      - name: Run tests
+        working-directory: ./frontend
+        run: npx vitest run --coverage
+      - name: Save coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: ./frontend/coverage
+  deploy:
+    env:
+      FRONTEND_DEPLOY_WEBHOOK: ${{secrets.FRONTEND_DEPLOY_WEBHOOK}}
+    needs: [prettier-check, lint, tests]
+    runs-on: ubuntu-latest
+    steps:
+      - if: env.FRONTEND_DEPLOY_WEBHOOK != ''
+        name: Trigger deploy to production
+        run: curl ${{secrets.FRONTEND_DEPLOY_WEBHOOK}}

@@ -59,7 +59,7 @@ const EditListing = () => {
   const DeleteListingMutation = useMutation({
     mutationKey: ["DeleteListing", auth.token, id],
     mutationFn: () => deleteListing(auth.token, id),
-    onSuccess: (data) => {
+    onSuccess: () => {
       navigate(`/market/listings`);
     },
     onError: (data) => {

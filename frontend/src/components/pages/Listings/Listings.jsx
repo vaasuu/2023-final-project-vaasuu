@@ -16,7 +16,7 @@ const Listings = () => {
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
   const [listings, setListings] = useState([]);
 
-  const { isLoading: isLoadingAllListings, data: allListingsData } = useQuery({
+  const { isLoading: isLoadingAllListings } = useQuery({
     queryKey: ["all-listings", auth.token],
     queryFn: () => getAllListings(auth.token),
     enabled: !searchTerm, // disable this query when searching
@@ -64,7 +64,7 @@ const Listings = () => {
           minLength={3}
         />
       </div>
-      {isLoadingAllListings && <SyncLoader />}
+      {isLoadingAllListings && <SyncLoader data-testid="loader" />}
       {listings.length > 0 && (
         <div>
           <ListingsList listings={listings} />
