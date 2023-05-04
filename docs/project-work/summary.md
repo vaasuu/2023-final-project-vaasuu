@@ -37,10 +37,11 @@ I built a general marketplace site.
 
 I had some problems with the backend tests due to async code that left connections open and caused the tests to fail randomly. Also with database stuff, as I decided to change the DB along the way and that caused way too much work. (I blame Tamk for this one, as their MySQL server permissions are too strict)...
 
-There's more stuff about the problems in the [docs/project-work/problems.md](problems.md).
+There's more stuff about the problems in [problems.md](problems.md).
 
 Stuff in general took way too much time, but I guess that's what happens when you try to do stuff in a semi overengineered way when a simple solution would have been enough.
-Also the fact that I wanted to learn new stuff [docs/project-work/learning.md](learning.md) I hadn't used before certainly didn't help.
+
+Also the fact that I wanted to learn new stuff ([learning.md](learning.md)) I hadn't used before certainly didn't help.
 
 ## Deployed site
 
