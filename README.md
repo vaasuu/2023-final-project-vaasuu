@@ -25,7 +25,7 @@ Built as a final project for Web Programming course at TAMK.
 - [Installation](docs/development/installation.md)
 - [Project structure](docs/development/project-structure.md)
 - [Testing](docs/development/testing.md)
-- [Project work stuff](docs/project-work)
+- [Project work stuff](docs/project-work/summary.md)
 
 ## Local demo
 
