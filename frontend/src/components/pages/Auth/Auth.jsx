@@ -7,6 +7,7 @@ import { login, signup } from "../../../api/users/users";
 import { AuthContext } from "../../../shared/context/auth-context";
 import { Link, useNavigate } from "react-router-dom";
 import { NavigationContext } from "../../../shared/context/navigation-context";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -21,11 +22,13 @@ const Auth = () => {
   const auth = useContext(AuthContext);
   const navigationContext = useContext(NavigationContext);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const signupMutation = useMutation({
     mutationKey: "signup",
     mutationFn: signup,
     onSuccess: async (data) => {
+      setIsLoading(false);
       auth.login(data.id, data.token, data.roles);
       const previousPage = navigationContext.originalPage || "/";
 
@@ -35,6 +38,7 @@ const Auth = () => {
       navigate(previousPage);
     },
     onError: (data) => {
+      setIsLoading(false);
       setErrorMsg(data.error);
     },
   });
@@ -43,6 +47,7 @@ const Auth = () => {
     mutationKey: "login",
     mutationFn: login,
     onSuccess: async (data) => {
+      setIsLoading(false);
       auth.login(data.id, data.token, data.roles);
       const previousPage = navigationContext.originalPage || "/";
 
@@ -52,11 +57,13 @@ const Auth = () => {
       navigate(previousPage);
     },
     onError: (data) => {
+      setIsLoading(false);
       setErrorMsg(data.error);
     },
   });
 
   const onSubmit = (data) => {
+    setIsLoading(true);
     if (isLogin) {
       loginMutation.mutate(data);
     } else {
@@ -161,6 +168,7 @@ const Auth = () => {
       <Link className="auth__forgot-password" to="/reset-password">
         Forgot your password?
       </Link>
+      {isLoading && <SyncLoader />}
     </div>
   );
 };
