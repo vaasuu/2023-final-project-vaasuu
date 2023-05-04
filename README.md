@@ -44,3 +44,7 @@ MySQL takes about 1 min to start up, so you might have to wait a bit before the 
 | MailDev  | http://localhost:1080 |
 | Adminer  | http://localhost:8080 |
 | Database | localhost:3306        |
+
+## Database ER diagram
+
+![ER diagram](db/db-er.svg)
