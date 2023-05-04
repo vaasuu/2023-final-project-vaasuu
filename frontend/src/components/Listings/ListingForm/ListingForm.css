@@ -6,14 +6,14 @@
 }
 
 /* Form labels */
-label {
+.listing-form label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
 }
 
 /* Input fields */
-input[type="text"],
+.listing-form input[type="text"],
 textarea,
 select,
 input[type="number"],
@@ -27,7 +27,7 @@ input[type="url"] {
   transition: border-color 0.2s ease-in-out;
 }
 
-input[type="text"]:focus,
+.listing-form input[type="text"]:focus,
 textarea:focus,
 select:focus,
 input[type="number"]:focus,
@@ -37,7 +37,7 @@ input[type="url"]:focus {
 }
 
 /* Button to remove image URLs */
-ul li button {
+.listing-form ul li button {
   margin-left: 0.5rem;
   background: transparent;
   border: none;
@@ -45,7 +45,7 @@ ul li button {
   color: #0077cc;
 }
 
-ul li button:hover {
+.listing-form ul li button:hover {
   text-decoration: underline;
 }
 
