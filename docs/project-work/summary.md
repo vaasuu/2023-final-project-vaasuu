@@ -17,13 +17,14 @@ I built a general marketplace site.
 - Users can be searched by name
 - Listings have full text search (searches title, description, category, location)
 - Listings can have multiple links to images
-- Backend creates [Blurhashes](https://blurha.sh/) for images that act has placeholders while the images are loading. (only for the listing view)
+- Backend creates [BlurHashes](https://blurha.sh/) for images that act as placeholders while the images are loading. (only for the listing view)
 - Listings have:
 
   - Title
   - Description
   - Category
   - Location
+  - Owner
   - Price
   - Currency
   - Image links
@@ -31,7 +32,8 @@ I built a general marketplace site.
 - Settings page where users can update their name, email address and password
 - Users can delete their account
 - Forgot password functionality (sends an email with a link to reset password, expires after 30 min)
-- Responsive site design
+- Site auto logouts users as the session expires (1 hour). Users can also logout manually.
+- Responsive site design: works on mobile and desktop. Sidebar is behind a hamburger menu on mobile.
 
 ### Problems
 
