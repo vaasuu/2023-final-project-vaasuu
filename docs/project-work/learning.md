@@ -2,6 +2,8 @@
 
 ## SQL Triggers
 
+I hadn't used triggers before, so I had to learn how to use them. I use them to add a default role to users and to update the listing updated_at timestamp when a listing's category, pictures are updated.
+
 ## Terraform
 
 Created a [super simple terraform script to create a new RDS instance](../../terraform/) with the help of [this article](https://dev.to/aws-builders/create-a-mysql-rds-database-instance-with-terraform-3oab). It's not super useful, but it was a good learning experience and I needed to create the RDS instance anyway.
@@ -299,3 +301,15 @@ valtteri@Hackintosh:terraform$
 
 </section>
 </details>
+
+## More React stuff
+
+- React router v6
+- React query
+- React hook form
+- misc stuff
+
+## Testing
+
+- React Testing Library & Vitest
+- Cypress

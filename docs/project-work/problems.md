@@ -1,39 +1,39 @@
-## Problems
+# Problems I encountered during development
 
-### Jest test failing randomly
+## Jest test failing randomly
 
 I had some problems with the tests failing randomly. I had a test that would fail sometimes, and sometimes it would pass.
 It was caused by async code that was not properly awaited.
 
-#### Solution
+### Solution
 
 `jest`'s `--detectOpenHandles` flag helped me during troubleshooting. It showed me that there was an open handle, which was causing the issue.
 Also `--detectLeaks` was helpful, as it showed me that there was a memory leak, which was the same async code. This took me a while to solve.
 
 I also noticed that the example code from the lecture had the same problem but it was not so obvious as it was only a few tests instead of 50+ I have here.
 
-### Timezone
+## Timezone
 
 I had some problems with the timezone. I had failing tests and timestamps were off by 2-3 hours.
 
 The reason for this was that node-mysql2 client uses the local timezone, and conversions happen when the database is in a different timezone than the client.
 
-#### Solution
+### Solution
 
 I solved this by setting the timezone manually to GMT+0/UTC, wherever I could set it. This fixed the problem. I had to manually add the TZ environment variable to the node start scripts to make it work locally as well.
 
-#### Mysql vs MariaDB
+## Mysql vs MariaDB
 
 I started developing this project with MySQL, but switched to MariaDB because it's so much lighter on resources.
 I was going to use the TAMK MySQL server, so I tested my complete SQL queries on MySQL and found out that they didn't work on MySQL.
-Main problem was that MySQL returned JSON as a actual JSON Object, while MariaDB returned it as a string of the JSON, so my parsing code didn't work.
+Main problem was that MySQL returned JSON as a actual JSON Object, while MariaDB returned it as a string of the JSON, so my parsing code didn't work. Also problems with the stricter default SQL_MODE on MySQL.
 
-#### Solution
+### Solution
 
 I had to then rewrite some parts of the code to make it work on MySQL. As a compromise, I switched dev environment to MySQL, even though it's heavier on resources.
 I could probably have made it work the same on both, as I know MariaDB can fake being MySQL, but I didn't have time to do that.
 
-### TAMK MySQL server
+## TAMK MySQL server
 
 TAMK's mysql server does not grant me the necessary permissions to use it for this project. Can't bypass it as I don't have SUPER user priviledges.
 
