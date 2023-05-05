@@ -2,6 +2,9 @@
 
 Built as a final project for Web Programming course at TAMK.
 
+[![Backend](https://github.com/TiTe-5G00EV16/2023-final-project-vaasuu/actions/workflows/backend.yml/badge.svg)](https://github.com/TiTe-5G00EV16/2023-final-project-vaasuu/actions/workflows/backend.yml)
+[![Frontend](https://github.com/TiTe-5G00EV16/2023-final-project-vaasuu/actions/workflows/frontend.yml/badge.svg)](https://github.com/TiTe-5G00EV16/2023-final-project-vaasuu/actions/workflows/frontend.yml)
+
 ## Short feature list
 
 - Secure user registration and login with bcrypt and JWT
