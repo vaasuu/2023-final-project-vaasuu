@@ -49,3 +49,39 @@ jobs:
       - name: Run tests
         working-directory: ./frontend
         run: npm run test:run
+  e2e-tests:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start MySQL server
+        uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: 8.0
+          auto-start: true
+      - name: Setup MySQL server
+        run: |
+          mysql -u root -h 127.0.0.1 <<< "CREATE DATABASE test; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+      - name: Seed Database
+        working-directory: ./db/init-scripts/dev
+        run: mysql -h 127.0.0.1 -P 3306 -u root -ppassword test < init_test.sql
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install frontend node-modules
+        working-directory: ./frontend
+        run: npm ci
+      - name: Install backend node-modules
+        working-directory: ./backend
+        run: npm ci
+      - name: Start backend
+        working-directory: ./backend
+        run: npm run dev &
+      - name: Start frontend
+        working-directory: ./frontend
+        run: npm run dev &
+      - name: Run e2e tests
+        working-directory: ./frontend
+        run: npm run test:e2e
