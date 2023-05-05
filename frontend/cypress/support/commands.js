@@ -29,4 +29,12 @@ Cypress.Commands.add("login", (email, password) => {
   cy.get("input[name=email]").type(email);
   cy.get("input[name=password]").type(password);
   cy.get('[type="submit"]').click();
+  cy.url().should("include", "/listings");
+});
+
+Cypress.Commands.add("openListingsPage", () => {
+  cy.login("john.smith@example.com", "john.smith");
+  cy.visit("http://localhost:5173/market/listings");
+  cy.contains("Listings");
+  cy.url().should("include", "/listings");
 });
