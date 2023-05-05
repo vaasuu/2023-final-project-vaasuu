@@ -65,11 +65,7 @@ const Listings = () => {
         />
       </div>
       {isLoadingAllListings && <SyncLoader data-testid="loader" />}
-      {listings.length > 0 && (
-        <div>
-          <ListingsList listings={listings} />
-        </div>
-      )}
+      <ListingsList listings={listings} />
     </div>
   );
 };
