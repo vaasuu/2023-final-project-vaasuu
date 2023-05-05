@@ -1,12 +1,12 @@
 describe("listings page", () => {
   it("needs auth", () => {
-    cy.visit("http://localhost:5173/market/listings");
+    cy.visit("/market/listings");
     cy.url().should("include", "/auth");
   });
 
   it("loads", () => {
     cy.login("john.smith@example.com", "john.smith");
-    cy.visit("http://localhost:5173/market/listings");
+    cy.visit("/market/listings");
     cy.contains("Listings");
     cy.url().should("include", "/listings");
     cy.get(".search-bar-input").should("be.visible");

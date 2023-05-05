@@ -1,13 +1,13 @@
 describe("create listing page", () => {
   it("loads", () => {
     cy.login("john.smith@example.com", "john.smith");
-    cy.visit("http://localhost:5173/market/listings/new");
+    cy.visit("/market/listings/new");
     cy.contains("Create Listing");
   });
 
   it("listing can be created", () => {
     cy.login("john.smith@example.com", "john.smith");
-    cy.visit("http://localhost:5173/market/listings/new");
+    cy.visit("/market/listings/new");
     cy.get("#title").type("test title");
     cy.get("#description").type("test description");
     cy.get("#category").select("electronics");

@@ -1,7 +1,7 @@
 describe("listing", () => {
   it("loads", () => {
     cy.login("john.smith@example.com", "john.smith");
-    cy.visit("http://localhost:5173/market/listings/1");
+    cy.visit("/market/listings/1");
   });
   it("can be edited by owner", () => {
     cy.createListing(); // create a listing to edit

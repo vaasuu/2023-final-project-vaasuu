@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add("login", (email, password) => {
-  cy.visit("http://localhost:5173/auth");
+  cy.visit("/auth");
   cy.get("input[name=email]").type(email);
   cy.get("input[name=password]").type(password);
   cy.get('[type="submit"]').click();
@@ -34,14 +34,14 @@ Cypress.Commands.add("login", (email, password) => {
 
 Cypress.Commands.add("openListingsPage", () => {
   cy.login("john.smith@example.com", "john.smith");
-  cy.visit("http://localhost:5173/market/listings");
+  cy.visit("/market/listings");
   cy.contains("Listings");
   cy.url().should("include", "/listings");
 });
 
 Cypress.Commands.add("createListing", (title, description) => {
   cy.login("john.smith@example.com", "john.smith");
-  cy.visit("http://localhost:5173/market/listings/new");
+  cy.visit("/market/listings/new");
   cy.get("#title").type(title || "test title");
   cy.get("#description").type(description || "test description");
   cy.get("#category").select("electronics");
