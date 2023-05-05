@@ -5,12 +5,21 @@ require("dotenv").config(); // loads .env file into process.env
 
 // Environment variables that are required for the app to run
 const requiredEnvVars = [
-  "JWT_SECRET",
   "MYSQL_HOST",
   "MYSQL_USERNAME",
   "MYSQL_PASSWORD",
   "MYSQL_DATABASE",
   "MYSQL_PORT",
+  "JWT_SECRET",
+  "JWT_PASSWORD_RESET_SECRET",
+  "FRONTEND_URL",
+  "EMAIL_SMTP_HOST",
+  "EMAIL_SMTP_PORT",
+  "EMAIL_SMTP_SECURE",
+  "EMAIL_SMTP_USERNAME",
+  "EMAIL_SMTP_PASSWORD",
+  "EMAIL_FROM_NAME",
+  "EMAIL_FROM_ADDRESS",
 ];
 
 // Check that all required environment variables are set
