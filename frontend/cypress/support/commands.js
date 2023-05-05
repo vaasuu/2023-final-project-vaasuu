@@ -32,6 +32,16 @@ Cypress.Commands.add("login", (email, password) => {
   cy.url().should("include", "/listings");
 });
 
+Cypress.Commands.add("register", (name, email, password) => {
+  cy.visit("/auth");
+  cy.contains("Register instead?").click();
+  cy.get("#name").type(name);
+  cy.get("input[name=email]").type(email);
+  cy.get("input[name=password]").type(password);
+  cy.get("#confirmPassword").type(password);
+  cy.get('[type="submit"]').click();
+});
+
 Cypress.Commands.add("openListingsPage", () => {
   cy.login("john.smith@example.com", "john.smith");
   cy.visit("/market/listings");

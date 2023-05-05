@@ -65,13 +65,23 @@ describe("auth page", () => {
   });
 
   it("can register with valid credentials", () => {
+    // generate random string to avoid conflicts with existing users
+    const randomString =
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
+
     cy.visit("/auth");
     cy.contains("Register instead?").click();
     cy.get("#name").type("Test User");
-    cy.get("input[name=email]").type("test.user@example.com");
+    cy.get("input[name=email]").type(`test.user.${randomString}@example.com`);
     cy.get("input[name=password]").type("test.user");
     cy.get("#confirmPassword").type("test.user");
     cy.get('[type="submit"]').click();
     cy.url().should("include", "/listings");
+  });
+
+  it("can't register with already registered email", () => {
+    cy.register("John Smith II", "john.smith@example.com", "john.smith");
+    cy.contains("User with that email already exists");
   });
 });
