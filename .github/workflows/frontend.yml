@@ -83,6 +83,9 @@ jobs:
       - name: Install backend node-modules
         working-directory: ./backend
         run: npm ci
+      - name: Start email server
+        working-directory: ./backend
+        run: npm run maildev &
       - name: Start backend
         working-directory: ./backend
         run: npm run dev &
