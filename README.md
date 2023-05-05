@@ -48,3 +48,8 @@ MySQL takes about 1 min to start up, so you might have to wait a bit before the 
 ## Database ER diagram
 
 ![ER diagram](db/db-er.svg)
+
+## Video demo
+
+> **Warning** video is 24 minutes long.
+> [![Video demo](https://img.youtube.com/vi/zx0a1EEBalI/0.jpg)](https://youtu.be/zx0a1EEBalI)
