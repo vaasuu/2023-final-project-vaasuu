@@ -78,7 +78,7 @@ jobs:
         run: npm ci
       - name: Start email server
         working-directory: ./backend
-        run: npx maildev --ip 127.0.0.1 &
+        run: npx maildev --ip 127.0.0.1 --smtp 10025 & # .env.test has EMAIL_SMTP_PORT=10025
       - name: Start backend
         working-directory: ./backend
         env:
@@ -90,8 +90,6 @@ jobs:
           NODE_ENV: test
           VITE_BACKEND_URL: http://localhost:3000
         run: npm run dev &
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
       - name: Run e2e tests
         working-directory: ./frontend
         run: npm run test:e2e

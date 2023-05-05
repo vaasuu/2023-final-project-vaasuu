@@ -85,7 +85,7 @@ jobs:
         run: npm ci
       - name: Start email server
         working-directory: ./backend
-        run: npx maildev --ip 127.0.0.1 &
+        run: npx maildev --ip 127.0.0.1 --smtp 10025 & # .env.test has EMAIL_SMTP_PORT=10025
       - name: Start backend
         working-directory: ./backend
         env:
