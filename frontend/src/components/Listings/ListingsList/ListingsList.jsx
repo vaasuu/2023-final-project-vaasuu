@@ -3,8 +3,8 @@ import ListingCard from "../ListingCard/ListingCard";
 import "./ListingsList.css";
 
 const ListingsList = ({ listings }) => {
-  if (!listings) {
-    return <div> No listings found </div>;
+  if (!listings?.length) {
+    return <div className="listings-list__empty"> No listings found </div>;
   }
 
   return (

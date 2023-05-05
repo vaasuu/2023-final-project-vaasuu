@@ -49,3 +49,59 @@ jobs:
       - name: Run tests
         working-directory: ./frontend
         run: npm run test:run
+  e2e-tests:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start MySQL server
+        uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: 8.0
+          auto-start: true
+      - name: Setup MySQL server
+        run: |
+          mysql -u root -h 127.0.0.1 <<< "CREATE DATABASE test; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Seed Database
+        working-directory: ./db/init-scripts/dev
+        run: mysql -h 127.0.0.1 -P 3306 -u root -ppassword test < init_test.sql
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install frontend node-modules
+        working-directory: ./frontend
+        run: npm ci
+      - name: Install backend node-modules
+        working-directory: ./backend
+        run: npm ci
+      - name: Start email server
+        working-directory: ./backend
+        run: npx maildev --ip 127.0.0.1 --smtp 10025 & # .env.test has EMAIL_SMTP_PORT=10025
+      - name: Start backend
+        working-directory: ./backend
+        env:
+          NODE_ENV: test # should use .env.test automatically
+        run: npm run start & # run normal node, so crashes will be reported
+      - name: Start frontend
+        working-directory: ./frontend
+        env:
+          NODE_ENV: test
+          VITE_BACKEND_URL: http://localhost:3000
+        run: npm run dev &
+      - name: Run e2e tests
+        working-directory: ./frontend
+        run: npm run test:e2e
+      - name: Save e2e test screenshots
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: e2e-test-screenshots
+          path: ./frontend/cypress/screenshots
+      - name: Save e2e test videos
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: e2e-test-videos
+          path: ./frontend/cypress/videos
