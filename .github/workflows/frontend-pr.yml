@@ -78,7 +78,7 @@ jobs:
         run: npm ci
       - name: Start email server
         working-directory: ./backend
-        run: npm run maildev &
+        run: npx maildev --ip 127.0.0.1 &
       - name: Start backend
         working-directory: ./backend
         env:
