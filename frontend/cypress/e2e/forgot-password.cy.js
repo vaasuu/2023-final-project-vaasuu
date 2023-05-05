@@ -40,7 +40,7 @@ describe("forgot password page", () => {
       .then((emails) => {
         const lastEmail = emails[emails.length - 1];
         resetLink = lastEmail.text.match(
-          /http:\/\/localhost:5173\/reset-password#ey[a-zA-Z0-9._]+/
+          /http:\/\/localhost:5173\/reset-password#ey[a-zA-Z0-9._-]+/
         )[0];
         expect(resetLink).to.not.be.empty;
       });
