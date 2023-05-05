@@ -10,8 +10,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:ui": "vitest --ui",
-    "coverage": "vitest run --coverage",
-    "e2e": "cypress run"
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "cypress run"
   },
   "dependencies": {
     "currency-codes": "^2.1.0",
