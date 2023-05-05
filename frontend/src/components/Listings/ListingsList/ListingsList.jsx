@@ -4,7 +4,7 @@ import "./ListingsList.css";
 
 const ListingsList = ({ listings }) => {
   if (listings?.length == 0) {
-    return <div> No listings found </div>;
+    return <div className="listings-list__empty"> No listings found </div>;
   }
 
   return (

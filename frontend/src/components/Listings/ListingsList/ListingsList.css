@@ -6,3 +6,7 @@
   gap: 20px;
   overflow: scroll;
 }
+
+.listings-list__empty {
+  padding: 16px;
+}
