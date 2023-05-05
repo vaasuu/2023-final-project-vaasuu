@@ -30,7 +30,7 @@ const Auth = () => {
     onSuccess: async (data) => {
       setIsLoading(false);
       auth.login(data.id, data.token, data.roles);
-      const previousPage = navigationContext.originalPage || "/";
+      const previousPage = navigationContext.originalPage || "/market/listings";
 
       // wait for the auth context to update
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -49,7 +49,7 @@ const Auth = () => {
     onSuccess: async (data) => {
       setIsLoading(false);
       auth.login(data.id, data.token, data.roles);
-      const previousPage = navigationContext.originalPage || "/";
+      const previousPage = navigationContext.originalPage || "/market/listings";
 
       // wait for the auth context to update
       await new Promise((resolve) => setTimeout(resolve, 100));
