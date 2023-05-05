@@ -55,7 +55,7 @@ const ChangePassword = () => {
 
   const token = location.hash ? location.hash.substr(1) : null;
 
-  const expiration = parseJwt(token).exp;
+  const expiration = parseJwt(token)?.exp;
   const resetTokenExpired = Date.now() >= expiration * 1000;
 
   const passwordResetMutation = useMutation({
