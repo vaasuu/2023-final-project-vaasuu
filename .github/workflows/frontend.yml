@@ -68,11 +68,11 @@ jobs:
       - name: Setup MySQL server
         run: |
           mysql -u root -h 127.0.0.1 <<< "CREATE DATABASE test; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+      - name: Fetch code
+        uses: actions/checkout@v3
       - name: Seed Database
         working-directory: ./db/init-scripts/dev
         run: mysql -h 127.0.0.1 -P 3306 -u root -ppassword test < init_test.sql
-      - name: Fetch code
-        uses: actions/checkout@v3
       - name: Install node.js 18
         uses: actions/setup-node@v3
         with:
