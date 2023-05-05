@@ -88,9 +88,14 @@ jobs:
         run: npm run maildev &
       - name: Start backend
         working-directory: ./backend
-        run: npm run dev &
+        env:
+          NODE_ENV: test # should use .env.test automatically
+        run: npm run start & # run normal node, so crashes will be reported
       - name: Start frontend
         working-directory: ./frontend
+        env:
+          NODE_ENV: test
+          VITE_BACKEND_URL: http://localhost:3000
         run: npm run dev &
       - name: Run e2e tests
         working-directory: ./frontend
