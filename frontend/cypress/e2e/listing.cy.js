@@ -14,7 +14,8 @@ describe("listing", () => {
     cy.get("#price").should("have.value", "1000.00");
 
     // Edit listing details
-    cy.get("#price").clear().type("2000.00");
+    cy.get("#price").clear();
+    cy.get("#price").type("2000.00");
     cy.get('[type="submit"]').click();
     cy.contains("test title");
     cy.contains("2000.00");
@@ -52,7 +53,8 @@ describe("listing", () => {
     cy.get("#price").should("have.value", "1000.00");
 
     // Edit listing details
-    cy.get("#price").clear().type("2000.00");
+    cy.get("#price").clear();
+    cy.get("#price").type("2000.00");
     cy.get('[type="submit"]').click();
     cy.contains("test title");
     cy.contains("2000.00");
