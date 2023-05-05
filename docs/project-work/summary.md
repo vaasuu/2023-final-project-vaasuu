@@ -55,5 +55,5 @@ db: MySQL on AWS RDS (Learner Lab, so it will be gone after the course)
 
 ## Video demo
 
-> **Warning** video is 32 minutes long.
-> [![Video demo](https://img.youtube.com/vi/6sgb86AS98o/0.jpg)](https://youtu.be/6sgb86AS98o)
+> **Warning** video is 24 minutes long.
+> [![Video demo](https://img.youtube.com/vi/zx0a1EEBalI/0.jpg)](https://youtu.be/zx0a1EEBalI)
