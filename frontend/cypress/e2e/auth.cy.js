@@ -63,4 +63,15 @@ describe("auth page", () => {
     cy.url().should("include", "/auth");
     cy.get("h1").contains("Log in");
   });
+
+  it("can register with valid credentials", () => {
+    cy.visit("/auth");
+    cy.contains("Register instead?").click();
+    cy.get("#name").type("Test User");
+    cy.get("input[name=email]").type("test.user@example.com");
+    cy.get("input[name=password]").type("test.user");
+    cy.get("#confirmPassword").type("test.user");
+    cy.get('[type="submit"]').click();
+    cy.url().should("include", "/listings");
+  });
 });
