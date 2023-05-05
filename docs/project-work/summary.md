@@ -54,3 +54,6 @@ frontend: https://marketplace-frontend-yxv8.onrender.com
 db: MySQL on AWS RDS (Learner Lab, so it will be gone after the course)
 
 ## Video demo
+
+> **Warning** video is 32 minutes long.
+> [![Video demo](https://img.youtube.com/vi/6sgb86AS98o/0.jpg)](https://youtu.be/6sgb86AS98o)
