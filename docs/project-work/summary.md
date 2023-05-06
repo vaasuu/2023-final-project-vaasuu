@@ -2,6 +2,14 @@
 
 I built a general marketplace site.
 
+The frontend site is split into two parts: stuff that doesn't need authentication (landing, auth, tos, privacy policy, forgot password) and the main marketplace part that needs authentication. The main marketplace part had a sidebar with links to the different views (listings, users, settings, etc). The sidebar is behind a hamburger menu on mobile.
+
+Frontend talks to the backend via a JSON REST API. The backend uses JWT for authentication and bcrypt for password hashing. The backend also creates [BlurHashes](https://blurha.sh/) for images that act as placeholders in the listings view while the images are loading. Users and listings are shown as cards in lists that can be clicked to open the full listing/user view.
+
+The backend is split into separate directories; controllers, services, models, routes and middleware. Controllers handle the request and response, service handles sending email, models handle DB stuff, routes are the endpoints and middleware is for authentication. Some routes act differently depending on the user role (normal or admin). I also built some of the functionality into the DB (e.g. triggers for updating `updated_at` for listings and deleting listings & pictures when a user is deleted).
+
+The DB was built in a way that it's easy to add functionality to the site. For example a user can have multiple roles or a listing can be in multiple categories. I would've liked to add more functionality to the site, like a chat and direct media uploads, but I ran out of time.
+
 ## Features
 
 - User registration and login
@@ -56,4 +64,5 @@ db: MySQL on AWS RDS (Learner Lab, so it will be gone after the course)
 ## Video demo
 
 > **Warning** video is 24 minutes long.
-> [![Video demo](https://img.youtube.com/vi/zx0a1EEBalI/0.jpg)](https://youtu.be/zx0a1EEBalI)
+
+[![Video demo](https://img.youtube.com/vi/zx0a1EEBalI/0.jpg)](https://youtu.be/zx0a1EEBalI)
