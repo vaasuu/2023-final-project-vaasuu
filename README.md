@@ -30,6 +30,13 @@ Built as a final project for Web Programming course at TAMK.
 - [Testing](docs/development/testing.md)
 - [Project work stuff](docs/project-work/summary.md)
 
+## Online demo
+
+> **NOTE** database *might* not be running after the course has ended, so you might not be able to log in.
+> Also since the backend is running on the free tier of Render, it will need a couple seconds to wake up. 
+
+https://marketplace-frontend-yxv8.onrender.com
+
 ## Local demo
 
 ```
