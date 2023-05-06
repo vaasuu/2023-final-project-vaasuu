@@ -95,3 +95,90 @@ My solution was to use AWS RDS instead.
 And because I'm obsessed with spending _more_ time on this project, I also created a [terraform](https://www.terraform.io/) script to create the RDS instance, just because I wanted to try it out.
 
 I had some problems at first with the creads, but managed to fix it by reading the [AWS terraform provider documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#provider-configuration) (I had the wrong field name for the `token` field).
+
+### Problem with email e2e tests on GitHub Actions
+
+They were failing on GitHub Actions, but not locally.
+I spent a lot of time trying to figure out why, but the problem was that the email server was running on the wrong port! Stupid me!
+
+I had changed the SMTP port to `10025` for tests in `backend/.env.test`, so test runs would not overlap with development mail server on `1025`, but I forgot to change it in the GitHub Actions workflow file. So the tests were trying to connect to the wrong port. I was running SMTP server on `maildev` default port 1025. :facepalm: :facepalm: :facepalm:
+Tests were passing locally because I was running things in dev mode, not test mode, so `.env` was used instead of `.env.test`.
+
+### Discovery and solution
+
+I discovered the problem by sshing into the GitHub Actions runner and looking at `lsof -P -i -n` output. and logs.
+
+I fixed it by changing the port to the correct one.
+
+<details>
+<summary>SSH log session on GH Actions runner</summary>
+
+```
+runner@fv-az618-408:~/work/2023-final-project-vaasuu/2023-final-project-vaasuu$ lsof -P -i -n
+COMMAND    PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+Runner.Li 1524 runner   93u  IPv6  24103      0t0  TCP 10.1.0.76:48256->13.107.42.16:443 (ESTABLISHED)
+Runner.Li 1524 runner   95u  IPv6  24711      0t0  TCP 10.1.0.76:48270->13.107.42.16:443 (ESTABLISHED)
+Runner.Wo 1539 runner   94u  IPv6  24130      0t0  TCP 10.1.0.76:48280->13.107.42.16:443 (ESTABLISHED)
+Runner.Wo 1539 runner  105u  IPv6  24763      0t0  TCP 10.1.0.76:58582->13.107.42.16:443 (ESTABLISHED)
+Runner.Wo 1539 runner  119u  IPv6  25155      0t0  TCP 10.1.0.76:49958->13.107.42.16:443 (ESTABLISHED)
+mysqld    1637 runner   20u  IPv6  25854      0t0  TCP *:33060 (LISTEN)
+mysqld    1637 runner   23u  IPv6  25857      0t0  TCP *:3306 (LISTEN)
+node      1919 runner   18u  IPv4  25240      0t0  TCP 127.0.0.1:1080 (LISTEN)
+node      1919 runner   19u  IPv4  25241      0t0  TCP 127.0.0.1:1025 (LISTEN)
+node      1940 runner   18u  IPv6  26291      0t0  TCP *:3000 (LISTEN)
+node      1969 runner   24u  IPv6  26308      0t0  TCP [::1]:5173 (LISTEN)
+upterm    2020 runner    9u  IPv4  25501      0t0  TCP 10.1.0.76:41304->37.16.25.99:22 (ESTABLISHED)
+runner@fv-az618-408:~/work/2023-final-project-vaasuu/2023-final-project-vaasuu$
+runner@fv-az618-408:~/work/2023-final-project-vaasuu/2023-final-project-vaasuu$ cat backend/app.log
+{"level":"info","message":"Server is running on port 3000","timestamp":"2023-05-05T23:14:21.134Z"}
+runner@fv-az618-408:~/work/2023-final-project-vaasuu/2023-final-project-vaasuu$ curl -v localhost:1080/email
+*   Trying 127.0.0.1:1080...
+* Connected to localhost (127.0.0.1) port 1080 (#0)
+> GET /email HTTP/1.1
+> Host: localhost:1080
+> User-Agent: curl/7.81.0
+> Accept: */*
+>
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< X-Powered-By: Express
+< Access-Control-Allow-Origin: *
+< Content-Type: application/json; charset=utf-8
+< Content-Length: 2
+< ETag: W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
+< Vary: Accept-Encoding
+< Date: Fri, 05 May 2023 23:15:56 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+<
+* Connection #0 to host localhost left intact
+[]runner@fv-az618-408:~/work/2023-final-project-vaasuu/2023-final-project-vaasuucurl -v localhost:3000/api/v1/password-reset/send-reset-email -d '{"email":"john.smith@example.com"}' -H 'Content-Type: application/json'n'
+*   Trying 127.0.0.1:3000...
+* Connected to localhost (127.0.0.1) port 3000 (#0)
+> POST /api/v1/password-reset/send-reset-email HTTP/1.1
+> Host: localhost:3000
+> User-Agent: curl/7.81.0
+> Accept: */*
+> Content-Type: application/json
+> Content-Length: 34
+>
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 500 Internal Server Error
+< X-Powered-By: Express
+< Vary: Origin
+< Content-Type: application/json; charset=utf-8
+< Content-Length: 33
+< ETag: W/"21-u8tno/8IdqEY6PFcopkQe0syfE4"
+< Date: Fri, 05 May 2023 23:16:07 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+<
+* Connection #0 to host localhost left intact
+{"error":"Internal server error"}runner@fv-az618-408:~/work/2023-final-project-v
+runner@fv-az618-408:~/work/2023-final-project-vaasuu/2023-final-project-vaasuu$ cat backend/app.log
+{"level":"info","message":"Server is running on port 3000","timestamp":"2023-05-05T23:14:21.134Z"}
+{"level":"info","message":"Sending password reset email. Reset token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhYWFhYWFhLTA2MTUtNGQwNC1hNzk1LTljNTc1NmVmNWY0YyIsImlhdCI6MTY4MzMyODU2NywiZXhwIjoxNjgzMzMwMzY3fQ._SbEmt2tCQcp5axpq1j1-M8nR0m6iN0CmoalrDDIhzM","timestamp":"2023-05-05T23:16:07.704Z"}
+{"address":"127.0.0.1","code":"ESOCKET","command":"CONN","errno":-111,"level":"error","port":10025,"syscall":"connect","timestamp":"2023-05-05T23:16:07.714Z"}
+```
+
+</details>

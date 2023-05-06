@@ -313,3 +313,5 @@ valtteri@Hackintosh:terraform$
 
 - React Testing Library & Vitest
 - Cypress
+
+Learned a lot and had some fun with Cypress.
