@@ -1,0 +1,7 @@
+.env*
+dist
+node_modules
+
+# Cypress specific
+cypress/videos
+cypress/screenshots

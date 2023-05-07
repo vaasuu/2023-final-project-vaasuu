@@ -1,0 +1,105 @@
+name: Backend
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - backend/**
+      - .github/workflows/backend.yml
+  workflow_dispatch:
+jobs:
+  prettier-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Run prettier style check
+        working-directory: ./backend
+        run: npx prettier --check .
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Run eslint
+        working-directory: ./backend
+        run: npx eslint .
+  tests:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    env:
+      # Database
+      MYSQL_HOST: localhost
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: test
+      MYSQL_PORT: 3306
+      # JSON Web Tokens
+      JWT_SECRET: secret
+      JWT_PASSWORD_RESET_SECRET: resetsecret
+      # Backend API server
+      PORT: 3000
+      BACKEND_URL: http://localhost:3000
+      FRONTEND_URL: http://localhost:5173
+      # Email
+      EMAIL_SMTP_HOST: localhost
+      EMAIL_SMTP_PORT: 1025
+      EMAIL_SMTP_SECURE: false
+      EMAIL_SMTP_USERNAME: noreply@marketplace.example.com
+      EMAIL_SMTP_PASSWORD: password123
+      EMAIL_FROM_NAME: Marketplace
+      EMAIL_FROM_ADDRESS: noreply@marketplace.example.com
+      # Timezone
+      TZ: UTC
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Start MySQL server
+        uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: 8.0
+          auto-start: true
+      - name: Setup MySQL server
+        run: |
+          mysql -u root -h 127.0.0.1 <<< "CREATE DATABASE test; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+      - name: Seed Database
+        working-directory: ./db/init-scripts/dev
+        run: mysql -h 127.0.0.1 -P 3306 -u root -ppassword test < init_test.sql
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install node-modules
+        working-directory: ./backend
+        run: npm ci
+      - name: Run tests
+        working-directory: ./backend
+        run: npx jest --coverage --coverageReporters={clover,json-summary,json,lcov} --forceExit
+      - name: Save coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: ./backend/coverage
+      - name: Copy coverage report # because the coverage badge action expects the report to be in <repo root>/coverage/
+        run: |
+          mkdir -p ./coverage
+          cp backend/coverage/coverage-summary.json ./coverage/coverage-summary.json
+      - name: Update Coverage Badge
+        uses: we-cli/coverage-badge-action@8f6b0bd1b727cde6212c8c62d3329c4aac09fec3
+  deploy:
+    env:
+      BACKEND_DEPLOY_WEBHOOK: ${{secrets.BACKEND_DEPLOY_WEBHOOK}}
+    needs: [prettier-check, lint, tests]
+    runs-on: ubuntu-latest
+    steps:
+      - if: env.BACKEND_DEPLOY_WEBHOOK != ''
+        name: Trigger deploy to production
+        run: curl ${{secrets.BACKEND_DEPLOY_WEBHOOK}}

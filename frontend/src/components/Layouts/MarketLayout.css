@@ -1,0 +1,33 @@
+@media (min-width: 576px) {
+  .smallScreenToggleSidebar {
+    display: none;
+  }
+}
+
+.sidebar-collapse-button {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px;
+}
+
+.market-layout-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
+.market-layout__main-content-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  width: 100%;
+  overflow: scroll;
+}
+
+.market-layout__main-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}

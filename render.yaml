@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: marketplace-backend
+    env: node
+    region: frankfurt
+    plan: free
+    branch: main
+    rootDir: backend
+    autoDeploy: false
+    numInstances: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+  - type: web
+    name: marketplace-frontend
+    env: static
+    branch: main
+    rootDir: frontend
+    autoDeploy: false
+    buildCommand: npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

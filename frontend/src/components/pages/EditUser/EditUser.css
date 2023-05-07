@@ -1,0 +1,77 @@
+.edit-user-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-user__form {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+}
+
+.edit-user__form-control input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  margin: 10px 0;
+}
+
+.edit-user__form-control input:focus {
+  border-color: #333;
+}
+
+.form-error {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+.edit-user__form-control label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.edit-user__form-control input[type="submit"] {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+}
+
+.edit-user__form-control button {
+  padding: 10px;
+  margin: 16px 0;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+}
+
+.edit-user__form-control input[type="submit"]:hover {
+  background-color: #555;
+}
+
+.edit-user__form-control button:hover {
+  background-color: #555;
+}
+
+.edit-user__form-control input:invalid {
+  border-color: red;
+}
+
+.delete-user__button {
+  padding: 10px;
+  margin: 16px 0;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  background-color: #d0342c;
+  color: #fff;
+  cursor: pointer;
+}

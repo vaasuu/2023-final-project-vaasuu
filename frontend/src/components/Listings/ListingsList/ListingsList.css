@@ -1,0 +1,12 @@
+.listings-list {
+  margin: 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 20px;
+  overflow: scroll;
+}
+
+.listings-list__empty {
+  padding: 16px;
+}

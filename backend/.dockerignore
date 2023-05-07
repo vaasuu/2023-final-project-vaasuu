@@ -1,0 +1,6 @@
+.env*
+__tests__
+app.log
+coverage
+localhost.rest
+node_modules
