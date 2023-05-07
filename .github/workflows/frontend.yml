@@ -105,10 +105,28 @@ jobs:
         with:
           name: e2e-test-videos
           path: ./frontend/cypress/videos
+  build: # check that site builds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch code
+        uses: actions/checkout@v3
+      - name: Install node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install node-modules
+        working-directory: ./frontend
+        run: npm ci
+      - name: Build site
+        working-directory: ./frontend
+        env:
+          NODE_ENV: production
+          VITE_BACKEND_URL: http://localhost:3000
+        run: npm run build
   deploy:
     env:
       FRONTEND_DEPLOY_WEBHOOK: ${{secrets.FRONTEND_DEPLOY_WEBHOOK}}
-    needs: [prettier-check, lint, tests, e2e-tests]
+    needs: [prettier-check, lint, tests, e2e-tests, build]
     runs-on: ubuntu-latest
     steps:
       - if: env.FRONTEND_DEPLOY_WEBHOOK != ''
